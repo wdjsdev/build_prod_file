@@ -1,0 +1,23 @@
+** Build Prod File Step by Step **
+
+execute master script
+	-get order number
+		-prompt user for the correct order number.
+			-populate input field with order number from the
+			information layer
+			-"ok" and "cancel" buttons
+		-validate order number
+
+	-parse resulting data
+		-loop the lines array and separate garments into groups
+		and save the resulting data into an array of objects
+			-each of these objects will represent one production
+			file to be created.
+
+	-loop array of garments needed
+		-create a new document with order number (and append a
+		sequence letter if necessary)
+		-duplicate each piece of each size into new production file
+		-create artboards
+		-duplicate custom player information per roster data
+

@@ -15,6 +15,8 @@ function container()
 
 	var valid = true;
 
+	var testingActive = false;
+
 	// eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
 
@@ -29,12 +31,34 @@ function container()
 		aB = docRef.artboards,
 		swatches = docRef.swatches,
 		API_URL = "https://forms.na2.netsuite.com/app/site/hosting/scriptlet.nl?script=1377&deploy=1&compid=460511&h=b1f122a149a74010eb60&soid=",
-		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js");
+		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js"),
+		userDefinedSavePath = desktopPath + "/temp";
 
 	var curOrderData;
 
 	var garmentsNeeded = [];
+	var prodFiles = [];
 	var orderNum = "";
+
+
+
+
+	//test orders array
+	//use this to batch test some functionality
+	var testOrders = 
+	[
+		"2298609",
+		"2298624",
+		"2298631",
+		"2298643",
+		"2298653",
+		"2298667",
+		"2298668",
+		"2298680",
+		"2298697",
+		"2298739",
+		"2298749"
+	]
 
 
 	//=================================  /Data  =================================//
@@ -60,12 +84,36 @@ function container()
 			errorList.push("Failed to include the component: " + compFiles[x].name);
 			log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e);
 			valid = false;
-			break;
+			// break;
 		}
 	}
 
 	//=============================  /Components  ===============================//
 	/*****************************************************************************/
+
+
+
+	/*****************************************************************************/
+	//===============================  Testing  =================================//
+
+	if(testingActive)
+	{
+		// test_so_data(testOrders);
+
+		orderNum = "2296576";
+		valid = splitDataByGarment();
+
+		for(var x=0;x<garmentsNeeded.length;x++)
+		{
+			$.writeln(JSON.stringify(garmentsNeedec[x]));
+		}
+
+		log.h("Finished testing sequence. Valid = " + valid);
+		valid = false;
+	}
+
+	//==============================  /Testing  =================================//
+	/*****************************************************************************/	
 
 
 
@@ -83,12 +131,13 @@ function container()
 
 	if(valid)
 	{
-		orderNum = getOrderNumber();
+		// orderNum = getOrderNumber();
+		orderNum = "2296576";
 	}
 
 	if(valid)
 	{
-		getOrderDataFromNetsuite(orderNum);
+		curOrderData = getOrderDataFromNetsuite(orderNum);
 	}
 
 	if(valid)
@@ -97,6 +146,21 @@ function container()
 	}
 
 
+	if(valid)
+	{
+		prodFiles.push(createProdFile(orderNum,prodFiles.length));
+	}
+
+	if(valid)
+	{
+		duplicatePiecesToProdFile(prodFiles[0]);
+	}
+
+
+	for(var x=0;x<garmentsNeeded.length;x++)
+	{
+		log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
+	}
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
@@ -111,4 +175,6 @@ function container()
 	return valid;
 
 }
+
 container();
+

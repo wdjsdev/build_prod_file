@@ -20,18 +20,12 @@ function splitDataByGarment()
 	var result = true;
 	var garPat = /[fp][ds][-_](.*[\:])?/i;
 
-	var curLineItem, trimmedLineItem, curGarment = {};
+	var curLineItem, trimmedLineItem, curGarment;
 	var curSize, curCode;
 
+	initCurGarment();
 
-	////////////////////////
-	////////ATTENTION://////
-	//
-	//		fix below loop!
-	//		separate garments are not being
-	//		separated in the garmentsNeeded array.
-	//
-	////////////////////////
+
 	for (var x = 0, len = curOrderData.lines.length; x < len; x++)
 	{
 		curLine = curOrderData.lines[x];
@@ -51,9 +45,7 @@ function splitDataByGarment()
 			if (trimmedLineItem !== curCode)
 			{
 				log.l(trimmedLineItem + " !=== " + curCode + ". Pushing curGarment to garmentsNeeded array and re-initializing.\n");
-				garmentsNeeded.push(curGarment);
-				curGarment = {};
-				curGarment.roster = {};
+				sendCurGarment();
 				curCode = trimmedLineItem;
 			}
 
@@ -68,11 +60,13 @@ function splitDataByGarment()
 				{
 					curGarment.roster = {};
 				}
-				curGarment.roster[curSize] = [];
+				curGarment.roster[curSize] = {}
+				curGarment.roster[curSize].quantity = curLine.quantity;
+				curGarment.roster[curSize].players = [];
 
 				for (var y = 0, ylen = curLine.memo.roster.length; y < ylen; y++)
 				{
-					curGarment.roster[curSize].push(
+					curGarment.roster[curSize].players.push(
 					{
 						"name": curLine.memo.roster[y].name,
 						"number": curLine.memo.roster[y].number
@@ -81,11 +75,51 @@ function splitDataByGarment()
 				log.l("curGarment.roster[" + curSize + "] = " + JSON.stringify(curGarment.roster[curSize]));
 			}
 		}
+		else if (curLineItem.indexOf("FILLIN") > -1 || curLineItem.indexOf("DF") > -1)
+		{
+			log.l("curLineItem == " + curLineItem + "::This should be a break between garments.");
+			if(curGarment.item)
+			{
+				log.l("curGarment has data in it. Sending it to garmentsNeeded array and reinitializing curGarment object.");
+				sendCurGarment();
+			}
+			else
+			{
+				log.l("found a split between garments, but there's nothing in the curGarment object. Moving on to the next line item.");
+			}
+		}
 		else
 		{
 			log.l(curLineItem + " does NOT appear to be a correctly formatted garment. Skipping it.");
 			curCode = undefined;
 		}
 	}
-	garmentsNeeded.push(curGarment);
+
+	if(curGarment.item)
+	{
+		garmentsNeeded.push(curGarment);
+	}
+
+
+
+	function initCurGarment()
+	{
+		curGarment = {};
+		curGarment.item = "";
+		curGarment.roster = {};
+		curCode = undefined;
+		curSize = undefined;
+	}
+
+	//send the current garment object
+	//to the garmentsNeeded array
+	function sendCurGarment()
+	{
+		garmentsNeeded.push(curGarment);
+		initCurGarment();
+	}
+
+
+
+	return result;
 }

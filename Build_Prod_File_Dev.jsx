@@ -131,8 +131,8 @@ function container()
 
 	if(valid)
 	{
-		// orderNum = getOrderNumber();
-		orderNum = "2296576";
+		orderNum = getOrderNumber();
+		// orderNum = "2298833";
 	}
 
 	if(valid)

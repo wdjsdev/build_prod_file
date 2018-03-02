@@ -6,34 +6,28 @@
 		duplicate each piece of each size necessary for the
 		given order, move them into the prod file
 	Arguments
-		none
+		curData
+			object containing the roster info for the current garment
+		srcLayer
+			garment layer object
 	Return value
 		success boolean
 
 */
 
-function duplicatePiecesToProdFile(curOrder)
+function duplicatePiecesToProdFile(curData,srcLayer)
 {
 	log.h("Beginning execution of duplicatePiecesToProdFile() function.");
 	var result = true;
 	docRef.activate();
 	docRef.selection = null;
 
-	////////////////////////
-	////////ATTENTION://////
-	//
-	//		need to develop a new algorithm
-	//		for getting prepress layer because
-	// 		we'll be looking for prepress layers
-	//		for multiple garments
-	//
-	////////////////////////
-	var ppLay = getPPLay(layers);
+	var ppLay = getPPLay(srcLayer);
 	ppLay.visible = true;
 	log.l("set ppLay to " + ppLay);
 
-	var curData = curOrder.data;
-	log.l("set curData to " + JSON.stringify(curData));
+	// var curData = curData.roster;
+	// log.l("set curData to " + JSON.stringify(curData));
 	log.l("curData.roster.length = " + curData.roster.length);
 
 	for(var curSize in curData.roster)
@@ -62,13 +56,14 @@ function duplicatePiecesToProdFile(curOrder)
 		}
 
 		//duplicate the temp group to the production file
-		tmpGroup.duplicate(curOrder.doc);
-
+		var tmpGroupCopy = tmpGroup.duplicate(curData.doc);
 		tmpLay.remove();
 
-		curOrder.doc.activate();
-		curOrder.doc.groupItems[0].selected = true;
-		app.ungroup();
+		curData.doc.activate();
+		tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
+		tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+		ungroupDoc(curData.doc);
+
 	}
 	
 

@@ -37,7 +37,8 @@ function container()
 	var curOrderData;
 
 	var garmentsNeeded = [];
-	var prodFiles = [];
+	var garmentLayers = [];
+	var prodFileCount = 0;
 	var orderNum = "";
 
 
@@ -145,16 +146,18 @@ function container()
 		splitDataByGarment();
 	}
 
-
 	if(valid)
 	{
-		prodFiles.push(createProdFile(orderNum,prodFiles.length));
+		garmentLayers = findGarmentLayers();
 	}
 
 	if(valid)
 	{
-		duplicatePiecesToProdFile(prodFiles[0]);
+		valid = masterLoop();
 	}
+
+
+	
 
 
 	for(var x=0;x<garmentsNeeded.length;x++)

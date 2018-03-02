@@ -6,21 +6,17 @@
 		make a new document and name it with the order
 		number as well as any sequence letters if necessary
 	Arguments
-		orderNum
-			string representing the order number
-		prodFileCount
-			integer representing the number of production
-			files that have been created. this is for
-			appending sequence letters.
+		curGarment	
+			current garment in the garmentsNeeded array
 	Return value
-		object containing prod file document and name (with appendage)
+		void
 
 */
 
-function createProdFile(orderNum,prodFileCount)
+function createProdFile(curGarment)
 {
-	var result = {};
-	var sequenceLetters = ["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+	log.h("Beginning execution of createProdFile() function.");
+	var sequenceLetters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
 	//this variable will hold the string with
 	//which to concatenate with the order number
@@ -28,22 +24,16 @@ function createProdFile(orderNum,prodFileCount)
 
 	//check whether an appendage is needed
 
-	if(prodFileCount === 0 && templatesNeeded.length > 1)
+	if(garmentsNeeded.length > 1)
 	{
-		//this is the first file created, but there are more needed
-		//append _A to this file
-		appendage = "_A";
-	}
-	else if(templatesNeeded.length > 1)
-	{
-		appendage = "_" + sequenceLetters[profileCount];
+		appendage = "_" + sequenceLetters[prodFileCount];
 	}
 
-	result.doc = app.documents.add();
-	result.name = orderNum + appendage;
-	result.data = garmentsNeeded[prodFileCount];
+	log.l("creating a new production file called " + orderNum + appendage)
+	curGarment.doc = app.documents.add();
+	curGarment.name = orderNum + appendage;
 
-	result.doc.saveAs(File(userDefinedSavePath + "/" + result.name + ".ai"));
-
-	return result;
+	log.l("saving new production file to: " + userDefinedSavePath + "/" + curGarment.name + ".ai");
+	curGarment.doc.saveAs(File(userDefinedSavePath + "/" + curGarment.name + ".ai"));
+	prodFileCount++;
 }

@@ -16,24 +16,51 @@ function assignGarmentsToLayers()
 {
 	var rel = [];
 
+
+	var garmentOptions = ["Not a Template"];
+	for(var x=0;x<garmentLayers.length;x++)
+	{
+		garmentOptions.push(garmentLayers[x].name);
+	}
+
+
 	var w = new Window("dialog","Please select the appropriate layer for each garment on the sales order");
 
-	for(var x=0,len = garmentLayers.length;x<len;x++)
+	for(var x=0,len = garmentsNeeded.length;x<len;x++)
 	{
 		rel[x] = {};
-		rel[x].layerName = garmentLayers[x].name;
-		rel[x].potentialGarments = garmentsNeeded;
+		rel[x].index = x;
 		rel[x].group = UI.group(w);
 		rel[x].group.orientation = "row";
-		rel[x].msg = UI.static(rel[x].group,rel[x].layerName);
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		add a dropdown list here
-		//		that includes each garment
-		//		from the garmentsNeeded array
-		//
-		////////////////////////
+		rel[x].msg = UI.static(rel[x].group,garmentsNeeded[x].item + "_" + garmentsNeeded[x].styleNum);
+		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
+	}
+
+	var btnGroup = UI.group(w);
+		var submitBtn = UI.button(btnGroup,"Submit",submit)
+		var cancelBtn = UI.button(btnGroup,"Cancel",cancel)
+	w.show();
+
+
+
+	function submit()
+	{
+		for(var x=0,len=rel.length;x<len;x++)
+		{
+			if(rel[x].dropdown.selection.text.indexOf("Template")=== -1)
+			{
+				garmentsNeeded[rel[x].index].parentLayer = layers[rel[x].dropdown.selection.text];
+			}
+		}
+		w.close();
+	}
+
+	function cancel()
+	{
+		log.l("User cancelled dialog. Exiting script.");
+		errorList.push("Exited the script because the layer prompt dialog was cancelled.");
+		valid = false;
+		w.close();
 	}
 
 		

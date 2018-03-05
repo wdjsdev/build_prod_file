@@ -153,6 +153,11 @@ function container()
 
 	if(valid)
 	{
+		assignGarmentsToLayers();
+	}
+
+	if(valid)
+	{
 		valid = masterLoop();
 	}
 
@@ -160,10 +165,10 @@ function container()
 	
 
 
-	for(var x=0;x<garmentsNeeded.length;x++)
-	{
-		log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-	}
+	// for(var x=0;x<garmentsNeeded.length;x++)
+	// {
+	// 	log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
+	// }
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/

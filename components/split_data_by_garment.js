@@ -21,7 +21,7 @@ function splitDataByGarment()
 	var garPat = /[fp][ds][-_](.*[\:])?/i;
 
 	var curLineItem, trimmedLineItem, curGarment;
-	var curSize, curCode;
+	var curSize, curCode, curStyle;
 
 	initCurGarment();
 
@@ -40,6 +40,8 @@ function splitDataByGarment()
 			{
 				curCode = trimmedLineItem;
 				log.l("The variable curCode was not yet defined. setting curCode to " + curCode);
+				curGarment.styleNum = getStyleNum(curLine);
+				log.l("Set the styleNum to " + curGarment.styleNum);
 			}
 
 			if (trimmedLineItem !== curCode)
@@ -50,6 +52,7 @@ function splitDataByGarment()
 			}
 
 			curSize = curLineItem.substring(curLineItem.lastIndexOf("-") + 1, curLineItem.length);
+			curStyle = getStyleNum(curLineItem);
 			log.l("Set curSize to " + curSize);
 
 			if (curCode === trimmedLineItem)
@@ -78,7 +81,7 @@ function splitDataByGarment()
 		else if (curLineItem.indexOf("FILLIN") > -1 || curLineItem.indexOf("DF") > -1)
 		{
 			log.l("curLineItem == " + curLineItem + "::This should be a break between garments.");
-			if(curGarment.item)
+			if (curGarment.item)
 			{
 				log.l("curGarment has data in it. Sending it to garmentsNeeded array and reinitializing curGarment object.");
 				sendCurGarment();
@@ -95,7 +98,7 @@ function splitDataByGarment()
 		}
 	}
 
-	if(curGarment.item)
+	if (curGarment.item)
 	{
 		garmentsNeeded.push(curGarment);
 	}
@@ -106,6 +109,7 @@ function splitDataByGarment()
 	{
 		curGarment = {};
 		curGarment.item = "";
+		curGarment.styleNum = "";
 		curGarment.roster = {};
 		curCode = undefined;
 		curSize = undefined;

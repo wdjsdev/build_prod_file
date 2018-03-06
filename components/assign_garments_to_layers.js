@@ -16,8 +16,9 @@ function assignGarmentsToLayers()
 {
 	var rel = [];
 
+	var curGarment;
 
-	var garmentOptions = ["Not a Template"];
+	var garmentOptions = ["Skip This Garment"];
 	for(var x=0;x<garmentLayers.length;x++)
 	{
 		garmentOptions.push(garmentLayers[x].name);
@@ -28,11 +29,13 @@ function assignGarmentsToLayers()
 
 	for(var x=0,len = garmentsNeeded.length;x<len;x++)
 	{
+		curGarment = garmentsNeeded[x];
 		rel[x] = {};
 		rel[x].index = x;
 		rel[x].group = UI.group(w);
 		rel[x].group.orientation = "row";
-		rel[x].msg = UI.static(rel[x].group,garmentsNeeded[x].item + "_" + garmentsNeeded[x].styleNum);
+		rel[x].msg = UI.static(rel[x].group,curGarment.code + "_" + curGarment.styleNum);
+		rel[x].msg2 = UI.static(rel[x].group,curGarment.age === "A" ? "Adult" : "Youth");
 		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
 	}
 
@@ -47,7 +50,7 @@ function assignGarmentsToLayers()
 	{
 		for(var x=0,len=rel.length;x<len;x++)
 		{
-			if(rel[x].dropdown.selection.text.indexOf("Template")=== -1)
+			if(rel[x].dropdown.selection.text.indexOf("Skip")=== -1)
 			{
 				garmentsNeeded[rel[x].index].parentLayer = layers[rel[x].dropdown.selection.text];
 			}
@@ -62,6 +65,7 @@ function assignGarmentsToLayers()
 		valid = false;
 		w.close();
 	}
+
 
 		
 }

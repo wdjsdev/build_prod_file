@@ -35,12 +35,12 @@ function masterLoop()
 
 		if(result)
 		{
-			createProdFile(curGarment);
+			result = createProdFile(curGarment);
 		}
 
 		if(result)
 		{
-			duplicatePiecesToProdFile(curGarment,curGarmentLayer);
+			result = duplicatePiecesToProdFile(curGarment,curGarmentLayer);
 		}
 	}
 

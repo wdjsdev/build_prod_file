@@ -24,14 +24,15 @@ function masterLoop()
 
 	for(var ml=0,len=garmentsNeeded.length;ml<len && result;ml++)
 	{
+		curGarment = garmentsNeeded[ml];
+		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
 		if(!garmentsNeeded[ml].parentLayer)
 		{
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
-		curGarment = garmentsNeeded[ml];
 		curGarmentLayer = garmentLayers[ml];
-		log.l("::running master loop for the garment: " + curGarment.item);
+
 		if(result)
 		{
 			createProdFile(curGarment);
@@ -43,5 +44,6 @@ function masterLoop()
 		}
 	}
 
+	log.l("End of masterLoop function. returning: " + result);
 	return result;
 }

@@ -12,15 +12,20 @@ Description: query netsuite for JSON data for a given order number,
 
 function container()
 {
-
 	var valid = true;
 
-	var testingActive = false;
+	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
+	// eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
 
-	// eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
-	eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
 
-	logDest.push(File(desktopPath + "/automation/logs/build_prod_file_dev_log.txt"));
+	if(user === "will.dowling")
+	{
+		logDest.push(File(desktopPath + "/automation/logs/build_prod_file_dev_log.txt"));
+	}
+	else
+	{
+		logDest.push(File("/Volumes/Customization/Library/Scripts/Script Resources/Data/.script_logs/build_prod_file_log.txt"));
+	}
 
 
 	/*****************************************************************************/
@@ -32,7 +37,7 @@ function container()
 		swatches = docRef.swatches,
 		API_URL = "https://forms.na2.netsuite.com/app/site/hosting/scriptlet.nl?script=1377&deploy=1&compid=460511&h=b1f122a149a74010eb60&soid=",
 		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js"),
-		userDefinedSavePath = desktopPath + "/temp";
+		userDefinedSavePath = desktopPath;
 
 	var curOrderData;
 
@@ -41,25 +46,6 @@ function container()
 	var prodFileCount = 0;
 	var orderNum = "";
 
-
-
-
-	//test orders array
-	//use this to batch test some functionality
-	var testOrders = 
-	[
-		"2298609",
-		"2298624",
-		"2298631",
-		"2298643",
-		"2298653",
-		"2298667",
-		"2298668",
-		"2298680",
-		"2298697",
-		"2298739",
-		"2298749"
-	]
 
 
 	//=================================  /Data  =================================//
@@ -71,8 +57,9 @@ function container()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
+	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/"
 
-	var compFiles = includeComponents(devComponents,"",true);
+	var compFiles = includeComponents(devComponents,prodComponents,false);
 
 	for(var x=0,len=compFiles.length;x<len;x++)
 	{
@@ -95,31 +82,6 @@ function container()
 
 
 	/*****************************************************************************/
-	//===============================  Testing  =================================//
-
-	if(testingActive)
-	{
-		// test_so_data(testOrders);
-
-		orderNum = "2296576";
-		valid = splitDataByGarment();
-
-		for(var x=0;x<garmentsNeeded.length;x++)
-		{
-			$.writeln(JSON.stringify(garmentsNeedec[x]));
-		}
-
-		log.h("Finished testing sequence. Valid = " + valid);
-		valid = false;
-	}
-
-	//==============================  /Testing  =================================//
-	/*****************************************************************************/	
-
-
-
-
-	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 	
 	//check to make sure the active document is a proper converted template
@@ -134,6 +96,11 @@ function container()
 	{
 		orderNum = getOrderNumber();
 		// orderNum = "2298833";
+	}
+
+	if(valid)
+	{
+		getPreferences();
 	}
 
 	if(valid)

@@ -66,6 +66,6 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	}
 	
-
+	log.l("End of duplicatePiecesToProdFile function. returning: " + result);
 	return result;
 }

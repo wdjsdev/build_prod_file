@@ -37,7 +37,10 @@ function splitDataByGarment()
 			curSize = getSize(curItem);
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
-			curStyle = getStyleNum(curLine);
+			if(!curStyle)
+			{
+				curStyle = getStyleNum(curLine);
+			}
 			curRoster = curLine.memo.roster;
 
 			if (!curGarment)
@@ -61,22 +64,33 @@ function splitDataByGarment()
 			}
 
 		}
-		else if (curGarment.item && isSeparator(curItem))
+		else if (isSeparator(curItem))
 		{
 			log.l(curItem + " is a separator.");
-			sendCurGarment();
+			if (curGarment && curGarment.code)
+			{
+				log.l("curGarment existed.");
+				sendCurGarment();
+			}
+			else
+			{
+				log.l("Found a separator but curGarment was undefined.");
+			}
 		}
 
 	}
 
-	if(curGarment.code)
+	// if (curGarment.code)
+	// {
+	// 	sendCurGarment();
+	// }
+
+	for(var x=0,len=garmentsNeeded.length;x<len;x++)
 	{
-		sendCurGarment();
+		log.l("garmentsNeeded[" + x + "] = ::" + JSON.stringify(garmentsNeeded[x]));
+		$.sleep(500);
 	}
-
-	$.writeln("pause");
 	return result;
-
 
 
 
@@ -115,7 +129,7 @@ function splitDataByGarment()
 	function isSeparator(str)
 	{
 		str = str.toLowerCase();
-		return (str.indexOf("fillin") >= 1 || str.indexOf("df"))
+		return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1)
 	}
 
 }

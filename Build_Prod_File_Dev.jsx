@@ -37,7 +37,7 @@ function container()
 		swatches = docRef.swatches,
 		API_URL = "https://forms.na2.netsuite.com/app/site/hosting/scriptlet.nl?script=1377&deploy=1&compid=460511&h=b1f122a149a74010eb60&soid=",
 		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js"),
-		userDefinedSavePath = desktopPath;
+		prodFileSaveLocation = desktopPath;
 
 	var curOrderData;
 
@@ -60,21 +60,31 @@ function container()
 	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/"
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
-
-	for(var x=0,len=compFiles.length;x<len;x++)
+	if(compFiles && compFiles.length)
 	{
-		try
+		for(var x=0,len=compFiles.length;x<len;x++)
 		{
-			eval("#include \"" + compFiles[x].fsName + "\"");
-		}
-		catch(e)
-		{
-			errorList.push("Failed to include the component: " + compFiles[x].name);
-			log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e);
-			valid = false;
-			// break;
+			try
+			{
+				eval("#include \"" + compFiles[x].fsName + "\"");
+			}
+			catch(e)
+			{
+				errorList.push("Failed to include the component: " + compFiles[x].name);
+				log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e);
+				valid = false;
+				// break;
+			}
 		}
 	}
+	else
+	{
+		valid = false;
+		errorList.push("Failed to find any of the necessary components for this script to work.");
+		log.e("Failed to include any components. Exiting script.");
+	}
+
+	
 
 	//=============================  /Components  ===============================//
 	/*****************************************************************************/
@@ -85,7 +95,7 @@ function container()
 	//=================================  Procedure  =================================//
 	
 	//check to make sure the active document is a proper converted template
-	if(!isTemplate(docRef))
+	if(valid && !isTemplate(docRef))
 	{
 		valid = false;
 		errorList.push("Sorry, This script only works on converted template mockup files.");
@@ -100,7 +110,7 @@ function container()
 
 	if(valid)
 	{
-		getPreferences();
+		getSaveLocation();
 	}
 
 	if(valid)

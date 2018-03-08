@@ -20,6 +20,8 @@ function getOrderDataFromNetsuite(orderNum)
 {
 	log.h("Beginning execution of getOrderDataFromNetsuite(" + orderNum + ")");
 	var result;
+	var contents;
+	var curTries = 0,MAX_TRIES = 15;
 
 	var scptText =
 		[
@@ -49,12 +51,19 @@ function getOrderDataFromNetsuite(orderNum)
 	var executor = File("/Volumes/Customization/Library/Scripts/Script Resources/get_sales_order_data.app");
 	executor.execute();
 
-	$.sleep(2000);
+	
 
-	//verify the data was correctly saved
-	LOCAL_DATA_FILE.open();
-	var contents = LOCAL_DATA_FILE.read();
-	LOCAL_DATA_FILE.close();
+	do
+	{
+		log.l("Attempting to read and validate order data. this is attempt number " + (curTries + 1));
+		//verify the data was correctly saved
+		LOCAL_DATA_FILE.open();
+		contents = LOCAL_DATA_FILE.read();
+		LOCAL_DATA_FILE.close();
+		curTries++;
+	}
+	while(!validateData() && curTries < MAX_TRIES);
+
 
 	log.l("Local Data File successfully written.");
 
@@ -84,4 +93,23 @@ function getOrderDataFromNetsuite(orderNum)
 
 	log.l("getSalesOrderDataFromNetsuite function returning: " + result);
 	return result;
+
+
+
+
+	function validateData()
+	{
+		try
+		{
+			eval("var contents = " + contents);
+			log.l("data is valid. validateData function returning true.");
+			return true;
+		}
+		catch(e)
+		{
+			$.sleep(1000);
+			log.l("Data INVALID... validateData function returning false");
+			return false;
+		}
+	}
 }

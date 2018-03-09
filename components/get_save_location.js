@@ -19,7 +19,10 @@ function getSaveLocation()
 {
 	log.h("Beginning of getSaveLocation() function.");
 
-	if(docRef.fullName.indexOf("Customization")>-1)
+	var docPath = docRef.fullName.toString();
+	docPath = docPath.substring(0,docPath.lastIndexOf("/") + 1);
+
+	if(docPath.indexOf("Customization")>-1)
 	{
 		////////////////////////
 		////////ATTENTION://////
@@ -31,17 +34,11 @@ function getSaveLocation()
 		////////////////////////
 
 		alert("DON'T WORK ON FILES FROM THE NETWORK");
+		valid = false;
 	}
 	else
 	{
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		set the save lcoation to the
-		//		parent folder of the active
-		//		document
-		//
-		////////////////////////
+		prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
 	}
 
 

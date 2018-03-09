@@ -71,7 +71,7 @@ function container()
 			catch(e)
 			{
 				errorList.push("Failed to include the component: " + compFiles[x].name);
-				log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e);
+				log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e + "::System Error Line: " + e.line);
 				valid = false;
 				// break;
 			}

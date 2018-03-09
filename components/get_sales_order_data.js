@@ -23,35 +23,12 @@ function getOrderDataFromNetsuite(orderNum)
 	var contents;
 	var curTries = 0,MAX_TRIES = 15;
 
-	var scptText =
-		[
-			"do shell script ",
-			"\"curl \\\"" + API_URL,
-			orderNum + "\\\" > \\\"",
-			LOCAL_DATA_FILE.fsName + "\\\"\""
-		];
-
-	var dataString = "";
-	for (var x = 0; x < scptText.length; x++)
+	if (!curlOrderData())
 	{
-		dataString += scptText[x];
+		valid = false;
+		return false;
 	}
 
-	log.l("Creating the get_sales_order_data.scpt file with the following text:");
-	log.l(dataString);
-
-	var scptFile = new File(homeFolderPath + "/Documents/get_sales_order_data.scpt");
-
-	scptFile.open("w");
-	scptFile.write(dataString);
-	scptFile.close();
-
-	log.l("Successfully wrote the get_sales_order_data.scpt file.");
-
-	var executor = File("/Volumes/Customization/Library/Scripts/Script Resources/get_sales_order_data.app");
-	executor.execute();
-
-	
 
 	do
 	{
@@ -64,44 +41,36 @@ function getOrderDataFromNetsuite(orderNum)
 	}
 	while(!validateData() && curTries < MAX_TRIES);
 
-
-	log.l("Local Data File successfully written.");
-
-	if (contents.indexOf("<html>") === -1)
+	if(result)
 	{
-		log.l("Data is not HTML.. So that's good.");
-		eval("var contents = " + contents);
-
-		log.l("Successfully eval'd data.");
-
-		if (contents.order === orderNum && contents.lines.length)
-		{
-			log.l("Data appears valid.")
-			result = contents;
-		}
-		else
-		{
-			log.e("Result of getOrderDataFromNetsuite function (" + contents.order + ") " + " did not match the requested order number (" + orderNum + ")...");
-			errorList.push("Sorry.. Unable to get the correct data for the order number: " + orderNum);
-		}
-	}
-	else
-	{
-		errorList.push("The sales order data returned for this order was invalid.");
-		log.e("Netsuite returned HTML data instead of JSON.");
+		log.l("Local Data File successfully written.");
 	}
 
 	log.l("getSalesOrderDataFromNetsuite function returning: " + result);
 	return result;
 
-
-
-
 	function validateData()
 	{
 		try
 		{
-			eval("var contents = " + contents);
+			if (contents.indexOf("<html>") === -1)
+			{
+				log.l("Data is not HTML.. So that's good.");
+				eval("var contents = " + contents);
+
+				log.l("Successfully eval'd data.");
+
+				if (contents.order === orderNum && contents.lines.length)
+				{
+					log.l("Data appears valid.")
+					result = contents;
+				}
+				else
+				{
+					log.e("Result of getOrderDataFromNetsuite function (" + contents.order + ") " + " did not match the requested order number (" + orderNum + ")...");
+					errorList.push("Sorry.. Unable to get the correct data for the order number: " + orderNum);
+				}
+			}
 			log.l("data is valid. validateData function returning true.");
 			return true;
 		}

@@ -16,6 +16,7 @@
 function createProdFile(curGarment)
 {
 	var result = true;
+	var saveFile,saveFolder;
 	try
 	{
 		log.h("Beginning execution of createProdFile() function.");
@@ -36,8 +37,15 @@ function createProdFile(curGarment)
 		curGarment.doc = app.documents.add();
 		curGarment.name = orderNum + appendage;
 
-		log.l("saving new production file to: " + userDefinedSavePath + "/" + curGarment.name + ".ai");
-		curGarment.doc.saveAs(File(userDefinedSavePath + "/" + curGarment.name + ".ai"));
+		saveFolder = Folder(prodFileSaveLocation);
+		if(!saveFolder.exists)
+		{
+			saveFolder.create();
+		}
+		saveFile = File(saveFolder + "/" + curGarment.name + ".ai");
+
+		log.l("saving new production file to: " + prodFileSaveLocation + "/" + curGarment.name + ".ai");
+		curGarment.doc.saveAs(File(prodFileSaveLocation + "/" + curGarment.name + ".ai"));
 		prodFileCount++;
 	}
 	catch(e)

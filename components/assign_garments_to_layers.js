@@ -37,6 +37,7 @@ function assignGarmentsToLayers()
 		rel[x].msg = UI.static(rel[x].group,curGarment.code + "_" + curGarment.styleNum);
 		rel[x].msg2 = UI.static(rel[x].group,curGarment.age === "A" ? "Adult" : "Youth");
 		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
+		rel[x].dropdown.selection = (x+1);
 	}
 
 	var btnGroup = UI.group(w);

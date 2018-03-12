@@ -110,7 +110,7 @@ function container()
 
 	if(valid)
 	{
-		getSaveLocation();
+		valid = getSaveLocation();
 	}
 
 	if(valid)
@@ -120,7 +120,7 @@ function container()
 
 	if(valid)
 	{
-		splitDataByGarment();
+		valid = splitDataByGarment();
 	}
 
 	if(valid)

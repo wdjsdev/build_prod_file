@@ -11,7 +11,7 @@
 	Arguments
 		none
 	Return value
-		void
+		success boolean
 
 */
 
@@ -19,46 +19,32 @@ function getSaveLocation()
 {
 	log.h("Beginning of getSaveLocation() function.");
 
+	var result = true;
 	var docPath = docRef.fullName.toString();
 	docPath = docPath.substring(0,docPath.lastIndexOf("/") + 1);
 
 	if(docPath.indexOf("Customization")>-1)
 	{
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		prompt the user for the correct
-		//		save location and remind them
-		//		never to work directly from the network
-		//
-		////////////////////////
-
-		alert("DON'T WORK ON FILES FROM THE NETWORK");
-		valid = false;
+		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
+		errorList.push("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
+		prodFileSaveLocation = desktopFolder.selctDlg("Please select a location to save your production file(s)").fullName + "/" + orderNum + "_IHFD";
+		if(!prodFileSaveLocation)
+		{
+			log.e("User cancelled folder select dialog.");
+			errorList.push("Destination folder select dialog was cancelled. Exited script.");
+			result = false;
+		}
+		else
+		{
+			log.l("set prodFileSaveLocation to " + prodFileSaveLocation);
+		}
 	}
 	else
 	{
+		log.l("Setting prodFileSaveLocation to ")
 		prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
 	}
 
-
-	// var prefFile = File(homeFolderPath + "/Documents/build_prod_file_prefs.js");
-
-	// if(!prefFile.exists)
-	// {
-	// 	log.l("prefFile did not exist. prompting user for a default save location.");
-	// 	var userDefinedSaveLocation = desktopFolder.selectDlg("Choose a default save location for your production files.",desktopPath);
-	// 	prefFile.open("w");
-	// 	prefFile.write(userDefinedSaveLocation.fullName);
-	// 	prefFile.close();
-	// 	log.l("user chose: " + userDefinedSaveLocation.fullName);
-	// }
-
-	// prefFile.open();
-	// var defaultPath = prefFile.read();
-	// prefFile.close();
-
-	// userDefinedSavePath = defaultPath;
-	// log.l("Successfully set userDefinedSavePath to " + defaultPath);
 	log.l("End of getSaveLocation function.");
+	return result;
 }

@@ -20,14 +20,13 @@ function getSaveLocation()
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
-	var docPath = docRef.fullName.toString();
-	docPath = docPath.substring(0,docPath.lastIndexOf("/") + 1);
+	var docPath = "/Volumes/Macintosh HD" + docRef.path;
 
 	if(docPath.indexOf("Customization")>-1)
 	{
 		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
 		errorList.push("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
-		prodFileSaveLocation = desktopFolder.selctDlg("Please select a location to save your production file(s)").fullName + "/" + orderNum + "_IHFD";
+		prodFileSaveLocation = desktopFolder.selctDlg("Please select a location to save your production file(s)").path + "/" + orderNum + "_IHFD";
 		if(!prodFileSaveLocation)
 		{
 			log.e("User cancelled folder select dialog.");
@@ -36,13 +35,13 @@ function getSaveLocation()
 		}
 		else
 		{
-			log.l("set prodFileSaveLocation to " + prodFileSaveLocation);
+			log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 		}
 	}
 	else
 	{
-		log.l("Setting prodFileSaveLocation to ")
 		prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
+		log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 	}
 
 	log.l("End of getSaveLocation function.");

@@ -57,7 +57,7 @@ function container()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/"
+	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/components/build_prod_file"
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
 	if(compFiles && compFiles.length)
@@ -130,7 +130,14 @@ function container()
 
 	if(valid)
 	{
-		assignGarmentsToLayers();
+		if(garmentLayers.length > 1)
+		{
+			assignGarmentsToLayers();
+		}
+		else
+		{
+			garmentsNeeded[0].parentLayer = garmentLayers[0].name;
+		}
 	}
 
 	if(valid)

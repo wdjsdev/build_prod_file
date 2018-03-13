@@ -157,11 +157,11 @@ function container()
 	
 
 
-	for(var x=0;x<garmentsNeeded.length;x++)
-	{
-		log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-		$.sleep(500);
-	}
+	// for(var x=0;x<garmentsNeeded.length;x++)
+	// {
+	// 	log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
+	// 	$.sleep(500);
+	// }
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/

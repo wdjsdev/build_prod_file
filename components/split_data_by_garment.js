@@ -31,6 +31,7 @@ function splitDataByGarment()
 		curLine = curOrderData.lines[x];
 		curItem = curLine.item;
 
+		log.l("Processing line " + x + ". curItem = " + curItem)
 		if (garPat.test(curItem))
 		{
 			log.l(curItem + " is a proper garment line.");
@@ -43,17 +44,19 @@ function splitDataByGarment()
 			}
 			curRoster = curLine.memo.roster;
 
-			if (!curGarment)
+			if (!curGarment || !curGarment.garmentCount)
 			{
 				initCurGarment();
 			}
 			else if (curCode !== curGarment.code || curAge !== curGarment.age)
 			{
-				log.l("curCode = " + curCode);
-				log.l("curGarment.code = " + curGarment.code);
-				log.l("curAge = " + curAge);
-				log.l("curGarment.age = " + curGarment.age);
+				// log.l("curCode = " + curCode);
+				// log.l("curGarment.code = " + curGarment.code);
+				// log.l("curAge = " + curAge);
+				// log.l("curGarment.age = " + curGarment.age);
+				log.l("curCode or curAge do not match the current garment.");
 				sendCurGarment();
+				initCurGarment();
 			}
 
 			if (curCode === curGarment.code && curAge === curGarment.age)
@@ -61,23 +64,26 @@ function splitDataByGarment()
 				curGarment.roster[curSize] = {};
 				curGarment.roster[curSize].qty = curLine.quantity;
 				curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
+				curGarment.garmentCount += parseInt(curLine.quantity);
+				log.l("Added " + curLine.quantity + " " + curSize + " players to the roster.")
 			}
 
 		}
 		else if (isSeparator(curItem))
 		{
 			log.l(curItem + " is a separator.");
-			if (curGarment && curGarment.code)
+			if (curGarment && curGarment.code && curGarment.garmentsNeeded)
 			{
 				log.l("curGarment existed.");
 				sendCurGarment();
+				curGarment.garmentCount = 0;
 			}
 			else
 			{
 				log.l("Found a separator but curGarment was undefined.");
 			}
 		}
-
+		log.l("End of loop. curItem : " + curItem + "\n");
 	}
 
 	// if (curGarment.code)
@@ -102,14 +108,16 @@ function splitDataByGarment()
 		curGarment.age = curAge;
 		curGarment.styleNum = curStyle;
 		curGarment.roster = {};
+		curGarment.garmentCount = 0;
 
 	}
 
 	function sendCurGarment()
 	{
-		log.l("Sending curgGarment to garmentsNeeded array and reinitializing.");
+
+		log.l("Sending curgGarment to garmentsNeeded array and reinitializing.::curGarment = " + JSON.stringify(curGarment) + "::::");
 		garmentsNeeded.push(curGarment);
-		initCurGarment();
+		// initCurGarment();
 	}
 
 	function getRosterData(obj)

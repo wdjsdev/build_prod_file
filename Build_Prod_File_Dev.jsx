@@ -99,6 +99,7 @@ function container()
 	{
 		valid = false;
 		errorList.push("Sorry, This script only works on converted template mockup files.");
+		errorList.push("Make sure you have a prepress file open.")
 		log.e("Not a converted template..::Exiting Script.");
 	}
 
@@ -149,10 +150,11 @@ function container()
 	
 
 
-	// for(var x=0;x<garmentsNeeded.length;x++)
-	// {
-	// 	log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-	// }
+	for(var x=0;x<garmentsNeeded.length;x++)
+	{
+		log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
+		$.sleep(250);
+	}
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/

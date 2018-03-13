@@ -15,7 +15,6 @@
 
 function getStyleNum(obj)
 {
-	log.h("Beginning of getStyleNum() function");
 	var result;
 	var opt;
 

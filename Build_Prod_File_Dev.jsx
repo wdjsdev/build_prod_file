@@ -131,9 +131,16 @@ function container()
 
 	if(valid)
 	{
-		if(garmentLayers.length > 1)
+		if(garmentsNeeded.length && garmentLayers.length > 1)
 		{
 			assignGarmentsToLayers();
+		}
+		else if(!garmentsNeeded.length)
+		{
+			errorList.push("Failed to find any garments to process.");
+			log.e("Failed to find any garments to process." + 
+				"::garmentsNeeded.length = " + garmentsNeeded.length + 
+				"::garmentLayers.length = " + garmentLayers.length);
 		}
 		else
 		{
@@ -153,7 +160,7 @@ function container()
 	for(var x=0;x<garmentsNeeded.length;x++)
 	{
 		log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-		$.sleep(250);
+		$.sleep(500);
 	}
 
 	//=================================  /Procedure  =================================//

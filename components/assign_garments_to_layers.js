@@ -54,6 +54,7 @@ function assignGarmentsToLayers()
 			if(rel[x].dropdown.selection.text.indexOf("Skip")=== -1)
 			{
 				garmentsNeeded[rel[x].index].parentLayer = layers[rel[x].dropdown.selection.text];
+				log.l("garmentsNeeded[" + rel[x].index + "].parentLayer = " + layers[rel[x].dropdown.selection.text]);
 			}
 		}
 		w.close();

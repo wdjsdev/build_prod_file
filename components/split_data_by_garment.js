@@ -72,7 +72,7 @@ function splitDataByGarment()
 		else if (isSeparator(curItem))
 		{
 			log.l(curItem + " is a separator.");
-			if (curGarment && curGarment.code && curGarment.garmentsNeeded)
+			if (curGarment && curGarment.code && curGarment.garmentCount)
 			{
 				log.l("curGarment existed.");
 				sendCurGarment();

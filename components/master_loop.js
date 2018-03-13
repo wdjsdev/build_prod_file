@@ -31,7 +31,8 @@ function masterLoop()
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
-		curGarmentLayer = garmentLayers[ml];
+		// curGarmentLayer = garmentLayers[curGarment.parentLayer];
+		curGarmentLayer = curGarment.parentLayer;
 
 		if(result)
 		{
@@ -45,5 +46,7 @@ function masterLoop()
 	}
 
 	log.l("End of masterLoop function. returning: " + result);
+
+
 	return result;
 }

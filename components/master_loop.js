@@ -25,14 +25,15 @@ function masterLoop()
 	for(var ml=0,len=garmentsNeeded.length;ml<len && result;ml++)
 	{
 		curGarment = garmentsNeeded[ml];
+		curGarmentLayer = layers[garmentsNeeded[ml].parentLayer];
 		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
-		if(!garmentsNeeded[ml].parentLayer)
+		if(!curGarmentLayer)
 		{
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
 		// curGarmentLayer = garmentLayers[curGarment.parentLayer];
-		curGarmentLayer = curGarment.parentLayer;
+		// curGarmentLayer = curGarment.parentLayer;
 
 		if(result)
 		{

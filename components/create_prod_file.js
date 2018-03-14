@@ -16,7 +16,6 @@
 function createProdFile(curGarment)
 {
 	var result = true;
-	var saveFileName,saveFolder;
 	try
 	{
 		log.h("Beginning execution of createProdFile() function.");
@@ -38,7 +37,7 @@ function createProdFile(curGarment)
 		curGarment.name = orderNum + appendage;
 
 		saveFolder = Folder(prodFileSaveLocation);
-		saveFileName = curGarment.code + "_" + curGarment.styleNum + ".ai";
+		saveFileName = orderNum + appendage + ".ai";
 		saveFile(curGarment.doc,saveFileName,saveFolder)
 		prodFileCount++;
 	}

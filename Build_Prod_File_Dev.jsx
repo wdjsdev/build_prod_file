@@ -37,7 +37,9 @@ function container()
 		swatches = docRef.swatches,
 		API_URL = "https://forms.na2.netsuite.com/app/site/hosting/scriptlet.nl?script=1377&deploy=1&compid=460511&h=b1f122a149a74010eb60&soid=",
 		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js"),
-		prodFileSaveLocation = desktopPath;
+		prodFileSaveLocation = desktopPath,
+		saveFileName,
+		saveFolder;
 
 	var curOrderData;
 
@@ -144,7 +146,7 @@ function container()
 		}
 		else
 		{
-			garmentsNeeded[0].parentLayer = garmentLayers[0].name;
+			garmentsNeeded[0].parentLayer = garmentLayers[0];
 		}
 	}
 

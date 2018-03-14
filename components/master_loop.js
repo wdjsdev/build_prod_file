@@ -25,15 +25,14 @@ function masterLoop()
 	for(var ml=0,len=garmentsNeeded.length;ml<len && result;ml++)
 	{
 		curGarment = garmentsNeeded[ml];
-		curGarmentLayer = layers[garmentsNeeded[ml].parentLayer];
+		// curGarmentLayer = layers[garmentsNeeded[ml].parentLayer];
+		curGarmentLayer = curGarment.parentLayer;
 		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
 		if(!curGarmentLayer)
 		{
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
-		// curGarmentLayer = garmentLayers[curGarment.parentLayer];
-		// curGarmentLayer = curGarment.parentLayer;
 
 		if(result)
 		{
@@ -43,6 +42,11 @@ function masterLoop()
 		if(result)
 		{
 			result = duplicatePiecesToProdFile(curGarment,curGarmentLayer);
+		}
+
+		if(result)
+		{
+			result = saveFile(curGarment.doc,saveFileName,saveFolder)
 		}
 	}
 

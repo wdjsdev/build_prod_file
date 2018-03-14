@@ -117,6 +117,7 @@ function splitDataByGarment()
 
 		log.l("Sending curgGarment to garmentsNeeded array and reinitializing.::curGarment = " + JSON.stringify(curGarment) + "::::");
 		garmentsNeeded.push(curGarment);
+		curStyle = undefined;
 		// initCurGarment();
 	}
 

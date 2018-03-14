@@ -29,6 +29,7 @@ function getOrderNumber()
 			infoLay = layers[x].layers["Information"];
 			result = infoLay.textFrames["Order Number"].contents;
 			result = result.substring(0,result.indexOf(" "));
+			result = result.replace("#","");
 			log.l("Found the order number text frame. Set result to " + result);
 		}
 		catch(e)
@@ -52,7 +53,7 @@ function getOrderNumber()
 		var pat = /[\d]{7}([-_][a-z]*)?/i;
 		if(input.text.match(pat))
 		{
-			result = input.text;
+			result = input.text.replace("#","");
 			log.l("User submitted dialog. Input field is correctly formatted.");
 			w.close();
 		}

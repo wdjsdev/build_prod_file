@@ -34,16 +34,35 @@ function masterLoop()
 			continue;
 		}
 
+		//create a new production file for the current garment
 		if(result)
 		{
 			result = createProdFile(curGarment);
 		}
 
+		//copy each piece of the necessary sizes to the new production file
 		if(result)
 		{
 			result = duplicatePiecesToProdFile(curGarment,curGarmentLayer);
 		}
 
+		//make artboards
+		(function()
+		{
+			try
+			{
+				log.l("Attempting to include the create_artboards.jsx script.");
+				eval("#include \"" + SETUP_SCRIPTS_PATH + "/Create_Artboards.jsx\"");
+				log.l("Successfully included create_artboards.jsx");
+			}
+			catch(e)
+			{
+				errorList.push("Failed to create the artboards. Sorry.");
+				log.e("Failed to include the create_artboards.jsx script from: " + SETUP_SCRIPTS_PATH + "::system error message = " + e);
+			}
+		})()
+
+		//artwork has been pasted into production file. save changes
 		if(result)
 		{
 			result = saveFile(curGarment.doc,saveFileName,saveFolder)

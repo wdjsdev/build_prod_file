@@ -65,6 +65,7 @@ function splitDataByGarment()
 				curGarment.roster[curSize].qty = curLine.quantity;
 				curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
 				curGarment.garmentCount += parseInt(curLine.quantity);
+				curGarment.roster[curSize].inseam = getInseam(curLine.options);
 				log.l("Added " + curLine.quantity + " " + curSize + " players to the roster.")
 			}
 

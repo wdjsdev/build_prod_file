@@ -16,6 +16,7 @@
 function createProdFile(curGarment)
 {
 	var result = true;
+	
 	try
 	{
 		log.h("Beginning execution of createProdFile() function.");
@@ -35,6 +36,7 @@ function createProdFile(curGarment)
 		log.l("creating a new production file called " + orderNum + appendage)
 		curGarment.doc = app.documents.add();
 		curGarment.name = orderNum + appendage;
+		
 
 		saveFolder = Folder(prodFileSaveLocation);
 		saveFileName = orderNum + appendage + ".ai";

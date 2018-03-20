@@ -19,29 +19,81 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 {
 	log.h("Beginning execution of duplicatePiecesToProdFile() function.");
 	var result = true;
+	var sizeType = "";
+	var curSizeLayer;
+	var wxhPat = /[\d]{2}[iw]?x[\d]{2}[iw]?/i;
+	var firstPrepressLayer,ppSize;
 	docRef.activate();
 	docRef.selection = null;
 
-	var ppLay = getPPLay(srcLayer);
-	ppLay.visible = true;
-	log.l("set ppLay to " + ppLay);
-
-	// var curData = curData.roster;
-	// log.l("set curData to " + JSON.stringify(curData));
-	log.l("curData.roster.length = " + curData.roster.length);
+	//Determine how to handle the sizing format
+	//var = variable inseam, for example 30Ix32W or 36Ix34W
+	//wxy = fixed inseam/waist relationship. sizing is measured in inseam/waist but relationships are not variable
+	//std = standard sizing structure. S M L XL etc
+	try
+	{
+		var ppLay = getPPLay(srcLayer);
+		firstPrepressLayer = ppLay.layers[0];
+		if(firstPrepressLayer.name.indexOf("I")>-1)
+		{
+			log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam.");
+			sizeType = "var"
+		}
+		else if(wxhPat.test(firstPrepressLayer))
+		{
+			log.l(ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height.");
+			sizeType = "wxh"
+		}
+		else
+		{
+			log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing.");
+			sizeType = "std";
+		}
+		ppLay.visible = true;
+		log.l("set ppLay to " + ppLay);
+	}
+	catch(e)
+	{
+		log.e("Failed to determine the prepress layer.");
+		errorList.push("Failed to find a prepress layer for " + curData.code + "_" + curData.styleNum);
+		result = false;
+		return result;
+	}
 
 	for(var curSize in curData.roster)
 	{
 		try
 		{
-			ppLay.layers[curSize].hasSelectedArtwork = true;
-			log.l("selected the artwork on layer: " + curSize);
+			if(sizeType === "var")
+			{
+				ppSize = curSize + "Wx" + curData.roster[curSize].inseam + "I"
+				curSizeLayer = getSizeLayer(curData.roster[curSize].inseam + "I");
+				//loop each item in the curSizeLayer and find pieces
+				//which match the waist and inseam of the current garment
+				//and select each one.
+				var len = curSizeLayer.pageItems.length;
+				var curItem;
+				for(var pp=0;pp<len;pp++)
+				{
+					curItem = curSizeLayer.pageItems[pp];
+					if(curItem.name.indexOf(curSize)>-1)
+					{
+						curItem.selected = true;
+					}
+				}
+			}
+			else
+			{
+				curSizeLayer = getSizeLayer(curSize);
+				curSizeLayer.hasSelectedArtwork = true;
+				log.l("selected the artwork on layer: " + curSize);
+			}
 		}
 		catch(e)
 		{
+			log.e("Failed while selecting artwork for " + curSize + "::system error message: " + e);
+			errorList.push("Failed to select the artwork from the prepress layer for " + curData.code + "_" + curData.styleNum);
 			result = false;
-			errorList.push("Couldn't find a prepress layer called: " + curSize);
-			log.e(curSize + " doesn't exist in the prepress layer.");
 		}
 	} 
 
@@ -68,4 +120,32 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	
 	log.l("End of duplicatePiecesToProdFile function. returning: " + result);
 	return result;
+
+
+	function getSizeLayer(curSize)
+	{
+		var len = ppLay.layers.length;;
+		for(var x=0;x<len;x++)
+		{
+			if(sizeType === "std" && ppLay.layers[x].name === curSize)
+			{
+				log.l("curSize layer = " + ppLay.layers[x]);
+				return ppLay.layers[x];
+			}
+			// else if(sizeType === "var" && ppLay.layers[x].name === curSize + "I")
+			else if(sizeType === "var" && ppLay.layers[x].name === curSize)
+			{
+				log.l("curSize layer = " + ppLay.layers[x]);
+				return ppLay.layers[x];
+			}
+			else if(sizeType === "wxh" && ppLay.layers[x].name.indexOf(curSize)>-1)
+			{
+				log.l("curSize layer = " + ppLay.layers[x]);
+				return ppLay.layers[x];
+			}
+		}
+		log.e("Failed to find a prepress size layer for " + curSize);
+		errorList.push("Failed to find a prepress size layer for " + curSize);
+		return undefined;
+	}
 }

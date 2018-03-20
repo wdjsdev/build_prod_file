@@ -151,18 +151,18 @@ function container()
 
 	if(valid)
 	{
-		if(garmentsNeeded.length && garmentLayers.length > 1)
-		{
-			assignGarmentsToLayers();
-		}
-		else if(!garmentsNeeded.length)
+		if(!garmentsNeeded.length)
 		{
 			errorList.push("Failed to find any garments to process.");
 			log.e("Failed to find any garments to process." + 
 				"::garmentsNeeded.length = " + garmentsNeeded.length + 
 				"::garmentLayers.length = " + garmentLayers.length);
 		}
-		else
+		else if(garmentsNeeded.length > 1 || garmentLayers.length > 1)
+		{
+			assignGarmentsToLayers();
+		}
+		else if(garmentsNeeded.length === 1 && garmentLayers.length === 1)
 		{
 			garmentsNeeded[0].parentLayer = garmentLayers[0];
 		}

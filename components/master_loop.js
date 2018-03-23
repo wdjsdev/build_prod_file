@@ -65,6 +65,19 @@ function masterLoop()
 			})()
 		}
 
+		//search for text frames that could hold names/numbers.
+		//setup roster grouping structure in each necessary piece.
+		if(result)
+		{
+			result = findArtLocs();
+		}
+
+		//input the actual roster data into the roster groups
+		if(result)
+		{
+			result = inputRosterData(curGarment.roster);
+		}
+
 		//artwork has been pasted into production file. save changes
 		if(result)
 		{

@@ -29,7 +29,7 @@ function inputRosterData(roster)
 
 	for (var curSize in roster)
 	{
-		log.l("Beginning roster loop for size: " + curSize);
+		log.l("::Beginning roster loop for size: " + curSize);
 
 		for (var z = pieces.length - 1; z >= 0; z--)
 		{

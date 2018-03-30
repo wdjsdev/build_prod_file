@@ -18,7 +18,7 @@ function splitDataByGarment()
 {
 	log.h("Beginning execution of splitDataByGarment() function");
 	var result = true;
-	var garPat = /[fp][ds][-_](.*[\:])?/i;
+	var garPat = /[fpb][dsma][-_](.*[\:])?/i;
 
 	var curLine, curItem;
 
@@ -66,7 +66,7 @@ function splitDataByGarment()
 				curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
 				curGarment.garmentCount += parseInt(curLine.quantity);
 				curGarment.roster[curSize].inseam = getInseam(curLine.options);
-				log.l("Added " + curLine.quantity + " " + curSize + " players to the roster.")
+				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);
 			}
 
 		}

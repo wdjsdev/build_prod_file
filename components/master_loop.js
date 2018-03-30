@@ -65,24 +65,33 @@ function masterLoop()
 			})()
 		}
 
+
+		////////////////////////
+		////////ATTENTION://////
+		//
+		//		temporarily disabling the below logic because
+		//		it should not be used until the new export
+		//		functionality is complete
+		//
+		////////////////////////
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
-		if(result)
-		{
-			result = findArtLocs();
-		}
+		// if(result)
+		// {
+		// 	result = findArtLocs();
+		// }
 
-		//input the actual roster data into the roster groups
-		if(result)
-		{
-			result = inputRosterData(curGarment.roster);
-		}
+		// //input the actual roster data into the roster groups
+		// if(result)
+		// {
+		// 	result = inputRosterData(curGarment.roster);
+		// }
 
-		//artwork has been pasted into production file. save changes
-		if(result)
-		{
-			result = saveFile(curGarment.doc,saveFileName,saveFolder)
-		}
+		// //artwork has been pasted into production file. save changes
+		// if(result)
+		// {
+		// 	result = saveFile(curGarment.doc,saveFileName,saveFolder)
+		// }
 	}
 
 	log.l("End of masterLoop function. returning: " + result);

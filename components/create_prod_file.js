@@ -47,7 +47,7 @@ function createProdFile(curGarment)
 	{
 		result = false;
 		errorList.push("Failed to create the production file for " + curGarment.code + "_" + curGarment.styleNum);
-		log.e("Failed while creating production file for " + curGarment.code + "_" + curGarment.styleNum + ".::system error message was : " + e);
+		log.e("Failed while creating production file for " + curGarment.code + "_" + curGarment.styleNum + ".::system error message was : " + e + ", on line: " + e.line);
 	}
 	return result;
 }

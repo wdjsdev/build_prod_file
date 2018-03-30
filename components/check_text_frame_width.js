@@ -22,6 +22,8 @@ function checkTextFrameWidth(frame)
 	var doc = app.activeDocument;
 	var result = false;
 	var BUFFER = 2;
+	doc.selection = null;
+	var centerPoint = frame.left + frame.width / 2;
 
 	//check whether the textFrame is already less than the maximum width
 	if(frame.width <= maxPlayerNameWidth)
@@ -30,27 +32,32 @@ function checkTextFrameWidth(frame)
 	}
 	else
 	{
-		var centerPoint = frame.left + frame.width / 2;
+		log.l("Current frame width = " + frame.width);
 		frame.width = maxPlayerNameWidth;
-		doc.selection = null;
-		var tmpLay = doc.layers.add();
-		tmpLay.name = "temp";
-		var tempFrame = frame.duplicate(tmpLay);
+		var tempFrame = frame.duplicate(tempLay);
 		tempFrame.selected = true;
-		app.executeMenuCommand("outline");
-		app.executeMenuCommand("expandStyle");
+		expand();
 		doc.selection = null;
-		tmpLay.hasSelectedArtwork = true;
+		tempLay.hasSelectedArtwork = true;
 		tempFrame = doc.selection[0];
 
 		if (tempFrame.width <= maxPlayerNameWidth + BUFFER)
 		{
-			tempFrame.left = centerPoint - tempFrame.width / 2;
-			// tempFrame = frame;
+			frame = tempFrame;
 			result = true;
 		}
-		tempFrame.remove();
+		// tempFrame.remove();
 	}
+
+	if(result)
+	{
+		frame.left = centerPoint - frame.width / 2;
+		doc.selection = null;
+		frame.selected = true;
+		expand();
+	}
+
+	tempFrame.remove();
 
 	log.l("End of checkTextFrameWidth() function. returning " + result);
 	return result;

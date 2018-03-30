@@ -44,7 +44,7 @@ function findArtLocs()
 	catch(e)
 	{
 		result = false;
-		log.e("Failed while setting up the art locations::system error message = " + e);
+		log.e("Failed while setting up the art locations::system error message = " + e + ", on line: " + e.line);
 		errorList.push("Failed to identify or setup custom applications for roster input. Sorry. =(");
 	}
 

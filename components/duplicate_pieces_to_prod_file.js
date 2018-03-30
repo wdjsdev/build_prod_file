@@ -54,7 +54,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	}
 	catch(e)
 	{
-		log.e("Failed to determine the prepress layer.");
+		log.e("Failed to determine the prepress layer.::system error message = " + e + ", on line: " + e.line);
 		errorList.push("Failed to find a prepress layer for " + curData.code + "_" + curData.styleNum);
 		result = false;
 		return result;
@@ -91,7 +91,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		}
 		catch(e)
 		{
-			log.e("Failed while selecting artwork for " + curSize + "::system error message: " + e);
+			log.e("Failed while selecting artwork for " + curSize + "::system error message: " + e + ", on line: " + e.line);
 			errorList.push("Failed to select the artwork from the prepress layer for " + curData.code + "_" + curData.styleNum);
 			result = false;
 		}
@@ -100,8 +100,8 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	if(result)
 	{
 		//create a temp group to hold all the selected pieces.
-		var tmpLay = layers.add();
-		var tmpGroup = tmpLay.groupItems.add();
+		var tempLay = layers.add();
+		var tmpGroup = tempLay.groupItems.add();
 		for(var x=docRef.selection.length -1;x>=0;x--)
 		{
 			docRef.selection[x].duplicate(tmpGroup);
@@ -109,7 +109,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 		//duplicate the temp group to the production file
 		var tmpGroupCopy = tmpGroup.duplicate(curData.doc);
-		tmpLay.remove();
+		tempLay.remove();
 
 		curData.doc.activate();
 		tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];

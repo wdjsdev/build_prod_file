@@ -38,7 +38,7 @@ function setupRosterGroup(item)
 	}
 	catch(e)
 	{
-		log.e("Failed while setting up roster group for item: " + item.name);
+		log.e("Failed while setting up roster group for item: " + item.name + "::system error message = " + e + ", on line: " + e.line);
 		result = false;
 	}
 

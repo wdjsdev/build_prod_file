@@ -56,6 +56,7 @@ function splitDataByGarment()
 				// log.l("curGarment.age = " + curGarment.age);
 				log.l("curCode or curAge do not match the current garment.");
 				sendCurGarment();
+				curStyle = getStyleNum(curLine);
 				initCurGarment();
 			}
 
@@ -77,6 +78,7 @@ function splitDataByGarment()
 			{
 				log.l("curGarment existed.");
 				sendCurGarment();
+				curStyle = undefined;
 				curGarment.garmentCount = 0;
 			}
 			else
@@ -86,11 +88,6 @@ function splitDataByGarment()
 		}
 		log.l("End of loop. curItem : " + curItem + "\n");
 	}
-
-	// if (curGarment.code)
-	// {
-	// 	sendCurGarment();
-	// }
 
 	for(var x=0,len=garmentsNeeded.length;x<len;x++)
 	{
@@ -118,7 +115,6 @@ function splitDataByGarment()
 
 		log.l("Sending curgGarment to garmentsNeeded array and reinitializing.::curGarment = " + JSON.stringify(curGarment) + "::::");
 		garmentsNeeded.push(curGarment);
-		curStyle = undefined;
 		// initCurGarment();
 	}
 

@@ -24,6 +24,7 @@ function masterLoop()
 
 	for(var ml=0,len=garmentsNeeded.length;ml<len && result;ml++)
 	{
+		curProdFileIndex = ml;
 		curGarment = garmentsNeeded[ml];
 		// curGarmentLayer = layers[garmentsNeeded[ml].parentLayer];
 		curGarmentLayer = curGarment.parentLayer;

@@ -30,7 +30,7 @@ function createProdFile(curGarment)
 
 		if(garmentsNeeded.length > 1)
 		{
-			appendage = "_" + sequenceLetters[prodFileCount];
+			appendage = "_" + sequenceLetters[curProdFileIndex];
 		}
 
 		log.l("creating a new production file called " + orderNum + appendage)
@@ -41,7 +41,6 @@ function createProdFile(curGarment)
 		saveFolder = Folder(prodFileSaveLocation);
 		saveFileName = orderNum + appendage + ".ai";
 		saveFile(curGarment.doc,saveFileName,saveFolder)
-		prodFileCount++;
 	}
 	catch(e)
 	{

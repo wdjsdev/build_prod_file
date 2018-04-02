@@ -59,7 +59,7 @@ function container()
 
 	var garmentsNeeded = [];
 	var garmentLayers = [];
-	var prodFileCount = 0;
+	var curProdFileIndex = 0;
 	var orderNum = "";
 
 	//set the app preferences to inches instead of units

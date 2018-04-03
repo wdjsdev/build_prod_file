@@ -20,9 +20,9 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	log.h("Beginning execution of duplicatePiecesToProdFile() function.");
 	var result = true;
 	var sizeType = "";
-	var curSizeLayer;
+	var curSizeLayer, curItem;
 	var wxhPat = /[\d]{2}[iw]?x[\d]{2}[iw]?/i;
-	var firstPrepressLayer,ppSize;
+	var firstPrepressLayer;
 	docRef.activate();
 	docRef.selection = null;
 
@@ -66,20 +66,21 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		{
 			if(sizeType === "var")
 			{
-				ppSize = curSize + "Wx" + curData.roster[curSize].inseam + "I"
-				curSizeLayer = getSizeLayer(curData.roster[curSize].inseam + "I");
+				curSizeLayer = getSizeLayer(curSize + "I");
 				//loop each item in the curSizeLayer and find pieces
 				//which match the waist and inseam of the current garment
 				//and select each one.
-				var len = curSizeLayer.pageItems.length;
-				var curItem;
-				for(var pp=0;pp<len;pp++)
+				for(var curWaistSize in curData.roster[curSize])
 				{
-					curItem = curSizeLayer.pageItems[pp];
-					if(curItem.name.indexOf(curSize)>-1)
+					for(var pp=0,len = curSizeLayer.groupItems.length;pp<len;pp++)
 					{
-						curItem.selected = true;
+						curItem = curSizeLayer.pageItems[pp];
+						if(curItem.name.indexOf(curWaistSize + "Wx" + curSize + "I")>-1)
+						{
+							curItem.selected = true;
+						}
 					}
+					
 				}
 			}
 			else

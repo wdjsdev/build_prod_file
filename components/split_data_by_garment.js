@@ -20,7 +20,7 @@ function splitDataByGarment()
 	var result = true;
 	var garPat = /[fpb][dsma][-_](.*[\:])?/i;
 
-	var curLine, curItem;
+	var curLine, curItem, curInseam, curWaist;
 
 	var curGarment;
 
@@ -50,10 +50,6 @@ function splitDataByGarment()
 			}
 			else if (curCode !== curGarment.code || curAge !== curGarment.age)
 			{
-				// log.l("curCode = " + curCode);
-				// log.l("curGarment.code = " + curGarment.code);
-				// log.l("curAge = " + curAge);
-				// log.l("curGarment.age = " + curGarment.age);
 				log.l("curCode or curAge do not match the current garment.");
 				sendCurGarment();
 				curStyle = getStyleNum(curLine);
@@ -62,11 +58,24 @@ function splitDataByGarment()
 
 			if (curCode === curGarment.code && curAge === curGarment.age)
 			{
-				curGarment.roster[curSize] = {};
-				curGarment.roster[curSize].qty = curLine.quantity;
-				curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
+				curInseam = getInseam(curLine.options);
+				if(!curInseam)
+				{
+					curGarment.roster[curSize] = {};
+					curGarment.roster[curSize].qty = curLine.quantity;
+					curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
+				}
+				else
+				{
+					curWaist = curSize;
+					curSize = curInseam;
+					if(curGarment.roster && !curGarment.roster[curSize])
+					{
+						curGarment.roster[curSize] = {};
+					}
+					curGarment.roster[curSize][curWaist] = getRosterData(curLine.memo.roster);
+				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
-				curGarment.roster[curSize].inseam = getInseam(curLine.options);
 				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);
 			}
 

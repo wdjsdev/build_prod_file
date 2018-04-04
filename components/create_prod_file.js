@@ -33,14 +33,20 @@ function createProdFile(curGarment)
 			appendage = "_" + sequenceLetters[curProdFileIndex];
 		}
 
-		log.l("creating a new production file called " + orderNum + appendage)
-		curGarment.doc = app.documents.add();
-		curGarment.name = orderNum + appendage;
-		
-
 		saveFolder = Folder(prodFileSaveLocation);
 		saveFileName = orderNum + appendage + ".ai";
-		saveFile(curGarment.doc,saveFileName,saveFolder)
+		if(File(saveFolder.fsName + "/" + saveFileName).exists && !getOverwritePreference(saveFileName,curGarment.code + "_" + curGarment.styleNum))
+		{
+			result = false;
+			log.l(saveFileName + " existed already and user chose not to overwrite.");
+		}
+		else
+		{
+			log.l("creating a new production file called " + orderNum + appendage)
+			curGarment.doc = app.documents.add();
+			curGarment.name = orderNum + appendage;
+			saveFile(curGarment.doc,saveFileName,saveFolder);
+		}
 	}
 	catch(e)
 	{

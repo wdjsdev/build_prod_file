@@ -25,8 +25,8 @@ function saveFile(doc,fileName,dest)
 		{
 			dest.create();
 		}
-		saveFile = File(dest + "/" + fileName);
-		doc.saveAs(saveFile);
+		var destFile = File(dest + "/" + fileName);
+		doc.saveAs(destFile);
 	}
 	catch(e)
 	{

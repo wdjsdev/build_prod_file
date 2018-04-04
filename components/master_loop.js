@@ -38,7 +38,10 @@ function masterLoop()
 		//create a new production file for the current garment
 		if(result)
 		{
-			result = createProdFile(curGarment);
+			if(!createProdFile(curGarment))
+			{
+				continue;
+			}
 		}
 
 		//copy each piece of the necessary sizes to the new production file

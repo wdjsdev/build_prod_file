@@ -32,7 +32,7 @@ function splitDataByGarment()
 		curItem = curLine.item;
 
 		log.l("Processing line " + x + ". curItem = " + curItem)
-		if (garPat.test(curItem))
+		if (garPat.test(curItem) && curItem.toLowerCase().indexOf("sample") === -1)
 		{
 			log.l(curItem + " is a proper garment line.");
 			curSize = getSize(curItem);
@@ -79,6 +79,10 @@ function splitDataByGarment()
 				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);
 			}
 
+		}
+		else if(curItem.toLowerCase().indexOf("sample")>-1)
+		{
+			errorList.push("Sorry. Due to the formatting inconsistencies with FD-SAMPLE sales orders, you're on your own for this sample.");
 		}
 		else if (isSeparator(curItem))
 		{

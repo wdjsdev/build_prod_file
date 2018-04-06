@@ -26,7 +26,6 @@ function masterLoop()
 	{
 		curProdFileIndex = ml;
 		curGarment = garmentsNeeded[ml];
-		// curGarmentLayer = layers[garmentsNeeded[ml].parentLayer];
 		curGarmentLayer = curGarment.parentLayer;
 		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
 		if(!curGarmentLayer)

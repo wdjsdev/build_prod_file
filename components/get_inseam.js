@@ -17,7 +17,7 @@
 function getInseam(opt)
 {
 	log.h("Beginning execution of getInseam() function.");
-	var result;
+	var result,curOpt;
 
 	var len = opt.length;
 	for(var x=0;x<len;x++)

@@ -31,7 +31,7 @@ function inputCurrentPlayer(curSize,pieces,curPlayer,curPlayerIndex)
 	// var MAX_RESIZE_ATTEMPTS = 15;
 	var curFrame, centerPoint;
 	var doc = app.activeDocument;
-	var liveTextGroup,rosterGroup,newPlayerGroup;
+	var liveTextGroup,rosterGroup,newPlayerGroup,curPlayerLabel;
 	var len = pieces.length;
 	
 	for(var z=0;z<len;z++)
@@ -48,10 +48,15 @@ function inputCurrentPlayer(curSize,pieces,curPlayer,curPlayerIndex)
 			// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
 			continue;
 		}
+
+		//determine how to name the newPlayerGroup
+		//basically build a string using player name and number
+		//if possible, otherwise use "(no name)" and/or "(no number)"
+		curPlayerLabel = (curPlayer.name === "" ? "(no name)" : curPlayer.name) + " " + (curPlayer.number === "" ? "(no number)" : curPlayer.number);
 			
 		log.l("Inputting roster info on the " + pieces[z].name);
 		newPlayerGroup = liveTextGroup.duplicate(rosterGroup);
-		newPlayerGroup.name = "Player " + curPlayerIndex;
+		newPlayerGroup.name = curPlayerLabel;
 		for(var t=newPlayerGroup.pageItems.length-1;t>=0;t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];
@@ -64,7 +69,7 @@ function inputCurrentPlayer(curSize,pieces,curPlayer,curPlayerIndex)
 				centerPoint = curFrame.left + curFrame.width/2;
 				curFrame.contents = curPlayer.name;
 				curFrame = expand(curFrame);
-				curFrame.name = "Player " + curPlayerIndex + " Name";
+				curFrame.name = "Name";
 				if(curFrame.width > maxPlayerNameWidth)
 				{
 					curFrame.width = maxPlayerNameWidth;
@@ -75,7 +80,7 @@ function inputCurrentPlayer(curSize,pieces,curPlayer,curPlayerIndex)
 			{
 				curFrame.contents = curPlayer.number;
 				curFrame = expand(curFrame);
-				curFrame.name = "Player " + curPlayerIndex + " Number";
+				curFrame.name = "Number";
 			}
 		}
 		rosterGroup.hidden = true;

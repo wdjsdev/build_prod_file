@@ -9,26 +9,20 @@
 		each player and update the contents to
 		the correct player info.
 	Arguments
-		curSize
-			string representing the current size
 		pieces
 			array of groupItems that match the current size
 		curPlayer
 			object containing player name and number data
-		curPlayerIndex
-			integer representing index of the current player for the current size
 	Return value
 		success boolean
 
 */
 
-function inputCurrentPlayer(curSize,pieces,curPlayer,curPlayerIndex)
+function inputCurrentPlayer(pieces,curPlayer)
 {
 	log.h("Beginning execution of inputCurrentPlayer() function.::player name = " + curPlayer.name + "::player number = " + curPlayer.number);
 	var result = true;
 	var nameProperlyResized = false;
-	// var resizeAttempts = 0;
-	// var MAX_RESIZE_ATTEMPTS = 15;
 	var curFrame, centerPoint;
 	var doc = app.activeDocument;
 	var liveTextGroup,rosterGroup,newPlayerGroup,curPlayerLabel;

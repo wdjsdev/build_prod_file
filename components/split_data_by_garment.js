@@ -72,8 +72,10 @@ function splitDataByGarment()
 					if(curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
+						// curGarment.roster[curSize].players = [];
 					}
-					curGarment.roster[curSize][curWaist] = getRosterData(curLine.memo.roster);
+					curGarment.roster[curSize][curWaist] = {};
+					curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
 				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
 				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);

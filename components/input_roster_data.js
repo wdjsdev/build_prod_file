@@ -33,7 +33,7 @@ function inputRosterData(roster)
 		log.l("::Beginning roster loop for size: " + curSize);
 
 		var variableInseamFormatRegex = /^[\d]{2}$/
-		if(variableInseamFormatRegex.test(curSize))
+		if (variableInseamFormatRegex.test(curSize))
 		{
 			curSize = curSize + "I";
 			variableInseamSizing = true;
@@ -42,15 +42,15 @@ function inputRosterData(roster)
 		//find all the pices associated with the current inseam size
 		for (var z = pieces.length - 1; z >= 0; z--)
 		{
-			if (pieces[z].name.indexOf(curSize) === 0 || pieces[z].name.indexOf(curSize) === pieces[z].name.indexOf("x")+1)
+			if (pieces[z].name.indexOf(curSize) === 0 || pieces[z].name.indexOf(curSize) === pieces[z].name.indexOf("x") + 1)
 			{
 				curSizePieces.push(pieces[z]);
 			}
 		}
-		if(variableInseamSizing)
+		if (variableInseamSizing)
 		{
 			//trim the "I" that was appended to curSize
-			curSize = curSize.substring(0,curSize.length-1);
+			curSize = curSize.substring(0, curSize.length - 1);
 		}
 
 		log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
@@ -58,21 +58,29 @@ function inputRosterData(roster)
 		$.writeln("pause");
 
 		//check whether this is standard sizing or variable inseam sizing
-		if(!roster[curSize].players)
+		if (!roster[curSize].players)
 		{
 			//this is a variable inseam garment
-			for(var curWaist in roster[curSize])
+			for (var curWaist in roster[curSize])
 			{
+				if (roster[curSize][curWaist].qty !== roster[curSize][curWaist].players.length)
+				{
+					rosterInconsistencies.push(curWaist + "Wx" + curSize + "I");
+				}
 				//loop the players for the current combination of waist and inseam
-				for(var cp=0,len=roster[curSize][curWaist].players.length;cp<len;cp++)
+				for (var cp = 0, len = roster[curSize][curWaist].players.length; cp < len; cp++)
 				{
 					curPlayer = roster[curSize][curWaist].players[cp];
-					inputCurrentPlayer(curSizePieces,curPlayer);
+					inputCurrentPlayer(curSizePieces, curPlayer);
 				}
 			}
 		}
 		else
 		{
+			if (roster[curSize].qty !== roster[curSize].players.length)
+			{
+				rosterInconsistencies.push(curSize);
+			}
 			for (var cp = 0, len = roster[curSize].players.length; cp < len; cp++)
 			{
 				curPlayer = roster[curSize].players[cp];
@@ -81,8 +89,13 @@ function inputRosterData(roster)
 			}
 		}
 
-		
+
 		curSizePieces = [];
+	}
+
+	if (rosterInconsistencies.length)
+	{
+		messageList.push("The following sizes had roster inconsistencies. Please double check their accuracy:\n" + rosterInconsistencies.join(", "));
 	}
 
 	tempLay.remove();

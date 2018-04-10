@@ -18,17 +18,17 @@
 
 */
 
-function inputCurrentPlayer(pieces,curPlayer)
+function inputCurrentPlayer(pieces, curPlayer)
 {
 	log.h("Beginning execution of inputCurrentPlayer() function.::player name = " + curPlayer.name + "::player number = " + curPlayer.number);
 	var result = true;
 	var nameProperlyResized = false;
 	var curFrame, centerPoint;
 	var doc = app.activeDocument;
-	var liveTextGroup,rosterGroup,newPlayerGroup,curPlayerLabel;
+	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel;
 	var len = pieces.length;
-	
-	for(var z=0;z<len;z++)
+
+	for (var z = 0; z < len; z++)
 	{
 		try
 		{
@@ -37,7 +37,7 @@ function inputCurrentPlayer(pieces,curPlayer)
 			liveTextGroup.hidden = false;
 			rosterGroup.hidden = false;
 		}
-		catch(e)
+		catch (e)
 		{
 			// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
 			continue;
@@ -47,27 +47,27 @@ function inputCurrentPlayer(pieces,curPlayer)
 		//basically build a string using player name and number
 		//if possible, otherwise use "(no name)" and/or "(no number)"
 		curPlayerLabel = (curPlayer.name === "" ? "(no name)" : curPlayer.name) + " " + (curPlayer.number === "" ? "(no number)" : curPlayer.number);
-			
+
 		log.l("Inputting roster info on the " + pieces[z].name);
 		newPlayerGroup = liveTextGroup.duplicate(rosterGroup);
 		newPlayerGroup.name = curPlayerLabel;
-		for(var t=newPlayerGroup.pageItems.length-1;t>=0;t--)
+		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];
-			if(curFrame.typename !== "TextFrame")
+			if (curFrame.typename !== "TextFrame")
 			{
 				continue;
 			}
-			if(curFrame.name.toLowerCase().indexOf("name")>-1)
+			if (curFrame.name.toLowerCase().indexOf("name") > -1)
 			{
-				centerPoint = curFrame.left + curFrame.width/2;
+				centerPoint = curFrame.left + curFrame.width / 2;
 				curFrame.contents = curPlayer.name;
 				curFrame = expand(curFrame);
 				curFrame.name = "Name";
-				if(curFrame.width > maxPlayerNameWidth)
+				if (curFrame.width > maxPlayerNameWidth)
 				{
 					curFrame.width = maxPlayerNameWidth;
-					curFrame.left = centerPoint - curFrame.width/2;
+					curFrame.left = centerPoint - curFrame.width / 2;
 				}
 			}
 			else

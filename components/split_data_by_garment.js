@@ -38,7 +38,7 @@ function splitDataByGarment()
 			curSize = getSize(curItem);
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
-			if(!curStyle)
+			if (!curStyle)
 			{
 				curStyle = getStyleNum(curLine);
 			}
@@ -59,7 +59,7 @@ function splitDataByGarment()
 			if (curCode === curGarment.code && curAge === curGarment.age)
 			{
 				curInseam = getInseam(curLine.options);
-				if(!curInseam)
+				if (!curInseam)
 				{
 					curGarment.roster[curSize] = {};
 					curGarment.roster[curSize].qty = curLine.quantity;
@@ -69,12 +69,13 @@ function splitDataByGarment()
 				{
 					curWaist = curSize;
 					curSize = curInseam;
-					if(curGarment.roster && !curGarment.roster[curSize])
+					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
 						// curGarment.roster[curSize].players = [];
 					}
 					curGarment.roster[curSize][curWaist] = {};
+					curGarment.roster[curSize][curWaist].qty = curLine.quantity;
 					curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
 				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
@@ -82,7 +83,7 @@ function splitDataByGarment()
 			}
 
 		}
-		else if(curItem.toLowerCase().indexOf("sample")>-1)
+		else if (curItem.toLowerCase().indexOf("sample") > -1)
 		{
 			errorList.push("Sorry. Due to the formatting inconsistencies with FD-SAMPLE sales orders, you're on your own for this sample.");
 		}
@@ -104,7 +105,7 @@ function splitDataByGarment()
 		log.l("End of loop. curItem : " + curItem + "\n");
 	}
 
-	for(var x=0,len=garmentsNeeded.length;x<len;x++)
+	for (var x = 0, len = garmentsNeeded.length; x < len; x++)
 	{
 		log.l("garmentsNeeded[" + x + "] = ::" + JSON.stringify(garmentsNeeded[x]));
 		$.sleep(200);

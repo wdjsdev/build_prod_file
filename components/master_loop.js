@@ -20,33 +20,33 @@ function masterLoop()
 {
 	log.h("Beginning execution of masterLoop() function");
 	var result = true;
-	var curGarment,curGarmentLayer;
+	var curGarment, curGarmentLayer;
 
-	for(var ml=0,len=garmentsNeeded.length;ml<len && result;ml++)
+	for (var ml = 0, len = garmentsNeeded.length; ml < len && result; ml++)
 	{
 		curProdFileIndex = ml;
 		curGarment = garmentsNeeded[ml];
 		curGarmentLayer = curGarment.parentLayer;
 		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
-		if(!curGarmentLayer)
+		if (!curGarmentLayer)
 		{
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
 
 		//create a new production file for the current garment
-		if(result)
+		if (result)
 		{
-			if(!createProdFile(curGarment))
+			if (!createProdFile(curGarment))
 			{
 				continue;
 			}
 		}
 
 		//copy each piece of the necessary sizes to the new production file
-		if(result)
+		if (result)
 		{
-			result = duplicatePiecesToProdFile(curGarment,curGarmentLayer);
+			result = duplicatePiecesToProdFile(curGarment, curGarmentLayer);
 		}
 
 		////////////////////////
@@ -89,22 +89,30 @@ function masterLoop()
 		////////////////////////
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
-		if(result)
-		{
-			result = findArtLocs();
-		}
+		// if(result)
+		// {
+		// 	result = findArtLocs();
+		// }
 
-		//input the actual roster data into the roster groups
+		// //input the actual roster data into the roster groups
+		// if (result)
+		// {
+		// 	result = inputRosterData(curGarment.roster);
+		// }
+
+		//create a color blocks group (this single group will be used for each artboard upon export.)
+		//delete the sew lines and default swatches from swatches panel
 		if(result)
 		{
-			result = inputRosterData(curGarment.roster);
+			result = colorBlocks();
 		}
 
 		//artwork has been pasted into production file. save changes
-		if(result)
+		if (result)
 		{
-			result = saveFile(curGarment.doc,saveFileName,saveFolder)
+			result = saveFile(curGarment.doc, saveFileName, saveFolder)
 		}
+
 	}
 
 	log.l("End of masterLoop function. returning: " + result);

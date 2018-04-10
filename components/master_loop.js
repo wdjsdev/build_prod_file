@@ -102,10 +102,10 @@ function masterLoop()
 
 		//create a color blocks group (this single group will be used for each artboard upon export.)
 		//delete the sew lines and default swatches from swatches panel
-		if(result)
-		{
-			result = colorBlocks();
-		}
+		// if(result)
+		// {
+		// 	result = colorBlocks();
+		// }
 
 		//artwork has been pasted into production file. save changes
 		if (result)

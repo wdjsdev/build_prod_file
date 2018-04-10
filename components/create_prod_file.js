@@ -43,7 +43,9 @@ function createProdFile(curGarment)
 		else
 		{
 			log.l("creating a new production file called " + orderNum + appendage)
-			curGarment.doc = app.documents.add();
+			// curGarment.doc = app.documents.add();
+			var prodFileTemplate = File("/Volumes/Customization/Library/Scripts/Script Resources/Files/prod_file_template.ait");
+			curGarment.doc = app.open(prodFileTemplate);
 			curGarment.name = orderNum + appendage;
 			saveFile(curGarment.doc,saveFileName,saveFolder);
 		}

@@ -499,270 +499,279 @@ function colorBlocks()
 	// 	return true;
 	// }
 
-var Blocks = function()
-{
-	//dimensions of color blocks
-	this.w = 5;
-	this.h = 5;
-
-	this.group = undefined;
-	this.blockLayer = undefined;
-
-	this.makeBlocks = function(colors)
+	var Blocks = function()
 	{
-		this.blockLayer = doc.layers.add();
-		this.blockLayer.name = "Color Blocks";
-		this.group = this.blockLayer.groupItems.add();
-		this.group.name = "Color Block Group";
-		var curBlock;
-		for (var x = 0, len = colors.length; x < len; x++)
-		{
-			curBlock = this.group.pathItems.rectangle(0, 0, this.w, this.h);
-			curBlock.name = colors[x];
-			curBlock.stroked = false;
-			curBlock.filled = true;
-			curBlock.fillColor = swatches[colors[x]].color;
-		}
-		this.blockLayer.zOrder(ZOrderMethod.SENDTOBACK);
-	}
-}
+		//dimensions of color blocks
+		this.w = 5;
+		this.h = 5;
 
-function getTopArtboard()
-{
-	var result = aB[0],
-		abLength = aB.length,
-		tlRect = result.artboardRect,
-		rect;
-	for (var x = 1; x < abLength; x++)
-	{
-		rect = aB[x].artboardRect;
-		if (rect[1] > tlRect[1])
+		this.group = undefined;
+		this.blockLayer = undefined;
+
+		this.makeBlocks = function(colors)
 		{
-			result = aB[x];
+			this.blockLayer = doc.layers.add();
+			this.blockLayer.name = "Color Blocks";
+			this.group = this.blockLayer.groupItems.add();
+			this.group.name = "Color Block Group";
+			var curBlock;
+			for (var x = 0, len = colors.length; x < len; x++)
+			{
+				curBlock = this.group.pathItems.rectangle(0, 0, this.w, this.h);
+				curBlock.name = colors[x];
+				curBlock.stroked = false;
+				curBlock.filled = true;
+				curBlock.fillColor = swatches[colors[x]].color;
+			}
+			this.blockLayer.zOrder(ZOrderMethod.SENDTOBACK);
+		};
+
+		this.centerOnArtboard = function()
+		{
+			var abRect = app.activeDocument.artboards[0].artboardRect;
+			this.group.left = (abRect[0] + (abRect[2] - abRect[0]) / 2) - 2.5;
+			this.group.top = (abRect[1] + (abRect[3] - abRect[1]) / 2) + 2.5;
 		}
 	}
-	return result;
-}
 
-function makeColorStrip()
-{
-	var file = new File("~/Desktop/automation/color_blocks/color_strip.ai");
-	var stripDoc = app.open(file);
-	var stripLayers = stripDoc.layers;
-	var stripAbRect = stripDoc.artboards[0].artboardRect;
-	var dim = [stripAbRect[2] - stripAbRect[0], stripAbRect[1] - stripAbRect[3]];
-	var spacing = 50;
-
-	stripLayers[0].hasSelectedArtwork = true;
-	app.copy();
-	stripDoc.close(SaveOptions.DONOTSAVECHANGES);
-	doc.activate();
-
-	//create a new artboard for the color strip
-	var topAb = getTopArtboard().artboardRect;
-	var newRect = [stripAbRect[0], topAb[1] + dim[1] + spacing, stripAbRect[2], topAb[1] + spacing];
-	var stripAb = aB.add(newRect);
-	stripAb.name = "Control Strip";
-	blockLayer.locked = false;
-	app.executeMenuCommand("pasteInPlace");
-
-	//recolor the swatches
-
-	var inkLen = docInks.length;
-	var stripSwatches = blockLayer.groupItems["Swatches"];
-	var curSwatch;
-	for (var x = 0; x < inkLen; x++)
+	function getTopArtboard()
 	{
-		curSwatch = stripSwatches.pageItems["Swatch " + x];
-		curSwatch.fillColor = swatches[docInks[x]].color;
+		var result = aB[0],
+			abLength = aB.length,
+			tlRect = result.artboardRect,
+			rect;
+		for (var x = 1; x < abLength; x++)
+		{
+			rect = aB[x].artboardRect;
+			if (rect[1] > tlRect[1])
+			{
+				result = aB[x];
+			}
+		}
+		return result;
 	}
 
-	blockLayer.locked = true;
-}
-
-
-////////End//////////
-///Logic Container///
-/////////////////////
-
-/*****************************************************************************/
-
-///////Begin////////
-////Data Storage////
-////////////////////
-
-var library = {
-	defaultSwatches: ['White', 'Black', 'White, Black', 'Orange, Yellow', 'Fading Sky', 'Super Soft Black Vignette', 'Foliage', 'Pompadour'],
-	approvedColors: ['Black B',
-		'White B',
-		'Gray B',
-		'Gray 2 B',
-		'Steel B',
-		'Navy B',
-		'Navy 2 B',
-		'Royal Blue B',
-		'Columbia B',
-		'Teal B',
-		'Dark Green B',
-		'Kelly Green B',
-		'Lime Green B',
-		'Optic Yellow B',
-		'Yellow B',
-		'Athletic Gold B',
-		'Vegas Gold B',
-		'Orange B',
-		'Texas Orange B',
-		'Red B',
-		'Cardinal B',
-		'Maroon B',
-		'Hot Pink B',
-		'Pink B',
-		'Soft Pink B',
-		'Purple B',
-		'Flesh B',
-		'Dark Flesh B',
-		'Brown B',
-		'Cyan B',
-		'FLO ORANGE B',
-		'FLO YELLOW B',
-		'FLO PINK B',
-		'Twitch B',
-		'MINT B',
-		'Magenta B',
-		'Magenta 2 B',
-		'NEON CORAL B',
-		'FLAME B',
-		'BRIGHT PURPLE B',
-		'Dark Charcoal B',
-		'Info B',
-		'Jock Tag B',
-		'Thru-cut',
-		'CUT LINE',
-		'Cutline',
-		'Jrock Charcoal',
-		'Feeney Purple B',
-		'Feeney Orange B',
-		'Feeney Orange Body B',
-		'Tailgater Gold B',
-		'Thru-cut',
-		'Cut Line',
-		'Jock Tag B',
-		'MLBPA Red',
-		'MLBPA Navy',
-		"Sangria B",
-		"Kiwi B",
-		"Hot Coral B",
-		"Cobalt B"
-	],
-	productionColors: ['Thru-cut', 'CUT LINE', 'cut line', 'Info B'],
-	navy: false,
-	navy2: false,
-	gray: false,
-	gray2: false,
-	magenta: false,
-	magenta2: false
-
-}
-
-////////End/////////
-////Data Storage////
-////////////////////
-
-/*****************************************************************************/
-
-///////Begin////////
-///Function Calls///
-////////////////////
-
-var doc = app.activeDocument;
-var layers = doc.layers;
-var swatches = doc.swatches;
-var aB = doc.artboards;
-var overridePassword = "FullDye101";
-var blockLayer;
-var docInks = [];
-var wrongColors = [];
-
-var valid;
-
-valid = removeBlockLayer();
-
-if (valid)
-{
-	valid = exterminateDefault();
-}
-
-
-if (valid)
-{
-	valid = fixFloSwatches();
-}
-
-
-if (valid && checkSew())
-{
-	valid = removeSewLines();
-}
-
-
-if (valid)
-{
-	valid = getDocInks();
-}
-
-
-if (valid)
-{
-	valid = navyGray();
-}
-else if (!valid && wrongColors.length > 0)
-{
-	errorList.push("Your document has the following incorrect colors:\n" + wrongColors.join('\n'));
-
-
-	//check whether the user has previously run the script.
-	//if the file has not been processed, just alert and exit. Give the user a chance to investigate/fix.
-	//if the file has been processed before, proceed.
-
-	if (beenProcessed("check"))
+	function makeColorStrip()
 	{
-		var valid = overrideColors();
-	}
-}
+		var file = new File("~/Desktop/automation/color_blocks/color_strip.ai");
+		var stripDoc = app.open(file);
+		var stripLayers = stripDoc.layers;
+		var stripAbRect = stripDoc.artboards[0].artboardRect;
+		var dim = [stripAbRect[2] - stripAbRect[0], stripAbRect[1] - stripAbRect[3]];
+		var spacing = 50;
 
-if (valid)
-{
-	colorBlockGroup = undefined;
-	colorBlockGroup = new Blocks();
-	colorBlockGroup.makeBlocks(docInks);
-	if (!colorBlockGroup)
+		stripLayers[0].hasSelectedArtwork = true;
+		app.copy();
+		stripDoc.close(SaveOptions.DONOTSAVECHANGES);
+		doc.activate();
+
+		//create a new artboard for the color strip
+		var topAb = getTopArtboard().artboardRect;
+		var newRect = [stripAbRect[0], topAb[1] + dim[1] + spacing, stripAbRect[2], topAb[1] + spacing];
+		var stripAb = aB.add(newRect);
+		stripAb.name = "Control Strip";
+		blockLayer.locked = false;
+		app.executeMenuCommand("pasteInPlace");
+
+		//recolor the swatches
+
+		var inkLen = docInks.length;
+		var stripSwatches = blockLayer.groupItems["Swatches"];
+		var curSwatch;
+		for (var x = 0; x < inkLen; x++)
+		{
+			curSwatch = stripSwatches.pageItems["Swatch " + x];
+			curSwatch.fillColor = swatches[docInks[x]].color;
+		}
+
+		blockLayer.locked = true;
+	}
+
+
+	////////End//////////
+	///Logic Container///
+	/////////////////////
+
+	/*****************************************************************************/
+
+	///////Begin////////
+	////Data Storage////
+	////////////////////
+
+	var library = {
+		defaultSwatches: ['White', 'Black', 'White, Black', 'Orange, Yellow', 'Fading Sky', 'Super Soft Black Vignette', 'Foliage', 'Pompadour'],
+		approvedColors: ['Black B',
+			'White B',
+			'Gray B',
+			'Gray 2 B',
+			'Steel B',
+			'Navy B',
+			'Navy 2 B',
+			'Royal Blue B',
+			'Columbia B',
+			'Teal B',
+			'Dark Green B',
+			'Kelly Green B',
+			'Lime Green B',
+			'Optic Yellow B',
+			'Yellow B',
+			'Athletic Gold B',
+			'Vegas Gold B',
+			'Orange B',
+			'Texas Orange B',
+			'Red B',
+			'Cardinal B',
+			'Maroon B',
+			'Hot Pink B',
+			'Pink B',
+			'Soft Pink B',
+			'Purple B',
+			'Flesh B',
+			'Dark Flesh B',
+			'Brown B',
+			'Cyan B',
+			'FLO ORANGE B',
+			'FLO YELLOW B',
+			'FLO PINK B',
+			'Twitch B',
+			'MINT B',
+			'Magenta B',
+			'Magenta 2 B',
+			'NEON CORAL B',
+			'FLAME B',
+			'BRIGHT PURPLE B',
+			'Dark Charcoal B',
+			'Info B',
+			'Jock Tag B',
+			'Thru-cut',
+			'CUT LINE',
+			'Cutline',
+			'Jrock Charcoal',
+			'Feeney Purple B',
+			'Feeney Orange B',
+			'Feeney Orange Body B',
+			'Tailgater Gold B',
+			'Thru-cut',
+			'Cut Line',
+			'Jock Tag B',
+			'MLBPA Red',
+			'MLBPA Navy',
+			"Sangria B",
+			"Kiwi B",
+			"Hot Coral B",
+			"Cobalt B"
+		],
+		productionColors: ['Thru-cut', 'CUT LINE', 'cut line', 'Info B'],
+		navy: false,
+		navy2: false,
+		gray: false,
+		gray2: false,
+		magenta: false,
+		magenta2: false
+
+	}
+
+	////////End/////////
+	////Data Storage////
+	////////////////////
+
+	/*****************************************************************************/
+
+	///////Begin////////
+	///Function Calls///
+	////////////////////
+
+	var doc = app.activeDocument;
+	var layers = doc.layers;
+	var swatches = doc.swatches;
+	var aB = doc.artboards;
+	var overridePassword = "FullDye101";
+	var blockLayer;
+	var docInks = [];
+	var wrongColors = [];
+
+	var valid;
+
+	valid = removeBlockLayer();
+
+	if (valid)
 	{
-		valid = false;
-		errorList.push("Failed to create the color blocks.");
+		valid = exterminateDefault();
 	}
-}
-
-////////////////////////
-////////ATTENTION://////
-//
-//		the below is disabled until
-//		alan gets back to me about the testing
-//		associated with this functionality
-//		
-//		Color Calibration Chart Creation
-//
-////////////////////////
-// if(valid)
-// {
-// 	makeColorStrip();
-// }
 
 
+	if (valid)
+	{
+		valid = fixFloSwatches();
+	}
 
-////////End/////////
-///Function Calls///
-////////////////////
 
-/*****************************************************************************/
+	if (valid && checkSew())
+	{
+		valid = removeSewLines();
+	}
+
+
+	if (valid)
+	{
+		valid = getDocInks();
+	}
+
+
+	if (valid)
+	{
+		valid = navyGray();
+	}
+	else if (!valid && wrongColors.length > 0)
+	{
+		errorList.push("Your document has the following incorrect colors:\n" + wrongColors.join('\n'));
+
+
+		//check whether the user has previously run the script.
+		//if the file has not been processed, just alert and exit. Give the user a chance to investigate/fix.
+		//if the file has been processed before, proceed.
+
+		if (beenProcessed("check"))
+		{
+			var valid = overrideColors();
+		}
+	}
+
+	if (valid)
+	{
+		colorBlockGroup = undefined;
+		colorBlockGroup = new Blocks();
+		colorBlockGroup.makeBlocks(docInks);
+		if (!colorBlockGroup)
+		{
+			valid = false;
+			errorList.push("Failed to create the color blocks.");
+		}
+	}
+
+	////////////////////////
+	////////ATTENTION://////
+	//
+	//		the below is disabled until
+	//		alan gets back to me about the testing
+	//		associated with this functionality
+	//		
+	//		Color Calibration Chart Creation
+	//
+	////////////////////////
+	// if(valid)
+	// {
+	// 	makeColorStrip();
+	// }
+
+
+
+	////////End/////////
+	///Function Calls///
+	////////////////////
+
+	/*****************************************************************************/
+
+	return valid;
 
 }

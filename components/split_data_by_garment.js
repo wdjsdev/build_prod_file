@@ -143,7 +143,11 @@ function splitDataByGarment()
 			{
 				name: obj[grd].name,
 				number: obj[grd].number
-			})
+			});
+			if(obj[grd].name)
+			{
+				curGarment.hasPlayerNames = true;
+			}
 		}
 		return result;
 	}

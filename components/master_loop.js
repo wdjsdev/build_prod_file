@@ -49,35 +49,6 @@ function masterLoop()
 			result = duplicatePiecesToProdFile(curGarment, curGarmentLayer);
 		}
 
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		disabling this fall to the create_artboards script in favor of
-		//		handling artboard creation one at a time during the export phase.
-		//		we will be simply moving the artboard from piece to piece as we export
-		//		them, so there will only be one artboard in the document.
-		//		this precludes the 'too many artboards in the document' error/limitation.
-		//
-		////////////////////////
-		// if(result)
-		// {
-		// 	//make artboards
-		// 	(function()
-		// 	{
-		// 		try
-		// 		{
-		// 			log.l("Attempting to include the create_artboards.jsx script.");
-		// 			eval("#include \"" + SETUP_SCRIPTS_PATH + "/Create_Artboards.jsx\"");
-		// 			log.l("Successfully included create_artboards.jsx");
-		// 		}
-		// 		catch(e)
-		// 		{
-		// 			errorList.push("Failed to create the artboards. Sorry.");
-		// 			log.e("Failed to include the create_artboards.jsx script from: " + SETUP_SCRIPTS_PATH + "::system error message = " + e);
-		// 		}
-		// 	})()
-		// }
-
 
 		////////////////////////
 		////////ATTENTION://////
@@ -92,6 +63,12 @@ function masterLoop()
 		if(result)
 		{
 			result = findArtLocs();
+		}
+
+		//prompt the user for player name case and max player name width
+		if(result && curGarment.hasPlayerNames)
+		{
+			result = getPlayerNameSettings(curGarment);
 		}
 
 		//input the actual roster data into the roster groups

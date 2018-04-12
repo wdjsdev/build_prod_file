@@ -43,15 +43,9 @@ function container()
 		INCH_TO_POINT_AT_SCALE = 7.2,
 		tempLay,
 		colorBlockGroup,
-
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		maxPlayerNameWidth will need to be dynamically
-		//		set. this is a temporary hard coded value for testing
-		//
-		////////////////////////
-		maxPlayerNameWidth = INCH_TO_POINT_AT_SCALE * 9;
+		playerNamesNeeded,
+		maxPlayerNameWidth,
+		playerNameCase;
 
 	//external components
 	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";

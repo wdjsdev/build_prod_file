@@ -24,33 +24,75 @@ function getPlayerNameSettings(curGarment)
 		var topTxt = UI.static(w,"Please choose the appropriate player name settings for " + curGarment.parentLayer.name);
 		var listGroup = UI.group(w);
 			listGroup.orientation = "column";
+			listGroup.alignChildren = "center";
+
 			var widthGroup = UI.group(listGroup);
-				widthGroup.orientation = "column";
+				widthGroup.orientation = "row";
+				
+				var widthTxt = UI.static(widthGroup,"Max Player Name Width:")
 				var widthDropdown = UI.dropdown(widthGroup,widthOptions);
+				widthDropdown.onChange = function()
+				{
+					if(widthDropdown.selection.text === "Custom")
+					{
+						customInputGroup.visible = true;
+						w.layout.layout("true");
+					}
+					else if(customInputGroup.visible)
+					{
+						customInputGroup.visible = false;
+						widthDropdown.selection = widthDropdown.selection;
+						w.layout.layout("true");
+					}
+				}
+
+				
 				var customInputGroup = UI.group(widthGroup);
 					customInputGroup.orientation = "row";
 					var customTxt = UI.static(customInputGroup, "Max name width in inches: ");
-					var customInput = UI.edit(customInputGroup,"8.5",5);
+					var customInput = UI.edit(customInputGroup,"",5);
 					customInputGroup.visible = false;
-				var widthCustomInput = UI.edit(widthGroup,)
-					widthDropdown.onChange = function()
-					{
-						if(widthDropdown.selection.text === "Custom")
-						{
-							customInputGroup.visible = true;
-							w.layout.layout("true");
-						}
-						else if(customInputGroup.visible)
-						{
-							w.layout.layout("true");
-						}
-					}
+					
 			var caseGroup = UI.group(listGroup);
+				caseGroup.orientation = "row";
+				var caseTxt = UI.static(caseGroup,"Font Case:");
 				var caseDropdown = UI.dropdown(caseGroup,caseOptions);
 
-		// var btnGroup = UI.group(w);
-		// 	var cancel = 
+		var btnGroup = UI.group(w);
+			var cancel = UI.button(btnGroup,"Cancel",function(){result = false;w.close();})
+			var submit = UI.button(btnGroup,"Submit",validate);
 
 	w.show();
+
+	function validate()
+	{
+		var localValid = false;
+		var maxWidth;
+		if(customInputGroup.visible || widthDropdown.selection.text === "Custom")
+		{
+			maxWidth = parseInt(customInput.text);
+			if(maxWidth.toString() !== "NaN")
+			{
+				curGarment.maxWidth = maxWidth;
+				curGarment.fontCase = caseDropdown.selection.text;
+				localValid = true;
+			}
+			else
+			{
+				alert("You must choose a default width from the dropdown or enter an integer for the max width.");
+				return localValid;
+			}
+		}
+		else
+		{
+			curGarment.maxWidth = parseInt(widthDropdown.selection.text);
+			curGarment.fontCase = caseDropdown.selection.text;
+			localValid = true;
+		}
+		if(localValid)
+		{
+			w.close();
+		}
+		return localValid;
+	}
 }
-getPlayerNameSettings({parentLayer : app.activeDocument.layers[0]});

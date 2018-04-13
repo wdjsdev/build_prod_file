@@ -55,7 +55,6 @@ function inputRosterData(roster)
 
 		log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
 
-		$.writeln("pause");
 
 		//check whether this is standard sizing or variable inseam sizing
 		if (!roster[curSize].players)
@@ -95,7 +94,7 @@ function inputRosterData(roster)
 
 	if (rosterInconsistencies.length)
 	{
-		messageList.push("The following sizes had roster inconsistencies. Please double check their accuracy:\n" + rosterInconsistencies.join(", "));
+		messageList.push("The following sizes had a roster/quantity discrepancy. Please double check the accuracy:\n" + rosterInconsistencies.join(", "));
 	}
 
 	tempLay.remove();

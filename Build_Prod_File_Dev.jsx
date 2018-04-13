@@ -43,15 +43,9 @@ function container()
 		INCH_TO_POINT_AT_SCALE = 7.2,
 		tempLay,
 		colorBlockGroup,
-
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		maxPlayerNameWidth will need to be dynamically
-		//		set. this is a temporary hard coded value for testing
-		//
-		////////////////////////
-		maxPlayerNameWidth = INCH_TO_POINT_AT_SCALE * 9;
+		playerNamesNeeded,
+		maxPlayerNameWidth,
+		playerNameCase;
 
 	//external components
 	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";
@@ -62,21 +56,6 @@ function container()
 	var garmentLayers = [];
 	var curProdFileIndex = 0;
 	var orderNum = "";
-
-	//set the app preferences to inches instead of units
-	//so that new files should open in inches rather than points.
-	/*
-		//Unit list 
-		0 : point,
-		1 : pica,
-		2 : inch,
-		3 : mm,
-		4 : cm,
-		5 : H/Q,
-		6 : px,
-	*/
-	var UNITS = 2;
-	app.preferences.setIntegerPreference("rulerType", UNITS);
 
 
 
@@ -138,7 +117,7 @@ function container()
 	if(valid)
 	{
 		orderNum = getOrderNumber();
-		// orderNum = "2298833";
+		// orderNum = "2336912";
 	}
 
 	if(valid)

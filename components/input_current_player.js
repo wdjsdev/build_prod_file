@@ -62,6 +62,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 			{
 				centerPoint = curFrame.left + curFrame.width / 2;
 				curFrame.contents = curPlayer.name;
+				curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 				curFrame = expand(curFrame);
 				curFrame.name = "Name";
 				if (curFrame.width > maxPlayerNameWidth)

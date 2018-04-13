@@ -57,21 +57,6 @@ function container()
 	var curProdFileIndex = 0;
 	var orderNum = "";
 
-	//set the app preferences to inches instead of units
-	//so that new files should open in inches rather than points.
-	/*
-		//Unit list 
-		0 : point,
-		1 : pica,
-		2 : inch,
-		3 : mm,
-		4 : cm,
-		5 : H/Q,
-		6 : px,
-	*/
-	var UNITS = 2;
-	app.preferences.setIntegerPreference("rulerType", UNITS);
-
 
 
 	//=================================  /Data  =================================//
@@ -132,7 +117,7 @@ function container()
 	if(valid)
 	{
 		orderNum = getOrderNumber();
-		// orderNum = "2298833";
+		// orderNum = "2336912";
 	}
 
 	if(valid)

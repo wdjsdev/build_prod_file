@@ -63,19 +63,19 @@ function getPlayerNameSettings(curGarment)
 			var submit = UI.button(btnGroup,"Submit",validate);
 
 	w.show();
+	return result;
 
 	function validate()
 	{
-		var localValid = false;
-		var maxWidth;
+		var maxWidth = parseInt(customInput.text);
+		var nameCase = caseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
 		if(customInputGroup.visible || widthDropdown.selection.text === "Custom")
 		{
-			maxWidth = parseInt(customInput.text);
 			if(maxWidth.toString() !== "NaN")
 			{
-				curGarment.maxWidth = maxWidth;
-				curGarment.fontCase = caseDropdown.selection.text;
-				localValid = true;
+				maxPlayerNameWidth = maxWidth;
+				playerNameCase = nameCase;
+				result = true;
 			}
 			else
 			{
@@ -85,14 +85,14 @@ function getPlayerNameSettings(curGarment)
 		}
 		else
 		{
-			curGarment.maxWidth = parseInt(widthDropdown.selection.text);
-			curGarment.fontCase = caseDropdown.selection.text;
-			localValid = true;
+			maxPlayerNameWidth = parseInt(widthDropdown.selection.text);
+			playerNameCase = nameCase;
+			result = true;
 		}
-		if(localValid)
+		if(result)
 		{
+			maxPlayerNameWidth *= INCH_TO_POINT_AT_SCALE;
 			w.close();
 		}
-		return localValid;
 	}
 }

@@ -77,6 +77,13 @@ function masterLoop()
 			result = inputRosterData(curGarment.roster);
 		}
 
+		//clear out maxPlayerNameWidth and playerNameCase variables so they
+		//don't interfere with the next garment accidentally
+
+		maxPlayerNameWidth = undefined;
+		playerNameCase = undefined;
+
+
 		// create a color blocks group (this single group will be used for each artboard upon export.)
 		// delete the sew lines and default swatches from swatches panel
 		if(result)

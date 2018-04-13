@@ -90,6 +90,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 
 		piece.selected = true;
 		doc.fitArtboardToSelectedArt(0);
+		app.executeMenuCommand("fitall");
 
 		colorBlockGroup.centerOnArtboard();
 

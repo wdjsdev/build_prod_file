@@ -60,42 +60,42 @@ function masterLoop()
 		////////////////////////
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
-		if(result)
-		{
-			result = findArtLocs();
-		}
+		// if(result)
+		// {
+		// 	result = findArtLocs();
+		// }
 
-		//prompt the user for player name case and max player name width
-		if(result && curGarment.hasPlayerNames)
-		{
-			result = getPlayerNameSettings(curGarment);
-		}
+		// //prompt the user for player name case and max player name width
+		// if(result && curGarment.hasPlayerNames)
+		// {
+		// 	result = getPlayerNameSettings(curGarment);
+		// }
 
-		//input the actual roster data into the roster groups
-		if (result)
-		{
-			result = inputRosterData(curGarment.roster);
-		}
+		// //input the actual roster data into the roster groups
+		// if (result)
+		// {
+		// 	result = inputRosterData(curGarment.roster);
+		// }
 
-		//clear out maxPlayerNameWidth and playerNameCase variables so they
-		//don't interfere with the next garment accidentally
+		// //clear out maxPlayerNameWidth and playerNameCase variables so they
+		// //don't interfere with the next garment accidentally
 
-		maxPlayerNameWidth = undefined;
-		playerNameCase = undefined;
+		// maxPlayerNameWidth = undefined;
+		// playerNameCase = undefined;
 
 
-		// create a color blocks group (this single group will be used for each artboard upon export.)
-		// delete the sew lines and default swatches from swatches panel
-		if(result)
-		{
-			result = colorBlocks();
-		}
+		// // create a color blocks group (this single group will be used for each artboard upon export.)
+		// // delete the sew lines and default swatches from swatches panel
+		// if(result)
+		// {
+		// 	result = colorBlocks();
+		// }
 
-		//export the PDFs
-		if(result)
-		{
-			result = exportProdFile(curGarment, curGarment.doc.name, saveFolder);
-		}
+		// //export the PDFs
+		// if(result)
+		// {
+		// 	result = exportProdFile(curGarment, curGarment.doc.name, saveFolder);
+		// }
 
 		//artwork has been pasted into production file. save changes
 		if (result)

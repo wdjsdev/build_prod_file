@@ -65,6 +65,8 @@ function getOrderNumber()
 
 	function cancel()
 	{
+		result = false;
+		log.l("User cancelled order number dialog.");
 		w.close();
 	}
 

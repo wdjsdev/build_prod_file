@@ -61,20 +61,34 @@ function inputCurrentPlayer(pieces, curPlayer)
 			if (curFrame.name.toLowerCase().indexOf("name") > -1)
 			{
 				centerPoint = curFrame.left + curFrame.width / 2;
-				curFrame.contents = curPlayer.name;
-				curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
-				curFrame = expand(curFrame);
-				curFrame.name = "Name";
-				if (curFrame.width > maxPlayerNameWidth)
+				if(curPlayer.name.indexOf("(") === -1)
 				{
-					curFrame.width = maxPlayerNameWidth;
-					curFrame.left = centerPoint - curFrame.width / 2;
+					curFrame.contents = curPlayer.name;
+					curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
+					curFrame = expand(curFrame);
+					if (curFrame.width > maxPlayerNameWidth)
+					{
+						curFrame.width = maxPlayerNameWidth;
+						curFrame.left = centerPoint - curFrame.width / 2;
+					}
 				}
+				else
+				{
+					curFrame.contents = "";
+				}
+				curFrame.name = "Name";
 			}
 			else
 			{
-				curFrame.contents = curPlayer.number;
-				curFrame = expand(curFrame);
+				if(curPlayer.number.indexOf("(")=== -1)
+				{
+					curFrame.contents = curPlayer.number;
+					curFrame = expand(curFrame);
+				}
+				else
+				{
+					curFrame.contents = "";
+				}
 				curFrame.name = "Number";
 			}
 		}

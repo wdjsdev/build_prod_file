@@ -117,6 +117,10 @@ function container()
 	if(valid)
 	{
 		orderNum = getOrderNumber();
+		if(!orderNum || orderNum == "")
+		{
+			valid = false;
+		}
 		// orderNum = "2336912";
 	}
 

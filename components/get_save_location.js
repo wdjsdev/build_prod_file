@@ -20,7 +20,10 @@ function getSaveLocation()
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
+	log.l("docRef = " + docRef);
+	log.l("docRef.path = " + docRef.path);
 	var docPath = "/Volumes/Macintosh HD" + docRef.path;
+	log.l("docPath = " + docPath);
 	var userSelectedPath;
 
 	if(docPath.indexOf("Customization")>-1)

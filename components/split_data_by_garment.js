@@ -32,7 +32,7 @@ function splitDataByGarment()
 		curItem = curLine.item;
 
 		log.l("Processing line " + x + ". curItem = " + curItem)
-		if (garPat.test(curItem) && curItem.toLowerCase().indexOf("sample") === -1)
+		if (garPat.test(curItem) && curItem.toLowerCase().indexOf("sample") === -1 && curItem.toLowerCase().indexOf("fluorescents") === -1)
 		{
 			log.l(curItem + " is a proper garment line.");
 			curSize = getSize(curItem);

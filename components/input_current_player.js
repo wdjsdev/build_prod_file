@@ -43,6 +43,16 @@ function inputCurrentPlayer(pieces, curPlayer)
 			continue;
 		}
 
+		//check whether any of the textFrames in the liveTextGroup are unnamed
+		for(var tf=0,tfLen=liveTextGroup.textFrames.length;tf<tfLen;tf++)
+		{
+			if(!liveTextGroup.textFrames[tf].name)
+			{
+				errorList.push(pieces[z].name + " has unnamed text frames. This could potentially cause unexpected results.");
+				break;
+			}
+		}
+
 		//determine how to name the newPlayerGroup
 		//basically build a string using player name and number
 		//if possible, otherwise use "(no name)" and/or "(no number)"

@@ -92,6 +92,11 @@ function exportProdFile(curGarment, folderName, destFolder)
 		doc.fitArtboardToSelectedArt(0);
 		app.executeMenuCommand("fitall");
 
+		if(!checkThruCut(piece))
+		{
+			errorList.push(piece.name + " is missing a Thru-cut line.");
+		}
+
 		colorBlockGroup.centerOnArtboard();
 
 		if(!rosterGroup)

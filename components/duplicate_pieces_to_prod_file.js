@@ -115,6 +115,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		curData.doc.activate();
 		tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
 		tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+		curData.doc.fitArtboardToSelectedArt(0);
 		ungroupDoc(curData.doc);
 
 	}

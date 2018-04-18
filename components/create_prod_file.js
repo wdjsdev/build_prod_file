@@ -35,7 +35,8 @@ function createProdFile(curGarment)
 
 		saveFolder = Folder(prodFileSaveLocation);
 		saveFileName = orderNum + appendage + ".ai";
-		if(File(saveFolder.fsName + "/" + saveFileName).exists && !getOverwritePreference(saveFileName,curGarment.code + "_" + curGarment.styleNum))
+		var overwriteMsg = "A production file already exists for " + saveFileName;
+		if(File(saveFolder.fsName + "/" + saveFileName).exists && !getOverwritePreference(overwriteMsg))
 		{
 			result = false;
 			log.l(saveFileName + " existed already and user chose not to overwrite.");

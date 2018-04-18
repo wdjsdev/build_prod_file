@@ -25,15 +25,11 @@ function exportProdFile(curGarment, folderName, destFolder)
 {
 	var result = true;
 	var doc = app.activeDocument;
-	var pdfSaveOpts = new PDFSaveOptions();
-	pdfSaveOpts.preserveEditability = false;
-	pdfSaveOpts.viewAfterSaving = false;
-	pdfSaveOpts.compressArt = true;
-	pdfSaveOpts.optimization = true;
 
 	folderName = folderName.replace(".ai","");
 	var pdfFolder = Folder(destFolder.fsName + "/" + folderName + "_PDFs");
-	if (pdfFolder.exists && !getOverwritePreference(folderName, "PDF Folder for " + curGarment.parentLayer.name))
+	var overwriteMsg = "A PDFs folder already exists for " + curGarment.doc.name.replace(".ai","");
+	if (pdfFolder.exists && !getOverwritePreference(overwriteMsg))
 	{
 		result = false;
 		errorList.push("Production File and PDFs were not  exported for " + curGarment.parentLayer.name);
@@ -74,8 +70,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 	function exportPiece(piece)
 	{
 		doc.selection = null;
-		var rosterGroup, liveTextGroup, curRosterChild;
-		var pieceNameWithUnderscores = piece.name.replace("/\s/g","_");
+		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName;
 		try
 		{
 			rosterGroup = piece.groupItems["Roster"];
@@ -101,8 +96,11 @@ function exportProdFile(curGarment, folderName, destFolder)
 
 		if(!rosterGroup)
 		{
-			var pdfFile = new File(pdfFolder + "/" + pieceNameWithUnderscores + ".pdf");
-			doc.saveAs(pdfFile,pdfSaveOpts);
+			// var pdfFileName = pdfFolder + "/" + pieceNameWithUnderscores + ".pdf";
+			pdfFileName = piece.name + ".pdf";
+			pdfFileName = pdfFileName.replace(/\s/g,"_");
+			saveFile(doc,pdfFileName,pdfFolder)
+			// doc.saveAs(pdfFile,pdfSaveOpts);
 		}
 		else
 		{
@@ -119,8 +117,11 @@ function exportProdFile(curGarment, folderName, destFolder)
 			{
 				curRosterChild = rosterGroup.groupItems[x];
 				curRosterChild.hidden = false;
-				pdfFile = new File(pdfFolder + "/" + pieceNameWithUnderscores + "_" + curRosterChild.name + ".pdf");
-				doc.saveAs(pdfFile,pdfSaveOpts);
+				// pdfFile = new File(pdfFolder + "/" + pieceNameWithUnderscores + "_" + curRosterChild.name + ".pdf");
+				// doc.saveAs(pdfFile,pdfSaveOpts);
+				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
+				pdfFileName = pdfFileName.replace(/\s/g,"_");
+				saveFile(doc,pdfFileName,pdfFolder);
 				curRosterChild.hidden = true;;
 			}
 			liveTextGroup.hidden = false;

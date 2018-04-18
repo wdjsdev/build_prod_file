@@ -292,7 +292,7 @@ function colorBlocks()
 		if (undesirable.length > 0)
 		{
 			wrongColors = undesirable;
-			localValid = false;
+			// localValid = false;
 		}
 		if (approvedColors.length == 0)
 		{
@@ -724,17 +724,7 @@ function colorBlocks()
 	}
 	else if (!valid && wrongColors.length > 0)
 	{
-		errorList.push("Your document has the following incorrect colors:\n" + wrongColors.join('\n'));
-
-
-		//check whether the user has previously run the script.
-		//if the file has not been processed, just alert and exit. Give the user a chance to investigate/fix.
-		//if the file has been processed before, proceed.
-
-		if (beenProcessed("check"))
-		{
-			var valid = overrideColors();
-		}
+		errorList.push(app.activeDocument.name + " has the following incorrect colors:\n" + wrongColors.join('\n'));
 	}
 
 	if (valid)

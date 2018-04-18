@@ -25,8 +25,16 @@ function saveFile(doc,fileName,dest)
 		{
 			dest.create();
 		}
+
 		var destFile = File(dest + "/" + fileName);
-		doc.saveAs(destFile);
+		if(fileName.toLowerCase().indexOf("pdf")>-1)
+		{
+			doc.saveAs(destFile,pdfSaveOpts);
+		}
+		else
+		{
+			doc.saveAs(destFile);
+		}
 	}
 	catch(e)
 	{

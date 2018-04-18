@@ -45,7 +45,8 @@ function container()
 		colorBlockGroup,
 		playerNamesNeeded,
 		maxPlayerNameWidth,
-		playerNameCase;
+		playerNameCase,
+		addRosterDataUserPreference;
 
 	//external components
 	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";
@@ -57,6 +58,11 @@ function container()
 	var curProdFileIndex = 0;
 	var orderNum = "";
 
+	var pdfSaveOpts = new PDFSaveOptions();
+	pdfSaveOpts.preserveEditability = false;
+	pdfSaveOpts.viewAfterSaving = false;
+	pdfSaveOpts.compressArt = true;
+	pdfSaveOpts.optimization = true;
 
 
 	//=================================  /Data  =================================//

@@ -182,12 +182,15 @@ function colorBlocks()
 
 		//select same fill color
 		app.executeMenuCommand("Find Fill Color menu item")
+		// app.executeMenuCommand("hide");
 
 		//remove all selected items
 		for (var a = doc.selection.length - 1; a > -1; a--)
 		{
 			doc.selection[a].remove();
 		}
+
+
 
 		item = doc.pathItems.rectangle(100, 100, 100, 100);
 		item.filled = false;
@@ -197,6 +200,7 @@ function colorBlocks()
 
 		//select same stroke color
 		app.executeMenuCommand("Find Stroke Color menu item");
+		// app.executeMenuCommand("hide");
 
 		//remove all selected items
 		for (var a = doc.selection.length - 1; a > -1; a--)
@@ -219,222 +223,165 @@ function colorBlocks()
 
 
 
-	//getDocInks Function Description
-	//generate the document's 'printable' inkList and return an array of swatchNames
+	//below function is deprecated to allow for a more efficient method
+	//of determining used colors.
+	//
+	// //getDocInks Function Description
+	// //generate the document's 'printable' inkList and return an array of swatchNames
+	// function getDocInks()
+	// {
+	// 	var inkList = doc.inkList;
+	// 	var approvedColors = [];
+	// 	var undesirable = [];
+	// 	var localValid = true;
+
+	// 	for (var ink = 0; ink < inkList.length; ink++)
+	// 	{
+	// 		isPrintable(inkList[ink]);
+	// 	}
+
+	// 	//check if current ink is printable
+	// 	function isPrintable(swatch)
+	// 	{
+	// 		if (swatch.inkInfo.printingStatus == InkPrintStatus.ENABLEINK)
+	// 			isApproved(swatch);
+	// 	}
+
+	// 	//check if current printable ink is an approved color
+	// 	//push to correct array accordingly
+	// 	function isApproved(swatch)
+	// 	{
+	// 		var approved = false;
+
+	// 		for (var pc = 0; pc < library.productionColors.length; pc++)
+	// 		{
+	// 			if (swatch.name == library.productionColors[pc])
+	// 			{
+	// 				approved = "prod";
+	// 				break;
+	// 			}
+	// 		}
+
+	// 		if (approved == "prod")
+	// 		{
+	// 			return;
+	// 		}
+
+	// 		for (var ac = 0; ac < library.approvedColors.length; ac++)
+	// 		{
+	// 			if (swatch.name == library.approvedColors[ac])
+	// 			{
+	// 				if (swatch.name == "Navy B")
+	// 					library.navy = true;
+	// 				else if (swatch.name == "Navy 2 B")
+	// 					library.navy2 = true;
+	// 				else if (swatch.name == "Gray B")
+	// 					library.gray = true;
+	// 				else if (swatch.name == "Gray 2 B")
+	// 					library.gray2 = true;
+	// 				else if (swatch.name == "Magenta B")
+	// 					library.magenta = true;
+	// 				else if (swatch.name == "Magenta 2 B")
+	// 					library.magenta2 = true;
+	// 				approvedColors.push(swatch.name);
+	// 				approved = true;
+	// 				break;
+	// 			}
+	// 		}
+
+
+	// 		if (!approved)
+	// 		{
+	// 			undesirable.push(swatch.name);
+	// 		}
+	// 	}
+
+	// 	if (undesirable.length > 0)
+	// 	{
+	// 		wrongColors = undesirable;
+	// 		// localValid = false;
+	// 	}
+	// 	if (approvedColors.length == 0)
+	// 	{
+	// 		errorList.push("Hmm.. There were no colors found in your document...?\nMake sure you have run the 'Add_Artboards.jsx' script first.")
+	// 		localValid = false;
+	// 	}
+	// 	else
+	// 	{
+	// 		docInks = approvedColors;
+	// 	}
+
+	// 	return localValid;
+	// }
+
 	function getDocInks()
 	{
-		var inkList = doc.inkList;
-		var approvedColors = [];
-		var undesirable = [];
-		var localValid = true;
+		var curDocInks = {};
+		var badInks = {};
+		var curPieceName,curArtboardInks;
 
-		for (var ink = 0; ink < inkList.length; ink++)
+		for(var x=0;x<layers[0].groupItems.length;x++)
 		{
-			isPrintable(inkList[ink]);
+			layers[0].groupItems[x].selected = true;
+			curPieceName = layers[0].groupItems[x].name;
+			doc.fitArtboardToSelectedArt(0);
+			doc.selection = null;
+			curArtboardInks = getInks();
+			getUniqueInks(curArtboardInks.approved,curDocInks);
+			getUniqueInks(curArtboardInks.undesirable,badInks);
 		}
 
-		//check if current ink is printable
-		function isPrintable(swatch)
-		{
-			if (swatch.inkInfo.printingStatus == InkPrintStatus.ENABLEINK)
-				isApproved(swatch);
-		}
+		
 
-		//check if current printable ink is an approved color
-		//push to correct array accordingly
-		function isApproved(swatch)
-		{
-			var approved = false;
 
-			for (var pc = 0; pc < library.productionColors.length; pc++)
+		function getInks()
+		{
+			var result = {"approved":[],"undesirable":[]};
+			var inkList = doc.inkList;
+
+			for(var x=0,len=inkList.length;x<len;x++)
 			{
-				if (swatch.name == library.productionColors[pc])
+				if(inkList[x].inkInfo.printingStatus === InkPrintStatus.ENABLEINK)
 				{
-					approved = "prod";
-					break;
+					classifyInk(inkList[x]);
 				}
 			}
 
-			if (approved == "prod")
+			if(result.undesirable.length)
 			{
-				return;
+				errorList.push(curPieceName + " has " + result.undesirable.length + " incorrect colors.");
 			}
 
-			for (var ac = 0; ac < library.approvedColors.length; ac++)
+			return result;
+
+			function classifyInk(ink)
 			{
-				if (swatch.name == library.approvedColors[ac])
-				{
-					if (swatch.name == "Navy B")
-						library.navy = true;
-					else if (swatch.name == "Navy 2 B")
-						library.navy2 = true;
-					else if (swatch.name == "Gray B")
-						library.gray = true;
-					else if (swatch.name == "Gray 2 B")
-						library.gray2 = true;
-					else if (swatch.name == "Magenta B")
-						library.magenta = true;
-					else if (swatch.name == "Magenta 2 B")
-						library.magenta2 = true;
-					approvedColors.push(swatch.name);
-					approved = true;
-					break;
-				}
-			}
-
-
-			if (!approved)
-			{
-				undesirable.push(swatch.name);
-			}
-		}
-
-		if (undesirable.length > 0)
-		{
-			wrongColors = undesirable;
-			// localValid = false;
-		}
-		if (approvedColors.length == 0)
-		{
-			errorList.push("Hmm.. There were no colors found in your document...?\nMake sure you have run the 'Add_Artboards.jsx' script first.")
-			localValid = false;
-		}
-		else
-		{
-			docInks = approvedColors;
-		}
-
-		return localValid;
-	}
-
-
-
-	//overrideBadColors Function Description
-	//if non-boombah colors exist in the document,
-	//open a password prompt to override and continue script
-	function overrideColors()
-	{
-		var correctPassword = false;
-		var msg = "You still have some non-boombah colors in your document. If they can't be removed and you've verified the art is correct, click \"Override\" and have a manager input the password.";
-
-		//New Dialog Window
-		var w = new Window("dialog", "Enter password to override:");
-
-
-		//Dialog Contents
-		// var txtTop = w.add("statictext {text:" + msg + ",characters:" + msg.length + ",justify:\"center\"}", [0,0,250,150], msg, {multiline:true});
-		var txtTop = w.add("statictext", [0, 0, 250, 150], msg,
-		{
-			multiline: true
-		});
-
-		var closeGroup = w.add("group");
-		var closeBtn = closeGroup.add("button", undefined, "Nevermind, Let me check the art again..");
-
-		closeBtn.onClick = function()
-		{
-			w.close();
-		}
-
-		var overrideButton = closeGroup.add("button", undefined, "Override");
-
-		overrideButton.onClick = function()
-		{
-			var pw = false;
-			while (!pw)
-			{
-				var userInput = pwDialog();
-				if (userInput == "Cancelled")
+				if(library.productionColors.indexOf(ink.name)>-1)
 				{
 					return;
 				}
-				else if (userInput)
+				else if(library.approvedColors.indexOf(ink.name)>-1)
 				{
-					correctPassword = true;
-					pw = true;
-					w.close();
+					result.approved.push(ink.name);
 				}
-				else if (userInput == "Cancelled")
-				{
-					break;
-				}
-			}
-			return pw;
-		}
-
-		function pwDialog()
-		{
-			var localValid = false;
-			var pw = new Window("dialog", "Enter Password");
-			var setWidth = pw.add("statictext", [0, 0, 150, 50], "Enter Override Password");
-			var inputBox = pw.add("edittext", undefined, "",
-			{
-				noecho: true
-			});
-			inputBox.characters = 10;
-			inputBox.active = true;
-
-			inputBox.addEventListener("keydown", function(ev)
-			{
-				if (ev.keyName == "Enter")
-					submitForm();
-			})
-
-			function submitForm()
-			{
-				var userInput = inputBox.text;
-				if (userInput == overridePassword)
-				{
-					localValid = true;
-					pw.close();
-					return;
-				}
-
 				else
 				{
-					alert("Invalid Password");
-					localValid = false;
+					result.undesirable.push(ink.name);
+					hasWrongColors = true;
 				}
 			}
+		}
 
-			var submit = pw.add("button", undefined, "Submit");
-			submit.onClick = submitForm;
-			var close = pw.add("button", undefined, "Cancel");
-			close.onClick = function()
+		function getUniqueInks(inks,obj)
+		{
+			for(var x=0,len = inks.length;x<len;x++)
 			{
-				pw.close();
-				localValid = "Cancelled";
-				correctPassword = false;
+				if(!obj[inks[x]])
+				{
+					obj[inks[x]] = 1;
+				}
 			}
-			pw.show();
-			return localValid;
 		}
-
-
-		w.show();
-
-		return correctPassword;
-	}
-
-
-
-	//beenProcessed Function Description
-	//Check to see whether the user has had a chance to fix the art before allowing them to enter override password
-	function beenProcessed(arg)
-	{
-		var localValid = false;
-		try
-		{
-			var markerLayer = layers[0].layers["processed"]
-			localValid = true;
-		}
-		catch (e)
-		{
-			var markerLayer = layers[0].layers.add();
-			markerLayer.name = "processed";
-			markerLayer.zOrder(ZOrderMethod.SENDTOBACK);
-		}
-		return localValid;
 	}
 
 
@@ -462,6 +409,11 @@ function colorBlocks()
 		}
 		return localValid;
 	}
+
+
+
+	//hasWrongColors function description
+	//check whether any col
 
 
 
@@ -687,8 +639,9 @@ function colorBlocks()
 	var aB = doc.artboards;
 	var overridePassword = "FullDye101";
 	var blockLayer;
-	var docInks = [];
-	var wrongColors = [];
+	var docInks;
+	var wrongColors;
+	var hasWrongColors = false;
 
 	var valid;
 
@@ -722,17 +675,27 @@ function colorBlocks()
 	{
 		valid = navyGray();
 	}
-	else if (!valid && wrongColors.length > 0)
+	
+	if(hasWrongColors)
 	{
-		errorList.push(app.activeDocument.name + " has the following incorrect colors:\n" + wrongColors.join('\n'));
+		valid = false;
+		errorList.push(doc.name + " has the following incorrect colors:\n");
+		for(var prop in wrongColors)
+		{
+			errorList.push(prop);
+		}
 	}
 
 	if (valid)
 	{
 		colorBlockGroup = undefined;
 		colorBlockGroup = new Blocks();
-		colorBlockGroup.makeBlocks(docInks);
-		if (!colorBlockGroup)
+		if (colorBlockGroup)
+		{
+			colorBlockGroup.makeBlocks(docInks); 
+			colorBlockGroup.centerOnArtboard();	
+		}
+		else
 		{
 			valid = false;
 			errorList.push("Failed to create the color blocks.");

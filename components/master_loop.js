@@ -88,15 +88,15 @@ function masterLoop()
 		playerNameCase = undefined;
 
 
-		// create a color blocks group (this single group will be used for each artboard upon export.)
-		// delete the sew lines and default swatches from swatches panel
-		if(result)
-		{
-			if(!colorBlocks())
-			{
-				continue;
-			}
-		}
+		// // create a color blocks group (this single group will be used for each artboard upon export.)
+		// // delete the sew lines and default swatches from swatches panel
+		// if(result)
+		// {
+		// 	if(!colorBlocks())
+		// 	{
+		// 		continue;
+		// 	}
+		// }
 
 		//export the PDFs
 		if(result)

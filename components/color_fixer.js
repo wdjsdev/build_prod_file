@@ -24,6 +24,7 @@ function colorFixer()
 
 	exterminateDefault();
 	fixFloSwatches();
+	moveSewLines();
 
 
 	//exterminateDefault Function Description
@@ -233,6 +234,18 @@ function colorFixer()
 				}
 			}
 		}
+	}
+
+
+	//moveSewLines function description
+	//Move any instance of a sew line fill/stroke
+	//to a separate layer, then hide the layer.
+	//this may be necessary for the artist to retroactively
+	//check whether some artwork is too close to a sew line
+	function moveSewlines()
+	{
+		doc.selection = null;
+		
 	}
 }
 colorFixer();

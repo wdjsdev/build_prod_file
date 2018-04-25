@@ -1,5 +1,6 @@
 function colorBlocks()
 {
+	
 
 	/*****************************************************************************/
 
@@ -320,16 +321,29 @@ function colorBlocks()
 		var badInks = {};
 		var curPieceName,curArtboardInks;
 
-		for(var x=0;x<layers[0].groupItems.length;x++)
+		// for(var x=0;x<layers[0].groupItems.length;x++)
+		// {
+		// 	layers[0].groupItems[x].selected = true;
+		// 	curPieceName = layers[0].groupItems[x].name;
+		// 	doc.fitArtboardToSelectedArt(0);
+		// 	doc.selection = null;
+		// 	curArtboardInks = getInks();
+		// 	getUniqueInks(curArtboardInks.approved,curDocInks);
+		// 	getUniqueInks(curArtboardInks.undesirable,badInks);
+		// }
+		
+		curArtboardInks = getInks();
+		getUniqueInks(curArtboardInks.approved,curDocInks);
+		getUniqueInks(curArtboardInks.undesirable,badInks);
+
+		//check for the existence of any badInks
+		if(curArtboardInks.undesirable.length)
 		{
-			layers[0].groupItems[x].selected = true;
-			curPieceName = layers[0].groupItems[x].name;
-			doc.fitArtboardToSelectedArt(0);
-			doc.selection = null;
-			curArtboardInks = getInks();
-			getUniqueInks(curArtboardInks.approved,curDocInks);
-			getUniqueInks(curArtboardInks.undesirable,badInks);
+			hasWrongColors = true;
 		}
+
+		docInks = curDocInks;
+
 
 		
 
@@ -467,13 +481,22 @@ function colorBlocks()
 			this.group = this.blockLayer.groupItems.add();
 			this.group.name = "Color Block Group";
 			var curBlock;
-			for (var x = 0, len = colors.length; x < len; x++)
+			// for (var x = 0, len = colors.length; x < len; x++)
+			// {
+			// 	curBlock = this.group.pathItems.rectangle(0, 0, this.w, this.h);
+			// 	curBlock.name = colors[x];
+			// 	curBlock.stroked = false;
+			// 	curBlock.filled = true;
+			// 	curBlock.fillColor = swatches[colors[x]].color;
+			// }
+
+			for(var prop in colors)
 			{
 				curBlock = this.group.pathItems.rectangle(0, 0, this.w, this.h);
-				curBlock.name = colors[x];
+				curBlock.name = prop;
 				curBlock.stroked = false;
 				curBlock.filled = true;
-				curBlock.fillColor = swatches[colors[x]].color;
+				curBlock.fillColor = swatches[prop].color;
 			}
 			this.blockLayer.zOrder(ZOrderMethod.SENDTOBACK);
 		};
@@ -643,7 +666,7 @@ function colorBlocks()
 	var wrongColors;
 	var hasWrongColors = false;
 
-	var valid;
+	var valid = true;
 
 	valid = removeBlockLayer();
 
@@ -667,7 +690,8 @@ function colorBlocks()
 
 	if (valid)
 	{
-		valid = getDocInks();
+		// valid = getDocInks();
+		getDocInks();
 	}
 
 
@@ -678,6 +702,7 @@ function colorBlocks()
 	
 	if(hasWrongColors)
 	{
+		alert("hasWrongColors = true");
 		valid = false;
 		errorList.push(doc.name + " has the following incorrect colors:\n");
 		for(var prop in wrongColors)
@@ -689,7 +714,9 @@ function colorBlocks()
 	if (valid)
 	{
 		colorBlockGroup = undefined;
+		alert("colorBlockGroup is undefined.");
 		colorBlockGroup = new Blocks();
+		alert("created a colorBlockGroup")
 		if (colorBlockGroup)
 		{
 			colorBlockGroup.makeBlocks(docInks); 
@@ -717,6 +744,8 @@ function colorBlocks()
 	// 	makeColorStrip();
 	// }
 
+	alert("end of color blocks function. returning " + valid);
+	return valid;
 
 
 	////////End/////////
@@ -724,7 +753,5 @@ function colorBlocks()
 	////////////////////
 
 	/*****************************************************************************/
-
-	return valid;
 
 }

@@ -56,10 +56,17 @@ function exportProdFile(curGarment, folderName, destFolder)
 	if(result)
 	{
 		unlockDoc(doc);
-		var groups = doc.layers[0].groupItems;
-		for(var x=0,len=groups.length;x<len;x++)
+		if(colorBlocks())
 		{
-			exportPiece(groups[x]);
+			var groups = doc.layers[0].groupItems;
+			for(var x=0,len=groups.length;x<len;x++)
+			{
+				exportPiece(groups[x]);
+			}
+		}
+		else
+		{
+			result = false;
 		}
 	}
 

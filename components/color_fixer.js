@@ -23,6 +23,7 @@ function colorFixer()
 
 
 	exterminateDefault();
+	fixFloSwatches();
 
 
 	//exterminateDefault Function Description
@@ -160,7 +161,6 @@ function colorFixer()
 				"Gold Dust",
 				"Blue Sky"
 			];
-
 		var defaultSwatchGroups = ["Grays", "Brights", "Cold"];
 		var curSwatch;
 
@@ -184,6 +184,55 @@ function colorFixer()
 			}
 		}
 
+	}
+
+	//fixFloSwatch Function Description
+	//Ensure capitalized names of flo swatches
+	//Fix naming convention for cut line, sew line and thru-cut
+	function fixFloSwatches()
+	{
+		var floLibrary = {
+			"Bright Purple B": "BRIGHT PURPLE B",
+			"Flo Yellow B": "FLO YELLOW B",
+			"Flame B": "FLAME B",
+			"Flo Blue B": "FLO BLUE B",
+			"Flo Orange B": "FLO ORANGE B",
+			"Flo Pink B": "FLO PINK B",
+			"Mint B": "MINT B",
+			"Neon Coral B": "NEON CORAL B",
+			"cutline": "CUT LINE",
+			"cut line": "CUT LINE",
+			"Cut Line": "CUT LINE",
+			"CutLine": "CUT LINE",
+			"CUTLINE": "CUT LINE",
+			"CUTline": "CUT LINE",
+			"sewline": "SEW LINE",
+			"sew line": "SEW LINE",
+			"SewLine": "SEW LINE",
+			"Sew Line": "SEW LINE",
+			"Sew Lines": "SEW LINE",
+			"ZUND CUT": "Thru-cut",
+			"ZUNDCUT": "Thru-cut"
+		}
+
+		for (var fs = 0; fs < swatches.length; fs++)
+		{
+			var thisSwatch = swatches[fs];
+			if (floLibrary[thisSwatch.name])
+			{
+				try
+				{
+					thisSwatch.name = floLibrary[thisSwatch.name];
+				}
+				catch (e)
+				{
+					errorList.push("System: " + e);
+					errorList.push("Failed while renaming swatch: " + thisSwatch.name +
+						".\nEither there was an MRAP error or there are multiple instances of the same swatch.\
+									\ni.e. CUTLINE and CUT LINE both exist in the swatches panel.");
+				}
+			}
+		}
 	}
 }
 colorFixer();

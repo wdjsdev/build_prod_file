@@ -43,6 +43,7 @@ function container()
 		INCH_TO_POINT_AT_SCALE = 7.2,
 		tempLay,
 		artworkLayer,
+		sewLinesLayer,
 		colorBlockGroup,
 		playerNamesNeeded,
 		maxPlayerNameWidth,

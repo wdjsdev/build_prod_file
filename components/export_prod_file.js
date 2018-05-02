@@ -56,6 +56,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 	if(result)
 	{
 		unlockDoc(doc);
+		sewLinesLayer.visible = false;
 
 		// var groups = doc.layers[0].groupItems;
 		var groups = artworkLayer.groupItems;

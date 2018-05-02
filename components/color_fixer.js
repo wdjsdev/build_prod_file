@@ -160,7 +160,6 @@ function colorFixer()
 
 		function moveSewLines(arr)
 		{
-			var sewLinesLayer;
 			try
 			{
 				sewLinesLayer = layers["Sew Lines"];
@@ -175,7 +174,6 @@ function colorFixer()
 			{
 				arr[x].moveToBeginning(sewLinesLayer);
 			}
-			sewLinesLayer.visible = false;
 			
 		}
 

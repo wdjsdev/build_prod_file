@@ -17,15 +17,25 @@
 
 function colorFixer()
 {
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
+	var result = true;
 	var doc = app.activeDocument;
 	var swatches = doc.swatches;
 	var layers = doc.layers;
 
+	try
+	{
+		exterminateDefault();
+		fixFloSwatches();
+		handleSewLines();
+	}
+	catch(e)
+	{
+		result = false;
+		errorList.push("Failed while fixing colors and hiding sew lines.");
+		log.e("Failed while fixing colors and hiding sew lines.::System error = " + e + "::error line = " + e.line);
+	}
 
-	exterminateDefault();
-	fixFloSwatches();
-	handleSewLines();
+	return result;
 
 
 	//exterminateDefault Function Description
@@ -119,6 +129,7 @@ function colorFixer()
 		var sewSwatch;
 		var sewLinesArray = [];
 		doc.selection = null;
+		app.redraw();
 		var sewLineColorValues = {
 			cyan: 0,
 			magenta: 100,
@@ -143,8 +154,8 @@ function colorFixer()
 		app.executeMenuCommand("Find Stroke Color menu item");
 		tempSew.remove();
 		pushSewLines(doc.selection);
-		// moveSewLines([filledSewLines,strokedSewLines]);
 		moveSewLines(sewLinesArray);
+		doc.selection = null;
 
 
 		function moveSewLines(arr)
@@ -159,7 +170,8 @@ function colorFixer()
 				sewLinesLayer = layers.add();
 				sewLinesLayer.name = "Sew Lines";
 			}
-			for(var x=arr.length-1;x>=0;x--)
+			// for(var x=arr.length-1;x>=0;x--)
+			for(var x=0,len=arr.length;x<len;x++)
 			{
 				arr[x].moveToBeginning(sewLinesLayer);
 			}
@@ -178,4 +190,3 @@ function colorFixer()
 
 	}
 }
-colorFixer();

@@ -56,17 +56,12 @@ function exportProdFile(curGarment, folderName, destFolder)
 	if(result)
 	{
 		unlockDoc(doc);
-		if(colorBlocks())
+
+		// var groups = doc.layers[0].groupItems;
+		var groups = artworkLayer.groupItems;
+		for(var x=0,len=groups.length;x<len;x++)
 		{
-			var groups = doc.layers[0].groupItems;
-			for(var x=0,len=groups.length;x<len;x++)
-			{
-				exportPiece(groups[x]);
-			}
-		}
-		else
-		{
-			result = false;
+			exportPiece(groups[x]);
 		}
 	}
 
@@ -94,12 +89,12 @@ function exportProdFile(curGarment, folderName, destFolder)
 		doc.fitArtboardToSelectedArt(0);
 		app.executeMenuCommand("fitall");
 
+		colorBlocks();
+
 		if(!checkThruCut(piece))
 		{
 			errorList.push(piece.name + " is missing a Thru-cut line.");
 		}
-
-		colorBlockGroup.centerOnArtboard();
 
 		if(!rosterGroup)
 		{

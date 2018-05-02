@@ -42,6 +42,7 @@ function container()
 		saveFolder,
 		INCH_TO_POINT_AT_SCALE = 7.2,
 		tempLay,
+		artworkLayer,
 		colorBlockGroup,
 		playerNamesNeeded,
 		maxPlayerNameWidth,

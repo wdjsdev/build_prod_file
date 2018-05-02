@@ -48,6 +48,8 @@ function createProdFile(curGarment)
 			var prodFileTemplate = File("/Volumes/Customization/Library/Scripts/Script Resources/Files/prod_file_template.ait");
 			curGarment.doc = app.open(prodFileTemplate);
 			curGarment.name = orderNum + appendage;
+			artworkLayer = app.activeDocument.layers[0];
+			artworkLayer.name = "Artwork";
 			saveFile(curGarment.doc,saveFileName,saveFolder);
 		}
 	}

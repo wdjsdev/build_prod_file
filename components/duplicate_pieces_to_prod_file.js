@@ -86,7 +86,8 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 			else
 			{
 				curSizeLayer = getSizeLayer(curSize);
-				curSizeLayer.hasSelectedArtwork = true;
+				// curSizeLayer.hasSelectedArtwork = true;
+				selectArtworkFromSizeLayer(curSizeLayer);
 				log.l("selected the artwork on layer: " + curSize);
 			}
 		}
@@ -105,7 +106,8 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		var tmpGroup = tempLay.groupItems.add();
 		for(var x=docRef.selection.length -1;x>=0;x--)
 		{
-			docRef.selection[x].duplicate(tmpGroup);
+			if(docRef.selection[x].typename === "GroupItem")
+				docRef.selection[x].duplicate(tmpGroup);
 		}
 
 		//duplicate the temp group to the production file
@@ -149,5 +151,13 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		log.e("Failed to find a prepress size layer for " + curSize);
 		errorList.push("Failed to find a prepress size layer for " + curSize);
 		return undefined;
+	}
+
+	function selectArtworkFromSizeLayer(layer)
+	{
+		for(var x=0,len=layer.groupItems.length;x<len;x++)
+		{
+			layer.groupItems[x].selected = true;
+		}
 	}
 }

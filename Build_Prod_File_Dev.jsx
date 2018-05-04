@@ -194,6 +194,11 @@ function container()
 		sendErrors(errorList);
 	}
 
+	if(messageList.length)
+	{
+		sendScriptMessages(messageList);
+	}
+
 	printLog();
 
 	return valid;

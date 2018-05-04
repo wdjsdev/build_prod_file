@@ -23,6 +23,7 @@ function inputRosterData(roster)
 	var rosterInconsistencies = [];
 	var curSizePieces = [];
 	var variableInseamSizing = false;
+	var curQty,playerLen;
 
 	tempLay = doc.layers.add();
 	tempLay.name = "temp";
@@ -62,9 +63,18 @@ function inputRosterData(roster)
 			//this is a variable inseam garment
 			for (var curWaist in roster[curSize])
 			{
-				if (roster[curSize][curWaist].qty !== roster[curSize][curWaist].players.length)
+				curQty = parseInt(roster[curSize][curWaist].qty);
+				playerLen = roster[curSize][curWaist].players.length;
+				if (curQty > playerLen)
 				{
 					rosterInconsistencies.push(curWaist + "Wx" + curSize + "I");
+					roster[curSize].players.push({"name":"","number":""});
+					log.l("added a no name / no number roster entry for " + curWaist + "Wx" + curSize + "I");
+				}
+				else if(curQty < playerLen)
+				{
+					errorList.push(curWaist + "Wx" + curSize + "I has more roster entries than garments sold!");
+					log.e(curWaist + "Wx" + curSize + "I has more roster entries than garments sold!");
 				}
 				//loop the players for the current combination of waist and inseam
 				for (var cp = 0, len = roster[curSize][curWaist].players.length; cp < len; cp++)
@@ -76,9 +86,18 @@ function inputRosterData(roster)
 		}
 		else
 		{
-			if (roster[curSize].qty !== roster[curSize].players.length)
+			curQty = parseInt(roster[curSize].qty);
+			playerLen = roster[curSize].players.length;
+			if (curQty > playerLen)
 			{
 				rosterInconsistencies.push(curSize);
+				roster[curSize].players.push({"name":"","number":""});
+				log.l("added a no name / no number roster entry for " + curSize);
+			}
+			else if(curQty < playerLen)
+			{
+				errorList.push(curSize + " has more roster entries than garments sold!");
+				log.e(curSize + " has more roster entries than garments sold!");
 			}
 			for (var cp = 0, len = roster[curSize].players.length; cp < len; cp++)
 			{
@@ -90,6 +109,8 @@ function inputRosterData(roster)
 
 
 		curSizePieces = [];
+		curQty = undefined;
+		playerLen = undefined;
 	}
 
 	if (rosterInconsistencies.length)

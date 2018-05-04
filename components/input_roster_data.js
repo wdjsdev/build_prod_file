@@ -68,12 +68,12 @@ function inputRosterData(roster)
 				if (curQty > playerLen)
 				{
 					rosterInconsistencies.push(curWaist + "Wx" + curSize + "I");
-					roster[curSize].players.push({"name":"","number":""});
+					roster[curSize][curWaist].players.push({"name":"","number":""});
 					log.l("added a no name / no number roster entry for " + curWaist + "Wx" + curSize + "I");
 				}
 				else if(curQty < playerLen)
 				{
-					errorList.push(curWaist + "Wx" + curSize + "I has more roster entries than garments sold!");
+					errorList.push("Size: " + curWaist + "Wx" + curSize + "I for garment: " + curGarment.parentLayer.name + " has more roster entries than garments sold!");
 					log.e(curWaist + "Wx" + curSize + "I has more roster entries than garments sold!");
 				}
 				//loop the players for the current combination of waist and inseam
@@ -96,7 +96,7 @@ function inputRosterData(roster)
 			}
 			else if(curQty < playerLen)
 			{
-				errorList.push(curSize + " has more roster entries than garments sold!");
+				errorList.push("Size: " + curSize + " for garment: " + curGarment.parentLayer.name + " has more roster entries than garments sold!");
 				log.e(curSize + " has more roster entries than garments sold!");
 			}
 			for (var cp = 0, len = roster[curSize].players.length; cp < len; cp++)

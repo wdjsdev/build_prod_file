@@ -82,7 +82,6 @@ function inputCurrentPlayer(pieces, curPlayer)
 					try
 					{
 						var textPath = curFrame.textPath;
-						$.writeln("resizing the arched text for player: " + curFrame.contents);
 						resizeArchedText(curFrame);
 						curFrame = expand(curFrame);
 					}

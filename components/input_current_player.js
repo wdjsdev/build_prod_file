@@ -78,11 +78,22 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 					}
-					curFrame = expand(curFrame);
-					if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
+
+					try
 					{
-						curFrame.width = maxPlayerNameWidth;
-						curFrame.left = centerPoint - curFrame.width / 2;
+						var textPath = curFrame.textPath;
+						$.writeln("resizing the arched text for player: " + curFrame.contents);
+						resizeArchedText(curFrame);
+						curFrame = expand(curFrame);
+					}
+					catch(e)
+					{
+						curFrame = expand(curFrame);
+						if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
+						{
+							curFrame.width = maxPlayerNameWidth;
+							curFrame.left = centerPoint - curFrame.width / 2;
+						}
 					}
 				}
 				else

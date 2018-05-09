@@ -139,7 +139,10 @@ function container()
 		valid = initAdjustProdFile();
 	}
 
-	$.writeln(JSON.stringify(prodFileRoster));
+	if(valid)
+	{
+		createAdjustmentDialog();
+	}
 
 
 	//=================================  /Procedure  =================================//

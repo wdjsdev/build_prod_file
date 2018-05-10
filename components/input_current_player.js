@@ -28,6 +28,12 @@ function inputCurrentPlayer(pieces, curPlayer)
 	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel;
 	var len = pieces.length;
 
+	//fix up a specific anomoly regarding apostrophes.
+	//for some reason apostrophes are rendered as : ‚Äô
+	//during script execution. replace any instance
+	//of these characters with a correct apostrophe
+	curPlayer.name = curPlayer.name.replace("‚Äô","'");
+
 	for (var z = 0; z < len; z++)
 	{
 		try
@@ -78,21 +84,11 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 					}
-
-					try
+					curFrame = expand(curFrame);
+					if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
 					{
-						var textPath = curFrame.textPath;
-						resizeArchedText(curFrame);
-						curFrame = expand(curFrame);
-					}
-					catch(e)
-					{
-						curFrame = expand(curFrame);
-						if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
-						{
-							curFrame.width = maxPlayerNameWidth;
-							curFrame.left = centerPoint - curFrame.width / 2;
-						}
+						curFrame.width = maxPlayerNameWidth;
+						curFrame.left = centerPoint - curFrame.width / 2;
 					}
 				}
 				else

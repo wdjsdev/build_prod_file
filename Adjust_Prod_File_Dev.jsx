@@ -33,7 +33,7 @@ function container()
 
 	var valid = true;
 
-	#include "/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.js";
+	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 
 	//verify the existence of a document
 	if(app.documents.length === 0)
@@ -89,7 +89,8 @@ function container()
 	var docRef = app.activeDocument,
 		layers = docRef.layers,
 		aB = docRef.artboards,
-		swatches = docRef.swatches;
+		swatches = docRef.swatches,
+		LISTBOX_DIMENSIONS = [50,50,200,200];
 
 		/*
 		format of prodFileRoster object is as follows.

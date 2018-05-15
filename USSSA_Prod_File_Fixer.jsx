@@ -56,10 +56,10 @@ function USSSA_one_off_fixer()
 			curNum = getPlayerNum(curEntry);
 			curFrame = curEntry.pageItems["Number"];
 			
-			if(curFrame.width > maxBack)
+			if(curFrame.width > curMaxWidth)
 			{
 				centerPoint = curFrame.left + curFrame.width/2;
-				curFrame.width = maxBack;
+				curFrame.width = curMaxWidth;
 				curFrame.left = centerPoint - curFrame.width/2;
 			}
 			

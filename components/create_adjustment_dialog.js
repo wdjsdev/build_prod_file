@@ -18,6 +18,7 @@ function createAdjustmentDialog()
 	var imgPath;
 
 	var w = new Window("dialog");
+		w.alignChildren["fill","fill"];
 
 		//group
 		//top row of listboxes
@@ -26,20 +27,29 @@ function createAdjustmentDialog()
 
 			//group
 			//size selection listbox
-			// var g_sizeSelect = UI.group(g_listboxGroup);
-			// 	g_sizeSelect.orientation = "column";
-			// 	//label
-			// 	st_sizeLabel = UI.static(g_sizeSelect,"Size");
-			// 	lb_sizeListbox = UI.listbox(g_sizeSelect,LISTBOX_DIMENSIONS,[]);
 			var g_sizeSelect = createListboxGroup(g_listboxGroup,"Size");
 
 			//group
 			//piece name selection listbox
-			// var g_pieceSelect = UI.group(g_listboxGroup);
-				// g_pieceSelect.orientation = "column";
 			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
 
+			//group
+			//Roster entry selection listbox
 			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
+
+		//horizontal separator
+		UI.hseparator(w,400);
+
+		//group
+		//this section provides the arrow buttons
+		//for moving the selected artwork by a given
+		//nudge amount. Thsi section will also include
+		//checkboxes that allow the user to choose whether
+		//to move the player name, player number, or both.
+		var g_transformationGroup = UI.group(w);
+			g_transformationGroup.orientation = "column";
+
+			createTransformControls(g_transformationGroup);
 
 
 	w.show();
@@ -56,5 +66,12 @@ function createAdjustmentDialog()
 			thisGroup.labelText = UI.static(thisGroup,label);
 			thisGroup.listbox = UI.listbox(thisGroup,LISTBOX_DIMENSIONS,[]);
 		return thisGroup;
+	}
+
+	function createTransformControls(parent)
+	{
+		parent.labelText = UI.static(parent,"Move the Stuff");
+		var btnGroup = parent.btnGroup = UI.group(parent);
+		btnGroup.add("button",undefined,"button");
 	}
 }

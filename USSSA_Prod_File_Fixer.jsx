@@ -142,7 +142,7 @@ function USSSA_one_off_fixer()
 					else
 					{
 						maxFront = maxYouthFrontNumberWidth;
-						maxBack = maxAdultBackNumberWidth;
+						maxBack = maxYouthBackNumberWidth;
 					}
 					w.close();
 				})

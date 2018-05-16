@@ -84,10 +84,11 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 					}
-					curFrame = expand(curFrame);
+					// curFrame = expand(curFrame);
 					if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
 					{
-						curFrame.width = maxPlayerNameWidth;
+						// curFrame.width = maxPlayerNameWidth;
+						resizeLiveText(curFrame,maxPlayerNameWidth);
 						curFrame.left = centerPoint - curFrame.width / 2;
 					}
 				}
@@ -102,7 +103,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				if(curPlayer.number.indexOf("(")=== -1)
 				{
 					curFrame.contents = curPlayer.number;
-					curFrame = expand(curFrame);
+					// curFrame = expand(curFrame);
 				}
 				else
 				{
@@ -111,6 +112,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				curFrame.name = "Number";
 			}
 		}
+		expand(curFrame);
 		rosterGroup.hidden = true;
 		liveTextGroup.hidden = true;
 	}

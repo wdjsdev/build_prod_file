@@ -61,11 +61,6 @@ function colorBlocks()
 				}
 			}
 
-			if(result.undesirable.length)
-			{
-				errorList.push(curPieceName + " has " + result.undesirable.length + " incorrect colors.");
-			}
-
 			return result;
 
 			function classifyInk(ink)
@@ -181,8 +176,9 @@ function colorBlocks()
 	
 	if(hasWrongColors)
 	{
-		valid = false;
-		errorList.push(doc.name + " has the following incorrect colors:\n");
+		// valid = false;
+		// errorList.push(doc.name + " has the following incorrect colors:\n");
+		errorList.push("WARNING: You are responsible for the colors in this document!");
 		for(var prop in wrongColors)
 		{
 			errorList.push(prop);

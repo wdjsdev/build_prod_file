@@ -61,6 +61,11 @@ function colorBlocks()
 				}
 			}
 
+			if(result.undesirable.length)
+			{
+				errorList.push(curPieceName + " has " + result.undesirable.length + " incorrect colors.");
+			}
+
 			return result;
 
 			function classifyInk(ink)

@@ -111,8 +111,8 @@ function inputCurrentPlayer(pieces, curPlayer)
 				}
 				curFrame.name = "Number";
 			}
+			expand(curFrame);
 		}
-		expand(curFrame);
 		rosterGroup.hidden = true;
 		liveTextGroup.hidden = true;
 	}

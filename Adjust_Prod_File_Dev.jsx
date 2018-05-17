@@ -50,7 +50,7 @@ function container()
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/components/build_prod_file"
 
-	var compFiles = includeComponents(devComponents,prodComponents,false);
+	var compFiles = includeComponents(devComponents,prodComponents,true);
 	if(compFiles && compFiles.length)
 	{
 		for(var x=0,len=compFiles.length;x<len;x++)

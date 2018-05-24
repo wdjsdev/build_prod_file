@@ -44,7 +44,9 @@ function getOrderNumber()
 		var input = UI.edit(w,result,10);
 			input.active = true;
 		var rosterInputPrefGroup = UI.group(w);
-			var rosterInputPrefCheckbox = UI.checkbox(rosterInputPrefGroup,"Automatically add roster data?")
+			var rosterInputPrefCheckbox = UI.checkbox(rosterInputPrefGroup,"Automatically add roster data?");
+		var expandStrokePrefGroup = UI.group(w);
+			var expandStrokeInputPrefCheckbox = UI.checkbox(expandStrokePrefGroup,"Fully expand strokes?");
 		var btnGroup = UI.group(w);
 			var submitButton = UI.button(btnGroup, "Submit", submit);
 			var cancelButton = UI.button(btnGroup, "Cancel", cancel);
@@ -58,6 +60,7 @@ function getOrderNumber()
 			result = input.text.replace("#","");
 			log.l("User submitted dialog. Input field is correctly formatted.");
 			addRosterDataUserPreference = rosterInputPrefCheckbox.value;
+			expandStrokesPreference = expandStrokeInputPrefCheckbox.value;
 			log.l("Set addRosterDataUserPreference to " + addRosterDataUserPreference);
 			w.close();
 		}

@@ -76,7 +76,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 			}
 			if (curFrame.name.toLowerCase().indexOf("name") > -1)
 			{
-				centerPoint = curFrame.left + curFrame.width / 2;
+				// centerPoint = curFrame.left + curFrame.width / 2;
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;
@@ -89,7 +89,8 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						// curFrame.width = maxPlayerNameWidth;
 						resizeLiveText(curFrame,maxPlayerNameWidth);
-						curFrame.left = centerPoint - curFrame.width / 2;
+						// centerPoint = curFrame.left + curFrame.width / 2;
+						// curFrame.left = centerPoint - curFrame.width / 2;
 					}
 				}
 				else
@@ -111,7 +112,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				}
 				curFrame.name = "Number";
 			}
-			expand(curFrame);
+			// expand(curFrame);
 		}
 		rosterGroup.hidden = true;
 		liveTextGroup.hidden = true;

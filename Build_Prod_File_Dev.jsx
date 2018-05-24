@@ -49,6 +49,7 @@ function container()
 		maxPlayerNameWidth,
 		playerNameCase,
 		addRosterDataUserPreference,
+		expandStrokesPreference,
 		curGarment;
 
 	//external components

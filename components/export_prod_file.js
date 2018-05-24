@@ -25,6 +25,8 @@ function exportProdFile(curGarment, folderName, destFolder)
 {
 	var result = true;
 	var doc = app.activeDocument;
+	var tmpLay = doc.layers.add();
+	tmpLay.name = "tmp";
 
 	folderName = folderName.replace(".ai","");
 	var pdfFolder = Folder(destFolder.fsName + "/" + folderName + "_PDFs");
@@ -66,6 +68,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 		}
 	}
 
+	tmpLay.remove();
 	return result;
 
 
@@ -73,7 +76,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 	function exportPiece(piece)
 	{
 		doc.selection = null;
-		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName;
+		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName,duplicateRosterGroup;
 		try
 		{
 			rosterGroup = piece.groupItems["Roster"];
@@ -116,16 +119,20 @@ function exportProdFile(curGarment, folderName, destFolder)
 			}
 
 			//loop rosterGroup children, reveal them one at a time and export the PDF
-			for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
+			// for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
+			for(var x=rosterGroup.groupItems.length-1;x>=0;x--)
 			{
 				curRosterChild = rosterGroup.groupItems[x];
-				curRosterChild.hidden = false;
-				// pdfFile = new File(pdfFolder + "/" + pieceNameWithUnderscores + "_" + curRosterChild.name + ".pdf");
-				// doc.saveAs(pdfFile,pdfSaveOpts);
+				duplicateRosterGroup = curRosterChild.duplicate(tmpLay);
+				// curRosterChild.hidden = false;
+				duplicateRosterGroup.hidden = false;
+				duplicateRosterGroup = expand(duplicateRosterGroup);
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
 				saveFile(doc,pdfFileName,pdfFolder);
-				curRosterChild.hidden = true;;
+				// curRosterChild.hidden = true;
+				// duplicateRosterGroup.remove();
+				removeExpandedRosterGroup(tmpLay);
 			}
 			liveTextGroup.hidden = false;
 		}

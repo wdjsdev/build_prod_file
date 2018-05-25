@@ -32,7 +32,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 	//for some reason apostrophes are rendered as : ‚Äô
 	//during script execution. replace any instance
 	//of these characters with a correct apostrophe
-	curPlayer.name = curPlayer.name.replace("‚Äô","'");
+	curPlayer.name = curPlayer.name.replace("‚Äô","'"); 
 
 	for (var z = 0; z < len; z++)
 	{
@@ -84,14 +84,18 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 					}
-					// curFrame = expand(curFrame);
-					if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
-					{
-						// curFrame.width = maxPlayerNameWidth;
-						resizeLiveText(curFrame,maxPlayerNameWidth);
-						// centerPoint = curFrame.left + curFrame.width / 2;
-						// curFrame.left = centerPoint - curFrame.width / 2;
-					}
+
+					//
+					//the below is deprecated because resizing live text causes too many
+					//problems, specifically with sharp angles causing large spikes
+					//in an arbitrary manner based on many unpredictable factors as
+					//a result of miter limit value
+					//
+
+					// if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
+					// {
+					// 	resizeLiveText(curFrame,maxPlayerNameWidth);
+					// }
 				}
 				else
 				{

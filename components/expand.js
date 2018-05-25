@@ -20,6 +20,7 @@ function expand(frame)
 	var doc = app.activeDocument;
 	doc.selection = null;
 	frame.selected = true;
+	var parentLayer = frame.layer;
 
 	app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
 
@@ -199,8 +200,15 @@ function expand(frame)
 	app.doScript("Expand", "expand_text");
 	if(expandStrokesPreference)
 	{
-		doc.layers["tmp"].hasSelectedArtwork = true;
-		app.doScript("expand_stroke","expand_text");
+		try
+		{
+			parentLayer.hasSelectedArtwork = true;
+			app.doScript("expand_stroke","expand_text");
+		}
+		catch(e)
+		{
+			//nothing was expanded. can't expand anything else here. just move on
+		}
 	}
 	app.unloadAction("expand_text","");
 

@@ -51,6 +51,35 @@ function createAdjustmentDialog()
 
 			createTransformControls(g_transformationGroup);
 
+		//horizontal separator
+		UI.hseparator(w,400);
+
+		//group
+		//this section allows for editing certain player
+		//information. there will be edit text boxes
+		//for each potential textFrame
+		var g_editRosterEntryGroup = UI.group(w);
+			g_editRosterEntryGroup.orientation = "column";
+
+			createEditRosterControls(g_editRosterEntryGroup);
+
+		//horizontal separator
+		UI.hseparator(w,400);
+
+		//group
+		//this is the group of buttons for the bottom of the
+		//dialog. there will be 'cancel' and 'submit' buttons
+		//cancel closes the current document and re-opens
+		//the saved production file. this effectively erases
+		//any changes made by the dialog.
+		//submit will save the file and re-export the updated
+		//info.
+
+		var g_mainButtonGroup = UI.group(w);
+			g_mainButtonGroup.orientation = "row";
+
+			createMainButtonGroup(g_mainButtonGroup);
+
 
 	w.show();
 		
@@ -72,6 +101,53 @@ function createAdjustmentDialog()
 	{
 		parent.labelText = UI.static(parent,"Move the Stuff");
 		var btnGroup = parent.btnGroup = UI.group(parent);
-		btnGroup.add("button",undefined,"button");
+			btnGroup.orientation = "column";
+			var btnGroupTopRow = UI.group(btnGroup);
+				var upButton = UI.button(btnGroupTopRow,"/\\",function(){alert("up")});
+			var btnGroupMiddleRow = UI.group(btnGroup);
+				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){alert("left")});
+				var rightButton = UI.button(btnGroupMiddleRow,">",function(){alert("right")});
+			var btnGroupBottomRow = UI.group(btnGroup);
+				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){alert("down")});
+
+		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
+			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
+			var numCheckbox = UI.checkbox(checkboxGroup, "Number");
+	}
+
+	function createEditRosterControls(parent)
+	{
+		var INPUTCHARACTERS = 20;
+		var inputContainerGroup = UI.group(parent);
+			inputContainerGroup.orientation = "row";
+
+		var labelGroup = UI.group(inputContainerGroup);
+			labelGroup.orientation = "column";
+
+			var nameLabel = UI.static(labelGroup,"Name:");
+			var numLabel = UI.static(labelGroup,"Number:");
+
+		var inputGroup = inputContainerGroup.inputGroup = UI.group(inputContainerGroup);
+			inputGroup.orientation = "column";
+
+			var nameInput = inputGroup.nameInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+			var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+
+		var btnGroup = parent.btnGroup = UI.group(parent);
+			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){alert("Updating")});
+	}
+
+	function createMainButtonGroup(parent)
+	{
+		var cancel = UI.button(parent,"Cancel",function(){alert("cancel")});
+		var submit = UI.button(parent,"Submit",function(){alert("submit")});
+	}
+
+	function populateListbox(parent,arr)
+	{
+		for(var x=0,len=arr.length;x<len;x++)
+		{
+			parent.add("item",arr[x]);
+		}
 	}
 }

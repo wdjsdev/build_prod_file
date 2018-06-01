@@ -177,8 +177,6 @@ function exportProdFile(curGarment, folderName, destFolder)
 				saveFile(doc,pdfFileName,pdfFolder);
 				removeExpandedRosterGroup(tmpNameLay);
 				removeExpandedRosterGroup(tmpNumLay);
-				valid = false;
-				return;
 			}
 
 			liveTextGroup.hidden = false;

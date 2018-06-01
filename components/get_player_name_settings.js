@@ -95,7 +95,7 @@ function getPlayerNameSettings(curGarment)
 		if(result)
 		{
 			maxPlayerNameWidth *= INCH_TO_POINT_AT_SCALE;
-			expandStrokePreference = expandStrokePreferenceGroup.value;
+			expandStrokesPreference = expandStrokePreferenceCheckbox.value;
 			w.close();
 		}
 	}

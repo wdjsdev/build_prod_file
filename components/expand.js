@@ -154,7 +154,6 @@ function expand(frame)
 		"		}",
 		"	}",
 		"}"
-
 	].join("\n");
 
 	var actionFile = new File(homeFolderPath + "/expand_live_text.aia");

@@ -22,7 +22,6 @@ function inputRosterData(roster)
 	var len, curPlayer, curPlayerIndex;
 	var rosterInconsistencies = [];
 	var curSizePieces = [];
-	var variableInseamSizing = false;
 	var curQty,playerLen;
 
 	tempLay = doc.layers.add();
@@ -33,27 +32,6 @@ function inputRosterData(roster)
 	{
 		log.l("::Beginning roster loop for size: " + curSize);
 
-		var variableInseamFormatRegex = /^[\d]{2}$/
-		if (variableInseamFormatRegex.test(curSize))
-		{
-			curSize = curSize + "I";
-			variableInseamSizing = true;
-		}
-
-		//find all the pices associated with the current inseam size
-		for (var z = pieces.length - 1; z >= 0; z--)
-		{
-			if (pieces[z].name.indexOf(curSize) === 0 || pieces[z].name.indexOf(curSize) === pieces[z].name.indexOf("x") + 1)
-			{
-				curSizePieces.push(pieces[z]);
-			}
-		}
-		if (variableInseamSizing)
-		{
-			//trim the "I" that was appended to curSize
-			curSize = curSize.substring(0, curSize.length - 1);
-		}
-
 		log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
 
 
@@ -63,6 +41,14 @@ function inputRosterData(roster)
 			//this is a variable inseam garment
 			for (var curWaist in roster[curSize])
 			{
+				//get all the garment pieces that match the current size
+				for (var z = pieces.length - 1; z >= 0; z--)
+				{
+					if (pieces[z].name.indexOf(curWaist + "Wx" + curSize + "I") === 0)
+					{
+						curSizePieces.push(pieces[z]);
+					}
+				}
 				curQty = parseInt(roster[curSize][curWaist].qty);
 				playerLen = roster[curSize][curWaist].players.length;
 				if (curQty > playerLen)
@@ -82,10 +68,19 @@ function inputRosterData(roster)
 					curPlayer = roster[curSize][curWaist].players[cp];
 					inputCurrentPlayer(curSizePieces, curPlayer);
 				}
+				curSizePieces = [];
 			}
 		}
 		else
 		{
+			//get all the garment pieces that match the current size
+			for (var z = pieces.length - 1; z >= 0; z--)
+			{
+				if (pieces[z].name.indexOf(curSize) === 0)
+				{
+					curSizePieces.push(pieces[z]);
+				}
+			}
 			curQty = parseInt(roster[curSize].qty);
 			playerLen = roster[curSize].players.length;
 			if (curQty > playerLen)

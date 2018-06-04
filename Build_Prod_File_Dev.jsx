@@ -48,7 +48,9 @@ function container()
 		playerNamesNeeded,
 		maxPlayerNameWidth,
 		playerNameCase,
-		addRosterDataUserPreference;
+		addRosterDataUserPreference,
+		expandStrokesPreference,
+		curGarment;
 
 	//external components
 	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";
@@ -192,6 +194,11 @@ function container()
 	if(errorList.length)
 	{
 		sendErrors(errorList);
+	}
+
+	if(messageList.length)
+	{
+		sendScriptMessages(messageList);
 	}
 
 	printLog();

@@ -181,8 +181,9 @@ function colorBlocks()
 	
 	if(hasWrongColors)
 	{
-		valid = false;
-		errorList.push(doc.name + " has the following incorrect colors:\n");
+		// valid = false;
+		// errorList.push(doc.name + " has the following incorrect colors:\n");
+		errorList.push("WARNING: You are responsible for the colors in this document!");
 		for(var prop in wrongColors)
 		{
 			errorList.push(prop);

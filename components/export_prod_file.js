@@ -25,6 +25,10 @@ function exportProdFile(curGarment, folderName, destFolder)
 {
 	var result = true;
 	var doc = app.activeDocument;
+	var tmpNameLay = doc.layers.add();
+	tmpNameLay.name = "tmpname";
+	var tmpNumLay = doc.layers.add();
+	tmpNumLay.name = "tmpnum";
 
 	folderName = folderName.replace(".ai","");
 	var pdfFolder = Folder(destFolder.fsName + "/" + folderName + "_PDFs");
@@ -66,6 +70,8 @@ function exportProdFile(curGarment, folderName, destFolder)
 		}
 	}
 
+	tmpNameLay.remove();
+	tmpNumLay.remove();
 	return result;
 
 
@@ -74,6 +80,8 @@ function exportProdFile(curGarment, folderName, destFolder)
 	{
 		doc.selection = null;
 		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName;
+		var curNameFrame,curNumFrame,duplicateName,duplicateNumber;
+		var playerNameCenterPoint;
 		try
 		{
 			rosterGroup = piece.groupItems["Roster"];
@@ -99,11 +107,9 @@ function exportProdFile(curGarment, folderName, destFolder)
 
 		if(!rosterGroup)
 		{
-			// var pdfFileName = pdfFolder + "/" + pieceNameWithUnderscores + ".pdf";
 			pdfFileName = piece.name + ".pdf";
 			pdfFileName = pdfFileName.replace(/\s/g,"_");
 			saveFile(doc,pdfFileName,pdfFolder)
-			// doc.saveAs(pdfFile,pdfSaveOpts);
 		}
 		else
 		{
@@ -116,17 +122,63 @@ function exportProdFile(curGarment, folderName, destFolder)
 			}
 
 			//loop rosterGroup children, reveal them one at a time and export the PDF
-			for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
+			for(var x=rosterGroup.groupItems.length-1;x>=0;x--)
 			{
 				curRosterChild = rosterGroup.groupItems[x];
-				curRosterChild.hidden = false;
-				// pdfFile = new File(pdfFolder + "/" + pieceNameWithUnderscores + "_" + curRosterChild.name + ".pdf");
-				// doc.saveAs(pdfFile,pdfSaveOpts);
+
+				//loop each textFrame on the curRosterChild group
+				//so they can be expanded separately
+				for(var y=0,yLen = curRosterChild.pageItems.length;y<yLen;y++)
+				{
+					if(curRosterChild.pageItems[y].name === "Name")
+					{
+						if(curRosterChild.pageItems[y].contents === "")
+						{
+							//empty string. just move on
+							continue;
+						}
+						duplicateName = curRosterChild.pageItems[y].duplicate(tmpNameLay);
+						duplicateName.hidden = false;
+						try
+						{
+							var myTextPath = duplicateName.textPath;
+							resizeLiveText(duplicateName);
+							expand(duplicateName);
+						}
+						catch(e)
+						{
+							expand(duplicateName);
+							duplicateName = tmpNameLay.groupItems[0];
+							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
+							{
+								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
+								duplicateName.width = maxPlayerNameWidth;
+								duplicateName.left = playerNameCenterPoint - duplicateName.width/2;
+							}
+						}
+					}
+					else if(curRosterChild.pageItems[y].name === "Number")
+					{
+						if(curRosterChild.pageItems[y].contents === "")
+						{
+							//empty string. just move on
+							continue;
+						}
+						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
+						expand(duplicateNumber);
+					}
+				}
+				// duplicateRosterGroup = curRosterChild.duplicate(tmpLay);
+				// duplicateRosterGroup.hidden = false;
+				// expand(duplicateRosterGroup);
+
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
 				saveFile(doc,pdfFileName,pdfFolder);
-				curRosterChild.hidden = true;;
+				removeExpandedRosterGroup(tmpNameLay);
+				removeExpandedRosterGroup(tmpNumLay);
 			}
+
 			liveTextGroup.hidden = false;
 		}
 

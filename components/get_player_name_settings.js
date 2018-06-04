@@ -27,7 +27,7 @@ function getPlayerNameSettings(curGarment)
 			listGroup.alignChildren = "center";
 
 			var widthGroup = UI.group(listGroup);
-				widthGroup.orientation = "row";
+				widthGroup.orientation = "column";
 				
 				var widthTxt = UI.static(widthGroup,"Max Player Name Width:")
 				var widthDropdown = UI.dropdown(widthGroup,widthOptions);
@@ -35,12 +35,12 @@ function getPlayerNameSettings(curGarment)
 				{
 					if(widthDropdown.selection.text === "Custom")
 					{
-						customInputGroup.visible = true;
+						customInput.enabled = true;
 						w.layout.layout("true");
 					}
-					else if(customInputGroup.visible)
+					else if(customInputGroup.enabled)
 					{
-						customInputGroup.visible = false;
+						customInput.enabled = false;
 						widthDropdown.selection = widthDropdown.selection;
 						w.layout.layout("true");
 					}
@@ -51,12 +51,15 @@ function getPlayerNameSettings(curGarment)
 					customInputGroup.orientation = "row";
 					var customTxt = UI.static(customInputGroup, "Max name width in inches: ");
 					var customInput = UI.edit(customInputGroup,"",5);
-					customInputGroup.visible = false;
+						customInput.enabled = false;
 					
 			var caseGroup = UI.group(listGroup);
 				caseGroup.orientation = "row";
 				var caseTxt = UI.static(caseGroup,"Font Case:");
 				var caseDropdown = UI.dropdown(caseGroup,caseOptions);
+
+			var expandStrokePreferenceGroup = UI.group(listGroup);
+				var expandStrokePreferenceCheckbox = UI.checkbox(expandStrokePreferenceGroup,"Fully expand strokes?");
 
 		var btnGroup = UI.group(w);
 			var cancel = UI.button(btnGroup,"Cancel",function(){result = false;w.close();})
@@ -69,7 +72,7 @@ function getPlayerNameSettings(curGarment)
 	{
 		var maxWidth = parseInt(customInput.text);
 		var nameCase = caseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
-		if(customInputGroup.visible || widthDropdown.selection.text === "Custom")
+		if(customInput.enabled || widthDropdown.selection.text === "Custom")
 		{
 			if(maxWidth.toString() !== "NaN")
 			{
@@ -80,7 +83,7 @@ function getPlayerNameSettings(curGarment)
 			else
 			{
 				alert("You must choose a default width from the dropdown or enter an integer for the max width.");
-				return localValid;
+				result = false;
 			}
 		}
 		else
@@ -92,6 +95,7 @@ function getPlayerNameSettings(curGarment)
 		if(result)
 		{
 			maxPlayerNameWidth *= INCH_TO_POINT_AT_SCALE;
+			expandStrokesPreference = expandStrokePreferenceCheckbox.value;
 			w.close();
 		}
 	}

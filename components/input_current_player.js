@@ -76,7 +76,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 			}
 			if (curFrame.name.toLowerCase().indexOf("name") > -1)
 			{
-				centerPoint = curFrame.left + curFrame.width / 2;
+				// centerPoint = curFrame.left + curFrame.width / 2;
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;
@@ -84,12 +84,18 @@ function inputCurrentPlayer(pieces, curPlayer)
 					{
 						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
 					}
-					curFrame = expand(curFrame);
-					if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
-					{
-						curFrame.width = maxPlayerNameWidth;
-						curFrame.left = centerPoint - curFrame.width / 2;
-					}
+
+					//
+					//the below is deprecated because resizing live text causes too many
+					//problems, specifically with sharp angles causing large spikes
+					//in an arbitrary manner based on many unpredictable factors as
+					//a result of miter limit value
+					//
+
+					// if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
+					// {
+					// 	resizeLiveText(curFrame,maxPlayerNameWidth);
+					// }
 				}
 				else
 				{
@@ -102,7 +108,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				if(curPlayer.number.indexOf("(")=== -1)
 				{
 					curFrame.contents = curPlayer.number;
-					curFrame = expand(curFrame);
+					// curFrame = expand(curFrame);
 				}
 				else
 				{
@@ -110,6 +116,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				}
 				curFrame.name = "Number";
 			}
+			// expand(curFrame);
 		}
 		rosterGroup.hidden = true;
 		liveTextGroup.hidden = true;

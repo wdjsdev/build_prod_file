@@ -44,7 +44,7 @@ function getOrderNumber()
 		var input = UI.edit(w,result,10);
 			input.active = true;
 		var rosterInputPrefGroup = UI.group(w);
-			var rosterInputPrefCheckbox = UI.checkbox(rosterInputPrefGroup,"Automatically add roster data?")
+			var rosterInputPrefCheckbox = UI.checkbox(rosterInputPrefGroup,"Automatically add roster data?");
 		var btnGroup = UI.group(w);
 			var submitButton = UI.button(btnGroup, "Submit", submit);
 			var cancelButton = UI.button(btnGroup, "Cancel", cancel);

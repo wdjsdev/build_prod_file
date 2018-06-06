@@ -92,6 +92,10 @@ function container()
 		swatches = docRef.swatches,
 		LISTBOX_DIMENSIONS = [50,50,200,200];
 
+		var curRosterGroup;
+		var curRosterName;
+		var curRosterNumber;
+
 		/*
 		format of prodFileRoster object is as follows.
 		broken down by size, then each piece that contains
@@ -125,6 +129,7 @@ function container()
 		}
 		*/
 		var prodFileRoster = {};
+		var prodFileSizes = [];
 
 
 

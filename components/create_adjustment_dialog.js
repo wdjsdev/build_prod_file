@@ -15,7 +15,6 @@
 function createAdjustmentDialog()
 {
 	var result = true;
-	var imgPath;
 
 	var w = new Window("dialog");
 		w.alignChildren["fill","fill"];
@@ -28,14 +27,32 @@ function createAdjustmentDialog()
 			//group
 			//size selection listbox
 			var g_sizeSelect = createListboxGroup(g_listboxGroup,"Size");
+			populateListbox(g_sizeSelect.listbox,prodFileSizes);
+			g_sizeSelect.listbox.onChange = function()
+			{
+				if(!g_sizeSelect.listbox.selection){return;};
+				var curSizePieces = getProdFilePiecesForCurSize(g_sizeSelect.listbox.selection.text);
+				populateListbox(g_pieceSelect.listbox,curSizePieces);
+			}
 
 			//group
 			//piece name selection listbox
 			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
+			g_pieceSelect.listbox.onChange = function()
+			{
+				if(!g_pieceSelect.listbox.selection){return;};
+				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
+				populateListbox(g_rosterSelect.listbox,curRosterEntries);
+			}
 
 			//group
 			//Roster entry selection listbox
 			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
+			g_rosterSelect.listbox.onChange = function()
+			{
+				if(!g_rosterSelect.listbox.selection){return;};
+				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
+			}
 
 		//horizontal separator
 		UI.hseparator(w,400);
@@ -79,6 +96,12 @@ function createAdjustmentDialog()
 			g_mainButtonGroup.orientation = "row";
 
 			createMainButtonGroup(g_mainButtonGroup);
+
+
+
+
+
+
 
 
 	w.show();
@@ -139,12 +162,16 @@ function createAdjustmentDialog()
 
 	function createMainButtonGroup(parent)
 	{
-		var cancel = UI.button(parent,"Cancel",function(){alert("cancel")});
+		var cancel = UI.button(parent,"Cancel",function(){w.close();});
 		var submit = UI.button(parent,"Submit",function(){alert("submit")});
 	}
 
 	function populateListbox(parent,arr)
 	{
+		for(var x = parent.items.length - 1;x>=0;x--)
+		{
+			parent.remove(parent.items[x]);
+		}
 		for(var x=0,len=arr.length;x<len;x++)
 		{
 			parent.add("item",arr[x]);

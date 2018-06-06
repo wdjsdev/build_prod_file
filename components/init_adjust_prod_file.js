@@ -62,6 +62,7 @@ function initAdjustProdFile()
 		if(!prodFileRoster[curSize])
 		{
 			prodFileRoster[curSize] = {};
+			prodFileSizes.push(curSize);
 		}
 
 		//initialize piece object in curSize object

@@ -62,12 +62,16 @@ function exportProdFile(curGarment, folderName, destFolder)
 		unlockDoc(doc);
 		sewLinesLayer.visible = false;
 
+		loadExpandAction();
+
 		// var groups = doc.layers[0].groupItems;
 		var groups = artworkLayer.groupItems;
 		for(var x=0,len=groups.length;x<len;x++)
 		{
 			exportPiece(groups[x]);
 		}
+
+		unloadExpandAction();
 	}
 
 	tmpNameLay.remove();
@@ -168,9 +172,6 @@ function exportProdFile(curGarment, folderName, destFolder)
 						expand(duplicateNumber);
 					}
 				}
-				// duplicateRosterGroup = curRosterChild.duplicate(tmpLay);
-				// duplicateRosterGroup.hidden = false;
-				// expand(duplicateRosterGroup);
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");

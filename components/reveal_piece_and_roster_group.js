@@ -54,6 +54,20 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 
 	//hide the live text group
 	piece.groupItems["Live Text"].hidden = true;
+
+	//hide all roster groups except the desired one
+	for(var x=0,len=piece.groupItems["Roster"].pageItems.length;x<len;x++)
+	{
+		if(piece.groupItems["Roster"].pageItems[x].name === rosterGroupName)
+		{
+			piece.groupItems["Roster"].pageItems[x].hidden = false;
+		}
+		else
+		{
+			piece.groupItems["Roster"].pageItems[x].hidden = true;	
+		}
+	}
 	//reveal the rosterGroup
 	curRosterGroup.hidden = false;
+	app.redraw();
 }

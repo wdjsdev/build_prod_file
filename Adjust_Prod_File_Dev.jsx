@@ -92,6 +92,8 @@ function container()
 		swatches = docRef.swatches,
 		LISTBOX_DIMENSIONS = [50,50,200,200];
 
+
+		var NUDGE_AMOUNT = 1.8;
 		var curRosterGroup;
 		var curRosterName;
 		var curRosterNumber;

@@ -126,16 +126,50 @@ function createAdjustmentDialog()
 		var btnGroup = parent.btnGroup = UI.group(parent);
 			btnGroup.orientation = "column";
 			var btnGroupTopRow = UI.group(btnGroup);
-				var upButton = UI.button(btnGroupTopRow,"/\\",function(){alert("up")});
+				var upButton = UI.button(btnGroupTopRow,"/\\",function(){moveSelectedArtwork("up",nameCheckbox.value,numCheckbox.value)});
 			var btnGroupMiddleRow = UI.group(btnGroup);
-				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){alert("left")});
-				var rightButton = UI.button(btnGroupMiddleRow,">",function(){alert("right")});
+				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){moveSelectedArtwork("left",nameCheckbox.value,numCheckbox.value)});
+				var rightButton = UI.button(btnGroupMiddleRow,">",function(){moveSelectedArtwork("right",nameCheckbox.value,numCheckbox.value)});
 			var btnGroupBottomRow = UI.group(btnGroup);
-				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){alert("down")});
+				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){moveSelectedArtwork("down",nameCheckbox.value,numCheckbox.value)});
 
 		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
 			var numCheckbox = UI.checkbox(checkboxGroup, "Number");
+	}
+
+	function moveSelectedArtwork(dir,namePref,numPref)
+	{
+		var xMoveDirection = 0,yMoveDirection = 0;
+		if(dir === "left")
+		{
+			xMoveDirection = -1;
+		}
+		else if(dir === "right")
+		{
+			xMoveDirection = 1;
+		}
+		else if(dir === "up")
+		{
+			yMoveDirection = 1;
+		}
+		else if(dir === "down")
+		{
+			yMoveDirection = -1;
+		}
+
+		if(curRosterName && namePref)
+		{
+			curRosterName.left += xMoveDirection * NUDGE_AMOUNT;
+			curRosterName.top += yMoveDirection * NUDGE_AMOUNT;
+			
+		}
+		if(curRosterNumber && numPref)
+		{
+			curRosterNumber.left += xMoveDirection * NUDGE_AMOUNT;
+			curRosterNumber.top += yMoveDirection * NUDGE_AMOUNT;
+		}
+		app.redraw();
 	}
 
 	function createEditRosterControls(parent)

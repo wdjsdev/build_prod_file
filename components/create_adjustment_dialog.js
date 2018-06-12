@@ -201,27 +201,22 @@ function createAdjustmentDialog()
 	function updateCurRoster(name,num)
 	{
 		var newName = "";
+		var newNum = "";
+
+		newName = (name === "") ? "(no name)" : name;
+		newNum = (num === "") ? "(no number)" : num;
 		if(curRosterName)
 		{
 			curRosterName.contents = name;
-			newName = name + " ";
-		}
-		else
-		{
-			newName = "(no name) ";
 		}
 		if(curRosterNumber)
 		{
 			curRosterNumber.contents = num;
-			newName += num;
-		}
-		else
-		{
-			newName += "(no number)"
 		}
 
-		curRosterGroup.name = newName;
-		g_rosterSelect.listbox.selection.text = newName;
+		curRosterGroup.name = newName + " " + newNum;
+		g_rosterSelect.listbox.selection.text = newName + " " + newNum;
+		w.layout.layout(true);
 		app.redraw();
 	}
 

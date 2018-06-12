@@ -25,6 +25,7 @@
 
 function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 {
+	curRosterGroup = curRosterName = curRosterNumber = undefined;
 	var piece = layers["Artwork"].pageItems[pieceName];
 	curRosterGroup = piece.groupItems["Roster"].pageItems[rosterGroupName];
 	try

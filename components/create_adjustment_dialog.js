@@ -52,6 +52,7 @@ function createAdjustmentDialog()
 			{
 				if(!g_rosterSelect.listbox.selection){return;};
 				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
+				updateEditRosterEntryGroup(g_editRosterEntryGroup.inputContainerGroup.inputGroup);
 			}
 
 		//horizontal separator
@@ -126,12 +127,12 @@ function createAdjustmentDialog()
 		var btnGroup = parent.btnGroup = UI.group(parent);
 			btnGroup.orientation = "column";
 			var btnGroupTopRow = UI.group(btnGroup);
-				var upButton = UI.button(btnGroupTopRow,"/\\",function(){moveSelectedArtwork("up",nameCheckbox.value,numCheckbox.value)});
+				var upButton = UI.button(btnGroupTopRow,"/\\",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
 			var btnGroupMiddleRow = UI.group(btnGroup);
-				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){moveSelectedArtwork("left",nameCheckbox.value,numCheckbox.value)});
-				var rightButton = UI.button(btnGroupMiddleRow,">",function(){moveSelectedArtwork("right",nameCheckbox.value,numCheckbox.value)});
+				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
+				var rightButton = UI.button(btnGroupMiddleRow,">",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
 			var btnGroupBottomRow = UI.group(btnGroup);
-				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){moveSelectedArtwork("down",nameCheckbox.value,numCheckbox.value)});
+				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
 
 		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
@@ -140,58 +141,88 @@ function createAdjustmentDialog()
 
 	function moveSelectedArtwork(dir,namePref,numPref)
 	{
-		var xMoveDirection = 0,yMoveDirection = 0;
-		if(dir === "left")
-		{
-			xMoveDirection = -1;
-		}
-		else if(dir === "right")
-		{
-			xMoveDirection = 1;
-		}
-		else if(dir === "up")
-		{
-			yMoveDirection = 1;
-		}
-		else if(dir === "down")
-		{
-			yMoveDirection = -1;
-		}
-
 		if(curRosterName && namePref)
 		{
-			curRosterName.left += xMoveDirection * NUDGE_AMOUNT;
-			curRosterName.top += yMoveDirection * NUDGE_AMOUNT;
+			curRosterName.left += dir[0] * NUDGE_AMOUNT;
+			curRosterName.top += dir[1] * NUDGE_AMOUNT;
 			
 		}
 		if(curRosterNumber && numPref)
 		{
-			curRosterNumber.left += xMoveDirection * NUDGE_AMOUNT;
-			curRosterNumber.top += yMoveDirection * NUDGE_AMOUNT;
+			curRosterNumber.left += dir[0] * NUDGE_AMOUNT;
+			curRosterNumber.top += dir[1] * NUDGE_AMOUNT;
 		}
+
 		app.redraw();
 	}
 
 	function createEditRosterControls(parent)
 	{
 		var INPUTCHARACTERS = 20;
-		var inputContainerGroup = UI.group(parent);
+		var inputContainerGroup = parent.inputContainerGroup = UI.group(parent);
 			inputContainerGroup.orientation = "row";
 
-		var labelGroup = UI.group(inputContainerGroup);
-			labelGroup.orientation = "column";
+			var labelGroup = inputContainerGroup.labelGroup = UI.group(inputContainerGroup);
+				labelGroup.orientation = "column";
 
-			var nameLabel = UI.static(labelGroup,"Name:");
-			var numLabel = UI.static(labelGroup,"Number:");
+				var nameLabel = UI.static(labelGroup,"Name:");
+				var numLabel = UI.static(labelGroup,"Number:");
 
-		var inputGroup = inputContainerGroup.inputGroup = UI.group(inputContainerGroup);
-			inputGroup.orientation = "column";
+			var inputGroup = inputContainerGroup.inputGroup = UI.group(inputContainerGroup);
+				inputGroup.orientation = "column";
 
-			var nameInput = inputGroup.nameInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
-			var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+				var nameInput = inputGroup.nameInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
 		var btnGroup = parent.btnGroup = UI.group(parent);
-			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){alert("Updating")});
+			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text)});
+	}
+
+	function updateEditRosterEntryGroup(parent)
+	{
+		if(curRosterName)
+		{
+			parent.nameInput.text = curRosterName.contents;
+		}
+		else
+		{
+			parent.nameInput.text = "";
+		}
+		if(curRosterNumber)
+		{
+			parent.numInput.text = curRosterNumber.contents;
+		}
+		else
+		{
+			parent.nameInput.text = "";
+		}
+	}
+
+	function updateCurRoster(name,num)
+	{
+		var newName = "";
+		if(curRosterName)
+		{
+			curRosterName.contents = name;
+			newName = name + " ";
+		}
+		else
+		{
+			newName = "(no name) ";
+		}
+		if(curRosterNumber)
+		{
+			curRosterNumber.contents = num;
+			newName += num;
+		}
+		else
+		{
+			newName += "(no number)"
+		}
+
+		curRosterGroup.name = newName;
+		g_rosterSelect.listbox.selection.text = newName;
+		app.redraw();
 	}
 
 	function createMainButtonGroup(parent)

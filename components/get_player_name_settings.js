@@ -6,14 +6,13 @@
 		display a dialog prompting the user to select
 		maximum player name width and player name case
 	Arguments
-		curGarment
-			curGarment object
+		none
 	Return value
 		success boolean		
 
 */
 
-function getPlayerNameSettings(curGarment)
+function getPlayerNameSettings()
 {
 	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	var result;
@@ -21,7 +20,7 @@ function getPlayerNameSettings(curGarment)
 	var caseOptions = ["Title Case", "lowercase", "UPPERCASE"];
 
 	var w = new Window("dialog", "Please input the player name preferences.");
-		var topTxt = UI.static(w,"Please choose the appropriate player name settings for " + curGarment.parentLayer.name);
+		var topTxt = UI.static(w,"Please choose the appropriate player name settings.");
 		var listGroup = UI.group(w);
 			listGroup.orientation = "column";
 			listGroup.alignChildren = "center";

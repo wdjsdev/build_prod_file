@@ -8,9 +8,7 @@
 		a simple export. But for any pieces with roster information
 		the same artboard will be exported once for each roster entry
 	Arguments
-		curGarment
-			current garment object
-		folderName
+		pdfFolderName
 			a string including the order number as well as any sequence letters
 			"1234567_C"
 		destFolder
@@ -21,24 +19,18 @@
 
 */
 
-function exportProdFile(curGarment, folderName, destFolder)
+function exportProdFile(pdfFolderName, destFolder)
 {
 	var result = true;
 	var doc = app.activeDocument;
+	var docName = doc.name;
 	var tmpNameLay = doc.layers.add();
 	tmpNameLay.name = "tmpname";
 	var tmpNumLay = doc.layers.add();
 	tmpNumLay.name = "tmpnum";
 
-	folderName = folderName.replace(".ai","");
-	var pdfFolder = Folder(destFolder.fsName + "/" + folderName + "_PDFs");
-	var overwriteMsg = "A PDFs folder already exists for " + curGarment.doc.name.replace(".ai","");
-	if (pdfFolder.exists && !getOverwritePreference(overwriteMsg))
-	{
-		result = false;
-		errorList.push("Production File and PDFs were not  exported for " + curGarment.parentLayer.name);
-		log.l("User chose not to overwrite the existing PDFs folder for " + curGarment.parentLayer.name);
-	}
+	pdfFolderName = pdfFolderName.replace(".ai","");
+	var pdfFolder = Folder(destFolder.fsName + "/" + pdfFolderName + "_PDFs");
 
 	if(result)
 	{
@@ -76,6 +68,8 @@ function exportProdFile(curGarment, folderName, destFolder)
 
 	tmpNameLay.remove();
 	tmpNumLay.remove();
+
+	saveFile(doc,docName,destFolder);
 	return result;
 
 

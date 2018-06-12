@@ -39,7 +39,8 @@ function initAdjustProdFile()
 	}
 
 	//set the artwork layer
-	var artworkLayer = layers["Artwork"];
+	artworkLayer = layers["Artwork"];
+	sewLinesLayer = layers["Sew Lines"];
 
 	//loop the groupItems on the artwork layer and build the
 	//script global prodFileRoster object as declared in the main script.

@@ -223,7 +223,11 @@ function createAdjustmentDialog()
 	function createMainButtonGroup(parent)
 	{
 		var cancel = UI.button(parent,"Cancel",function(){w.close();});
-		var submit = UI.button(parent,"Submit",function(){alert("submit")});
+		var submit = UI.button(parent,"Submit",function(){
+			getPlayerNameSettings();
+			w.close();
+			exportProdFile(docName, Folder(docPath));
+		});
 	}
 
 	function populateListbox(parent,arr)

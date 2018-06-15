@@ -127,12 +127,12 @@ function createAdjustmentDialog()
 		var btnGroup = parent.btnGroup = UI.group(parent);
 			btnGroup.orientation = "column";
 			var btnGroupTopRow = UI.group(btnGroup);
-				var upButton = UI.button(btnGroupTopRow,"/\\",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
+				var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
 			var btnGroupMiddleRow = UI.group(btnGroup);
-				var leftButton = UI.button(btnGroupMiddleRow,"<",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
-				var rightButton = UI.button(btnGroupMiddleRow,">",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
+				var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
+				var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
 			var btnGroupBottomRow = UI.group(btnGroup);
-				var downButton = UI.button(btnGroupBottomRow,"\\/",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
+				var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
 
 		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");

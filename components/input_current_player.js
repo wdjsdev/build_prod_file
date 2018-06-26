@@ -70,8 +70,17 @@ function inputCurrentPlayer(pieces, curPlayer)
 		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];
-			if (curFrame.typename !== "TextFrame")
+			// if (curFrame.typename !== "TextFrame")
+			// {
+			// 	continue;
+			// }
+			if(curFrame.typename === "GroupItem" && curFrame.textFrames.length)
 			{
+				curFrame = curFrame.textFrames[0];	
+			}
+			else if(curFrame.typename !== "TextFrame")
+			{
+				alert("curFrame is not a textFrame");
 				continue;
 			}
 			if (curFrame.name.toLowerCase().indexOf("name") > -1)

@@ -55,6 +55,9 @@ function container()
 	//external components
 	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";
 
+	//create instance of stopwatch object
+	var timer = new stopwatch();
+
 	var curOrderData;
 
 	var garmentsNeeded = [];
@@ -115,6 +118,9 @@ function container()
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 	
+	//log the start time
+	timer.logStart();
+
 	//check to make sure the active document is a proper converted template
 	if(valid && !isTemplate(docRef))
 	{
@@ -179,14 +185,11 @@ function container()
 	}
 
 
+	//log the end time
+	timer.logEnd();
 	
+	// buildStats.buildScriptExecutionTime = timer.calculate();
 
-
-	// for(var x=0;x<garmentsNeeded.length;x++)
-	// {
-	// 	log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-	// 	$.sleep(500);
-	// }
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/

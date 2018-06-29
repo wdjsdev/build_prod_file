@@ -128,7 +128,7 @@ function exportProdFile(pdfFolderName, destFolder)
 				//so they can be expanded separately
 				for(var y=0,yLen = curRosterChild.pageItems.length;y<yLen;y++)
 				{
-					if(curRosterChild.pageItems[y].name === "Name")
+					if(curRosterChild.pageItems[y].name.indexOf("Name") >-1)
 					{
 						if(curRosterChild.pageItems[y].contents === "")
 						{
@@ -155,7 +155,7 @@ function exportProdFile(pdfFolderName, destFolder)
 							}
 						}
 					}
-					else if(curRosterChild.pageItems[y].name === "Number")
+					else if(curRosterChild.pageItems[y].name.indexOf("Number") >-1)
 					{
 						if(curRosterChild.pageItems[y].contents === "")
 						{

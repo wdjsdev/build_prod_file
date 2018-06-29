@@ -22,24 +22,27 @@
 function findTextFrame(item)
 {
 	var result;
-	if(item.typename === "TextFrame")
-	{
-		result = item;
-		return result;
-	}
-
-	else if(item.typename === "GroupItem")
-	{
-		dig(item);
-	}
+	
+	dig(item);
 
 	return result;
 
 
 	function dig(item)
 	{
-		if(item.typename === "PathItem")
+		if(result)return;
+		if(item.typename.indexOf("PathItem")>=0)
 		{
+			return;
+		}
+		else if(item.typename === "TextFrame")
+		{
+			result = item;
+			return;
+		}
+		else if(item.typename === "GroupItem" && item.clipped && item.textFrames.length)
+		{
+			result = item;
 			return;
 		}
 		var len = item.pageItems.length;
@@ -53,7 +56,7 @@ function findTextFrame(item)
 			}
 			else if(curItem.typename === "GroupItem")
 			{
-				if(curItem.clipped)
+				if(curItem.clipped && curItem.textFrames.length)
 				{
 					result = curItem;
 				}
@@ -68,3 +71,4 @@ function findTextFrame(item)
 		}
 	}
 }
+

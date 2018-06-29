@@ -22,8 +22,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 {
 	log.h("Beginning execution of inputCurrentPlayer() function.::player name = " + curPlayer.name + "::player number = " + curPlayer.number);
 	var result = true;
-	var nameProperlyResized = false;
-	var curFrame, centerPoint;
+	var curFrame;
 	var doc = app.activeDocument;
 	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel;
 	var len = pieces.length;

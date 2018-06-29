@@ -19,7 +19,7 @@
 
 */
 
-function setupRosterGroup(item,frame)
+function setupRosterGroup(item)
 {
 	var result = false;
 	var curItem,frame;
@@ -32,44 +32,43 @@ function setupRosterGroup(item,frame)
 
 		//move all existing textFrames into liveTextGroup
 		var len = item.pageItems.length;
-		for(var x=len-1;x>=0;x--)
+		for(var x=len-1;x>=2;x--)
 		{
 			curItem = item.pageItems[x];
-			// $.writeln("checking for a text frame in: " + curItem.name);
-			// frame = findTextFrame(curItem);
+			frame = findTextFrame(curItem);
 
-			// if(frame)
-			// {
-			// 	frame.name = curItem.name;
-			// 	frame.moveToBeginning(liveTextGroup);
-			// 	result = true;
-			// }
-			if(curItem.typename === "TextFrame")
+			if(frame)
 			{
-				curItem.moveToBeginning(liveTextGroup);
+				frame.name = curItem.name.indexOf("Name")>-1 ? "Name" : "Number";
+				frame.moveToBeginning(liveTextGroup);
 				result = true;
 			}
-			else if(curItem.name !== "Live Text" && curItem.name != "Roster" && curItem.typename === "GroupItem" && curItem.textFrames.length)
-			{
-				if(curItem.textFrames.length)
-				{
-					curItem.textFrames[0].name = curItem.name;
-					curItem.textFrames[0].moveToBeginning(liveTextGroup);
-					result = true;
-				}
-				else
-				{
-					for(var y=0,yLen = curItem.pageItems.length;y<yLen;y++)
-					{
-						if(curItem.pageItems[y].typename === "GroupItem" && curItem.pageItems[y].clipped && curItem.pageItems[y].textFrames.length)
-						{
-							curItem.pageItems[y].textFrames[0].name = curItem.name;
-							curItem.pageItems[y].textFrames[0].moveToBeginning(liveTextGroup);
-							result = true;
-						}
-					}
-				}
-			}
+			// if(curItem.typename === "TextFrame")
+			// {
+			// 	curItem.moveToBeginning(liveTextGroup);
+			// 	result = true;
+			// }
+			// else if(curItem.name !== "Live Text" && curItem.name != "Roster" && curItem.typename === "GroupItem" && curItem.textFrames.length)
+			// {
+			// 	if(curItem.textFrames.length)
+			// 	{
+			// 		curItem.textFrames[0].name = curItem.name;
+			// 		curItem.textFrames[0].moveToBeginning(liveTextGroup);
+			// 		result = true;
+			// 	}
+			// 	else
+			// 	{
+			// 		for(var y=0,yLen = curItem.pageItems.length;y<yLen;y++)
+			// 		{
+			// 			if(curItem.pageItems[y].typename === "GroupItem" && curItem.pageItems[y].clipped && curItem.pageItems[y].textFrames.length)
+			// 			{
+			// 				curItem.pageItems[y].textFrames[0].name = curItem.name;
+			// 				curItem.pageItems[y].textFrames[0].moveToBeginning(liveTextGroup);
+			// 				result = true;
+			// 			}
+			// 		}
+			// 	}
+			// }
 		}
 
 		if(!result)

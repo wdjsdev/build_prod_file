@@ -32,7 +32,22 @@ function expand(frame)
 	}
 	catch(e){};
 
-	app.doScript("Expand", "expand_text");
+	// app.doScript("Expand", "expand_text");
+	try
+	{
+		frame.createOutline();
+	}
+	catch(e)
+	{
+		if(frame.textFrames.length)
+		{
+			frame.textFrames[0].createOutline();
+		}
+		else
+		{
+			errorList.push("Failed to expand the text frame.");
+		}
+	}
 
 	while(expandStrokesPreference && searchForStrokes(parentLayer))
 	{

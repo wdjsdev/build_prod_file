@@ -20,7 +20,7 @@ function unloadExpandAction()
 	{
 		try
 		{
-			app.unloadAction("expand_text","");
+			app.unloadAction("Text Expansion","");
 		}
 		catch(e)
 		{

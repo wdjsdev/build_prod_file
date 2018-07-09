@@ -19,19 +19,21 @@
 
 function getExpandStrokeSettings(curGarment)
 {
-
-	var w = new Window("dialog", "Please click the checkbox if you want to fully expand strokes.");
-		var expandStrokePreferenceGroup = UI.group(w);
-			var expandStrokePreferenceCheckbox = UI.checkbox(expandStrokePreferenceGroup,"Fully expand strokes?");
+	var w = new Window("dialog", "How do you want to expand the text?");
 
 		var btnGroup = UI.group(w);
 			var submit = UI.button(btnGroup,"Submit",validate);
+
+		getExpansionPreferences(w);
 
 	w.show();
 
 	function validate()
 	{
-		expandStrokesPreference = expandStrokePreferenceCheckbox.value;
+		for(var x=0,len=w.listbox.items.length;x<len;x++)
+		{
+			textExpandSteps.push(listbox.items[x].text);
+		}
 		w.close();
 	}
 }

@@ -50,6 +50,7 @@ function container()
 		playerNameCase,
 		addRosterDataUserPreference,
 		expandStrokesPreference,
+		textExpandSteps = [],
 		curGarment;
 
 	//external components

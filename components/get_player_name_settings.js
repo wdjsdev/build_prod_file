@@ -14,7 +14,6 @@
 
 function getPlayerNameSettings()
 {
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	var result;
 	var widthOptions = ["6.5", "7", "8", "9", "10", "Custom"];
 	var caseOptions = ["Title Case", "lowercase", "UPPERCASE"];
@@ -57,8 +56,7 @@ function getPlayerNameSettings()
 				var caseTxt = UI.static(caseGroup,"Font Case:");
 				var caseDropdown = UI.dropdown(caseGroup,caseOptions);
 
-			var expandStrokePreferenceGroup = UI.group(listGroup);
-				var expandStrokePreferenceCheckbox = UI.checkbox(expandStrokePreferenceGroup,"Fully expand strokes?");
+			getExpansionPreferences(w);
 
 		var btnGroup = UI.group(w);
 			var cancel = UI.button(btnGroup,"Cancel",function(){result = false;w.close();})
@@ -94,7 +92,10 @@ function getPlayerNameSettings()
 		if(result)
 		{
 			maxPlayerNameWidth *= INCH_TO_POINT_AT_SCALE;
-			expandStrokesPreference = expandStrokePreferenceCheckbox.value;
+			for(var x=0,len=w.listbox.items.length;x<len;x++)
+			{
+				textExpandSteps.push(w.listbox.items[x].text);
+			}
 			w.close();
 		}
 	}

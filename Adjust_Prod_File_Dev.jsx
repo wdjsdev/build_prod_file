@@ -98,6 +98,7 @@ function container()
 	var maxPlayerNameWidth;
 	var playerNameCase;
 	var expandStrokesPreference;
+	var textExpandSteps = [];
 	var artworkLayer,sewLinesLayer;
 
 	var pdfSaveOpts = new PDFSaveOptions();

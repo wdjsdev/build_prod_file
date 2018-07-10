@@ -17,22 +17,25 @@
 
 */
 
-function getExpandStrokeSettings(curGarment)
+function getExpandStrokeSettings()
 {
 	var w = new Window("dialog", "How do you want to expand the text?");
+
+		getExpansionPreferences(w);
 
 		var btnGroup = UI.group(w);
 			var submit = UI.button(btnGroup,"Submit",validate);
 
-		getExpansionPreferences(w);
+		
 
 	w.show();
 
 	function validate()
 	{
+		alert("beginning validate function");
 		for(var x=0,len=w.listbox.items.length;x<len;x++)
 		{
-			textExpandSteps.push(listbox.items[x].text);
+			textExpandSteps.push(w.listbox.items[x].text);
 		}
 		w.close();
 	}

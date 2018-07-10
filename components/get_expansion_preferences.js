@@ -37,6 +37,8 @@ function getExpansionPreferences(parent)
 			var outlineButton = btnGroup.outline = UI.button(btnGroup,"Create Outlines");
 			var expandAppearanceButton = btnGroup.expandAppearance = UI.button(btnGroup,"Expand Appearance");
 			var expandStrokeButton = btnGroup.expandStroke = UI.button(btnGroup,"Expand Stroke");
+			var separator = UI.hseparator(btnGroup,100);
+			var rmButton = btnGroup.rmItem = UI.button(btnGroup,"Remove Item");
 
 		var lbGroup = UI.group(prefGroup);
 			var listbox = parent.listbox = UI.listbox(lbGroup,listbox_size);
@@ -52,6 +54,15 @@ function getExpansionPreferences(parent)
 			expandStrokeButton.onClick = function()
 			{
 				listbox.add("item", "Expand");
+			}
+			rmButton.onClick = function()
+			{
+				alert(listbox.selection.length)
+				if(listbox.selection.length)
+				{
+					alert(listbox.selection.index);
+					listbox.remove(listbox.selection[listbox.selection.index])
+				}
 			}
 
 

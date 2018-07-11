@@ -26,6 +26,7 @@ function getExpansionPreferences(parent)
 {
 	var listbox_size = [0,0,200,200];
 	var dispGroup = UI.group(parent);
+		dispGroup.orientation = "column";
 		var disp = UI.static(dispGroup,"Please input the proper order of operations");
 		var disp2 = UI.static(dispGroup,"to properly expand the text.");
 

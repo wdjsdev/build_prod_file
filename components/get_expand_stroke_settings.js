@@ -32,7 +32,6 @@ function getExpandStrokeSettings()
 
 	function validate()
 	{
-		alert("beginning validate function");
 		for(var x=0,len=w.listbox.items.length;x<len;x++)
 		{
 			textExpandSteps.push(w.listbox.items[x].text);

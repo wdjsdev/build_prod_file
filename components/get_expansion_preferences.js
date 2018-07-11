@@ -57,11 +57,9 @@ function getExpansionPreferences(parent)
 			}
 			rmButton.onClick = function()
 			{
-				alert(listbox.selection.length)
-				if(listbox.selection.length)
+				if(listbox.selection)
 				{
-					alert(listbox.selection.index);
-					listbox.remove(listbox.selection[listbox.selection.index])
+					listbox.remove(listbox.selection);
 				}
 			}
 

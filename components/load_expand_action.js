@@ -1,6 +1,5 @@
 function loadExpandAction()
 {
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	var actionString = [
 		"/version 3",
 		"/name [ 14",
@@ -119,4 +118,3 @@ function loadExpandAction()
 
 	app.loadAction(actionFile);
 }
-loadExpandAction();

@@ -54,16 +54,11 @@ function exportProdFile(pdfFolderName, destFolder)
 		unlockDoc(doc);
 		sewLinesLayer.visible = false;
 
-		loadExpandAction();
-
-		// var groups = doc.layers[0].groupItems;
 		var groups = artworkLayer.groupItems;
 		for(var x=0,len=groups.length;x<len;x++)
 		{
 			exportPiece(groups[x]);
 		}
-
-		unloadExpandAction();
 	}
 
 	tmpNameLay.remove();

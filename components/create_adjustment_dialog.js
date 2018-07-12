@@ -224,7 +224,7 @@ function createAdjustmentDialog()
 	{
 		var cancel = UI.button(parent,"Cancel",function(){w.close();});
 		var submit = UI.button(parent,"Submit",function(){
-			getPlayerNameSettings();
+			getPlayerNameSettings(prodFileHasNames);
 			w.close();
 			exportProdFile(docName, Folder(docPath));
 		});

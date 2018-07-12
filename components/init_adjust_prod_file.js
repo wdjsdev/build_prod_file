@@ -112,6 +112,10 @@ function initAdjustProdFile()
 		{
 			if(group.pageItems[rg].name === name)
 			{
+				if(name === "Name")
+				{
+					prodFileHasNames = true;
+				}
 				return group.pageItems[rg];
 			}
 		}

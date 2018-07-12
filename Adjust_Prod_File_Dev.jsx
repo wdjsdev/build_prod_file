@@ -147,6 +147,7 @@ function container()
 	*/
 	var prodFileRoster = {};
 	var prodFileSizes = [];
+	var prodFileHasNames = false;
 
 
 

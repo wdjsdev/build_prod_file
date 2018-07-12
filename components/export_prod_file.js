@@ -29,6 +29,8 @@ function exportProdFile(pdfFolderName, destFolder)
 	var tmpNumLay = doc.layers.add();
 	tmpNumLay.name = "tmpnum";
 
+	loadExpandAction();
+
 	pdfFolderName = pdfFolderName.replace(".ai","");
 	var pdfFolder = Folder(destFolder.fsName + "/" + pdfFolderName + "_PDFs");
 
@@ -65,6 +67,9 @@ function exportProdFile(pdfFolderName, destFolder)
 	tmpNumLay.remove();
 
 	saveFile(doc,docName,destFolder);
+
+	unloadExpandAction();
+	
 	return result;
 
 

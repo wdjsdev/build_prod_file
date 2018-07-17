@@ -54,10 +54,18 @@ function getPlayerNameSettings(names)
 						var customInput = UI.edit(customInputGroup,"",5);
 							customInput.enabled = false;
 						
-				var caseGroup = UI.group(listGroup);
-					caseGroup.orientation = "row";
-					var caseTxt = UI.static(caseGroup,"Font Case:");
-					var caseDropdown = UI.dropdown(caseGroup,caseOptions);
+				////////////////////////
+				////////ATTENTION://////
+				//
+				//		deprectated in favor of pre-converting
+				//		roster data to correct case instead of
+				//		converting the textframes in the document	
+				//
+				////////////////////////
+				// var caseGroup = UI.group(listGroup);
+				// 	caseGroup.orientation = "row";
+				// 	var caseTxt = UI.static(caseGroup,"Font Case:");
+				// 	var caseDropdown = UI.dropdown(caseGroup,caseOptions);
 		}
 
 			getExpansionPreferences(w);
@@ -74,13 +82,13 @@ function getPlayerNameSettings(names)
 		if(names)
 		{
 			var maxWidth = parseInt(customInput.text);
-			var nameCase = caseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
+			// var nameCase = caseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
 			if(customInput.enabled || widthDropdown.selection.text === "Custom")
 			{
 				if(maxWidth.toString() !== "NaN")
 				{
 					maxPlayerNameWidth = maxWidth;
-					playerNameCase = nameCase;
+					// playerNameCase = nameCase;
 				}
 				else
 				{
@@ -92,7 +100,7 @@ function getPlayerNameSettings(names)
 			{
 				maxPlayerNameWidth = parseInt(widthDropdown.selection.text);
 				maxPlayerNameWidth *= INCH_TO_POINT_AT_SCALE;
-				playerNameCase = nameCase;
+				// playerNameCase = nameCase;
 			}
 		}
 		if(result)

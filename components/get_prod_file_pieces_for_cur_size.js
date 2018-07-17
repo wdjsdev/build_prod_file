@@ -14,8 +14,9 @@
 
 function getProdFilePiecesForCurSize(curSize)
 {
+	var doc = app.activeDocument;
 	var result = [];
-	var artLay = layers["Artwork"];
+	var artLay = doc.layers["Artwork"];
 	var curItem;
 	for(var x=0,len=artLay.pageItems.length;x<len;x++)
 	{

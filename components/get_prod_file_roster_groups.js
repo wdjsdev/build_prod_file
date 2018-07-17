@@ -15,8 +15,9 @@
 
 function getProdFileRosterGroups(pieceName)
 {
+	var doc = app.activeDocument;
 	var result = [];
-	var piece = layers["Artwork"].pageItems[pieceName];
+	var piece = doc.layers["Artwork"].pageItems[pieceName];
 	var rosterGroup = piece.groupItems["Roster"];
 	for(var x=0,len=rosterGroup.pageItems.length;x<len;x++)
 	{

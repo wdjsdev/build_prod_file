@@ -17,8 +17,11 @@
 function initAdjustProdFile()
 {
 	var result = true;
+	var doc = app.activeDocument;
+	var layers = doc.layers;
 
-	var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
+	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
+	var requiredLayers = ["Sew Lines", "Artwork"];
 
 	//verify proper prod file structure
 	try

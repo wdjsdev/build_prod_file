@@ -25,9 +25,11 @@
 
 function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 {
+	var doc = app.activeDocument;
 	curRosterGroup = curRosterName = curRosterNumber = undefined;
-	var piece = layers["Artwork"].pageItems[pieceName];
+	var piece = doc.layers["Artwork"].pageItems[pieceName];
 	curRosterGroup = piece.groupItems["Roster"].pageItems[rosterGroupName];
+	// curRosterGroup.hidden = false;
 	try
 	{
 		curRosterName = curRosterGroup.pageItems["Name"];
@@ -48,9 +50,9 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 	}
 
 	//create the artboard
-	docRef.selection = null;
+	doc.selection = null;
 	piece.pageItems[piece.pageItems.length-1].selected = true;
-	docRef.fitArtboardToSelectedArt(0);
+	doc.fitArtboardToSelectedArt(0);
 	app.executeMenuCommand("fitall");
 
 	//hide the live text group
@@ -61,6 +63,7 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 	{
 		if(piece.groupItems["Roster"].pageItems[x].name === rosterGroupName)
 		{
+			piece.groupItems["Roster"].hidden = false;
 			piece.groupItems["Roster"].pageItems[x].hidden = false;
 		}
 		else

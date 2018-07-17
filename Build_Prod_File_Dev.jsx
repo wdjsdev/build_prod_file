@@ -17,6 +17,10 @@ function container()
 	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	// eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
 
+	if(!valid)
+	{
+		return;
+	}
 
 	if(user === "will.dowling")
 	{
@@ -71,6 +75,18 @@ function container()
 	pdfSaveOpts.viewAfterSaving = false;
 	pdfSaveOpts.compressArt = true;
 	pdfSaveOpts.optimization = true;
+
+
+	//adjustment dialog variables
+
+	var LISTBOX_DIMENSIONS = [50,50,200,200];
+	var NUDGE_AMOUNT = 1.8;
+	var curRosterGroup;
+	var curRosterName;
+	var curRosterNumber;
+	var prodFileRoster = {};
+	var prodFileSizes = [];
+	var prodFileHasNames = false;
 
 
 	//=================================  /Data  =================================//
@@ -170,14 +186,15 @@ function container()
 				"::garmentsNeeded.length = " + garmentsNeeded.length + 
 				"::garmentLayers.length = " + garmentLayers.length);
 		}
-		else if(garmentsNeeded.length > 1 || garmentLayers.length > 1)
-		{
-			assignGarmentsToLayers();
-		}
-		else if(garmentsNeeded.length === 1 && garmentLayers.length === 1)
-		{
-			garmentsNeeded[0].parentLayer = garmentLayers[0];
-		}
+		// else if(garmentsNeeded.length > 1 || garmentLayers.length > 1)
+		// {
+		// 	assignGarmentsToLayers();
+		// }
+		// else if(garmentsNeeded.length === 1 && garmentLayers.length === 1)
+		// {
+		// 	garmentsNeeded[0].parentLayer = garmentLayers[0];
+		// }
+		assignGarmentsToLayers();
 	}
 
 	if(valid)

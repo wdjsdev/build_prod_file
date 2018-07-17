@@ -88,10 +88,18 @@ function inputCurrentPlayer(pieces, curPlayer)
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;
-					if(playerNameCase)
-					{
-						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
-					}
+
+					////////////////////////
+					////////ATTENTION://////
+					//
+					//		deprecated in favor of converting the case in the
+					//		data instead of converting the actual text frame.
+					//
+					////////////////////////
+					// if(playerNameCase)
+					// {
+					// 	curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
+					// }
 
 					//
 					//the below is deprecated because resizing live text causes too many

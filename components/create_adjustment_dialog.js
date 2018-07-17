@@ -84,6 +84,12 @@ function createAdjustmentDialog()
 		//horizontal separator
 		UI.hseparator(w,400);
 
+
+		//group
+		//this group holds the text expansion preferences
+		var g_textExpansionGroup = UI.group(w);
+			getExpansionPreferences(g_textExpansionGroup);
+
 		//group
 		//this is the group of buttons for the bottom of the
 		//dialog. there will be 'cancel' and 'submit' buttons
@@ -222,10 +228,12 @@ function createAdjustmentDialog()
 
 	function createMainButtonGroup(parent)
 	{
-		var cancel = UI.button(parent,"Cancel",function(){w.close();});
+		var cancel = UI.button(parent,"Cancel",function(){result = false;w.close();});
 		var submit = UI.button(parent,"Submit",function(){
 			getPlayerNameSettings(prodFileHasNames);
 			w.close();
+			var docName = docRef.name.replace(".ai","");
+			var docPath = decodeURI(docRef.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 			exportProdFile(docName, Folder(docPath));
 		});
 	}

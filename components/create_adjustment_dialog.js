@@ -15,6 +15,7 @@
 function createAdjustmentDialog()
 {
 	var result = true;
+	var doc = app.activeDocument;
 
 	var w = new Window("dialog");
 		w.alignChildren["fill","fill"];
@@ -263,8 +264,8 @@ function createAdjustmentDialog()
 				return;
 			}
 			w.close();
-			var docName = docRef.name.replace(".ai","");
-			var docPath = decodeURI(docRef.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
+			var docName = doc.name.replace(".ai","");
+			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 			exportProdFile(docName, Folder(docPath));
 		});
 	}

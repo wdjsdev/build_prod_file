@@ -85,6 +85,16 @@ function createAdjustmentDialog()
 		//horizontal separator
 		UI.hseparator(w,400);
 
+		//group
+		//this section lets the user input the max
+		//player name width settings
+		var g_getMaxNameWidthSettingsGroup = UI.group(w);
+
+			createMaxNameWidthSettingsControls(g_getMaxNameWidthSettingsGroup);
+
+		//horizontal separator
+		UI.hseparator(w,400);
+
 
 		//group
 		//this group holds the text expansion preferences
@@ -126,6 +136,13 @@ function createAdjustmentDialog()
 			thisGroup.labelText = UI.static(thisGroup,label);
 			thisGroup.listbox = UI.listbox(thisGroup,LISTBOX_DIMENSIONS,[]);
 		return thisGroup;
+	}
+
+	function createMaxNameWidthSettingsControls(parent)
+	{
+		var msg = "Enter the maximum player name width in inches.";
+		var disp = UI.static(parent,msg);
+		var input = parent.maxWidthInput = UI.edit(parent,"9",10);
 	}
 
 	function createTransformControls(parent)
@@ -264,6 +281,7 @@ function createAdjustmentDialog()
 				return;
 			}
 			w.close();
+			maxPlayerNameWidth = parseInt(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
 			var docName = doc.name.replace(".ai","");
 			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 			exportProdFile(docName, Folder(docPath));

@@ -147,10 +147,10 @@ function exportProdFile(pdfFolderName, destFolder)
 						{
 							expand(duplicateName);
 							duplicateName = tmpNameLay.groupItems[0];
-							if(curGarment.maxNameWidth && duplicateName.width > curGarment.maxNameWidth)
+							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
-								duplicateName.width = curGarment.maxNameWidth;
+								duplicateName.width = maxPlayerNameWidth;
 								duplicateName.left = playerNameCenterPoint - duplicateName.width/2;
 							}
 						}

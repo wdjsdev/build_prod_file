@@ -20,6 +20,9 @@ function initAdjustProdFile()
 	var doc = app.activeDocument;
 	var layers = doc.layers;
 
+	//reset the prodFileRoster object
+	prodFileRoster = {};
+
 	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
 	var requiredLayers = ["Sew Lines", "Artwork"];
 

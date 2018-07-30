@@ -57,9 +57,9 @@ function exportProdFile(pdfFolderName, destFolder)
 		sewLinesLayer.visible = false;
 
 		var groups = artworkLayer.groupItems;
-		for(var x=0,len=groups.length;x<len;x++)
+		for(var xg=0,groupsLen=groups.length;xg<groupsLen;xg++)
 		{
-			exportPiece(groups[x]);
+			exportPiece(groups[xg]);
 		}
 	}
 
@@ -115,7 +115,7 @@ function exportProdFile(pdfFolderName, destFolder)
 
 			//hide all rosterGroup children
 			for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
-			{
+			{ 
 				rosterGroup.groupItems[x].hidden = true;
 			}
 
@@ -147,10 +147,10 @@ function exportProdFile(pdfFolderName, destFolder)
 						{
 							expand(duplicateName);
 							duplicateName = tmpNameLay.groupItems[0];
-							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
+							if(curGarment.maxNameWidth && duplicateName.width > curGarment.maxNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
-								duplicateName.width = maxPlayerNameWidth;
+								duplicateName.width = curGarment.maxNameWidth;
 								duplicateName.left = playerNameCenterPoint - duplicateName.width/2;
 							}
 						}

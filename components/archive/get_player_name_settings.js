@@ -87,7 +87,7 @@ function getPlayerNameSettings(names)
 			{
 				if(maxWidth.toString() !== "NaN")
 				{
-					maxPlayerNameWidth = maxWidth;
+					maxPlayerNameWidth = maxWidth * INCH_TO_POINT_AT_SCALE;
 					// playerNameCase = nameCase;
 				}
 				else

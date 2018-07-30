@@ -228,9 +228,40 @@ function createAdjustmentDialog()
 
 	function createMainButtonGroup(parent)
 	{
+		var continuePreference = true;
 		var cancel = UI.button(parent,"Cancel",function(){result = false;w.close();});
 		var submit = UI.button(parent,"Submit",function(){
-			getPlayerNameSettings(prodFileHasNames);
+			// getPlayerNameSettings(prodFileHasNames);
+			for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
+			{
+				textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
+			}
+			if(!textExpandSteps.length)
+			{
+				var msg = "You did not select any text expansion options. Are you sure you want to proceed?";
+				var confirmContinue = new Window("dialog");
+					var msg = UI.static(confirmContinue,msg);
+					var ccBtnGroup = UI.group(confirmContinue);
+						var noBtn = UI.button(ccBtnGroup,"No",function()
+						{
+							continuePreference = false;
+							confirmContinue.close();
+						})
+						var yesBtn = UI.button(ccBtnGroup,"Yes",function()
+						{
+							continuePreference = true;
+							confirmContinue.close();
+						})
+				confirmContinue.show();
+			}
+			else
+			{
+				continuePreference = true;
+			}
+			if(!continuePreference)
+			{
+				return;
+			}
 			w.close();
 			var docName = docRef.name.replace(".ai","");
 			var docPath = decodeURI(docRef.path).replace("/Users/","/Volumes/Macintosh HD/Users/");

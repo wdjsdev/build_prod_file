@@ -147,17 +147,32 @@ function createAdjustmentDialog()
 
 	function createTransformControls(parent)
 	{
-		parent.labelText = UI.static(parent,"Move the Stuff");
-		var btnGroup = parent.btnGroup = UI.group(parent);
-			btnGroup.orientation = "column";
-			var btnGroupTopRow = UI.group(btnGroup);
-				var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
-			var btnGroupMiddleRow = UI.group(btnGroup);
-				var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
-				var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
-			var btnGroupBottomRow = UI.group(btnGroup);
-				var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
+		//translation controls
+		//move up down left and right
+		var translateGroup = UI.group(parent);
+			translateGroup.orientation = "column"
+			var translateLabel = UI.static(translateGroup,"Move the Stuff");
+			var translateBtnGroup = translateGroup.btnGroup = UI.group(translateGroup);
+				translateBtnGroup.orientation = "column";
+				var btnGroupTopRow = UI.group(translateBtnGroup);
+					var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
+				var btnGroupMiddleRow = UI.group(translateBtnGroup);
+					var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
+					var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
+				var btnGroupBottomRow = UI.group(translateBtnGroup);
+					var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
 
+		//horizontal separator
+		UI.hseparator(parent,400);
+
+		var resizeGroup = UI.group(parent)
+			resizeGroup.orientation = "column";
+			var resizeLabel = UI.static(resizeGroup,"Resize the Stuff");
+			var resizeBtnGroup = UI.group(resizeGroup);
+				var widerBtn = UI.button(resizeBtnGroup,"\u219E Wider \u21A0",function(){resizeSelectedArtwork(true,"width",nameCheckbox.value,numCheckbox.value)});
+				var narrowerBtn = UI.button(resizeBtnGroup,"\u21A0 Narrower \u219E",function(){resizeSelectedArtwork(false,"width",nameCheckbox.value,numCheckbox.value)});
+				var tallerBtn = UI.button(resizeBtnGroup,"\u219F Taller \u219F",function(){resizeSelectedArtwork(true,"height",nameCheckbox.value,numCheckbox.value)});
+				var shorterBtn = UI.button(resizeBtnGroup,"\u21A1 Shorter \u21A1",function(){resizeSelectedArtwork(false,"height",nameCheckbox.value,numCheckbox.value)});
 		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
 			var numCheckbox = UI.checkbox(checkboxGroup, "Number");
@@ -177,6 +192,42 @@ function createAdjustmentDialog()
 			curRosterNumber.top += dir[1] * NUDGE_AMOUNT;
 		}
 
+		app.redraw();
+	}
+
+	function resizeSelectedArtwork(dir,dim,namePref,numPref)
+	{
+		var val;
+		if(dir)
+		{
+			val = 1;
+		}
+		else
+		{
+			val = -1;
+		}
+		if(curRosterName && namePref)
+		{
+			if(dim === "width")
+			{
+				curRosterName.textRange.characterAttributes.horizontalScale += val;
+			}
+			else
+			{
+				curRosterName.textRange.characterAttributes.verticalScale += val;
+			}
+		}
+		if(curRosterNumber && numPref)
+		{
+			if(dim === "width")
+			{
+				curRosterNumber.textRange.characterAttributes.horizontalScale += val;
+			}
+			else
+			{
+				curRosterNumber.textRange.characterAttributes.verticalScale += val;
+			}
+		}
 		app.redraw();
 	}
 

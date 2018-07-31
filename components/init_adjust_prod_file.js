@@ -22,6 +22,7 @@ function initAdjustProdFile()
 
 	//reset the prodFileRoster object
 	prodFileRoster = {};
+	prodFileSizes = [];
 
 	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
 	var requiredLayers = ["Sew Lines", "Artwork"];

@@ -249,6 +249,9 @@ function createAdjustmentDialog()
 				var nameInput = inputGroup.nameInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
+		// var smallLetterPreferenceGroup = UI.group(parent);
+		// 	var shrinkLetterHeight = UI.checkbox(smallLetterPreferenceGroup,"Shrink \"lowercase\" letters height?");
+
 		var btnGroup = parent.btnGroup = UI.group(parent);
 			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text)});
 	}
@@ -273,8 +276,9 @@ function createAdjustmentDialog()
 		}
 	}
 
-	function updateCurRoster(name,num)
+	function updateCurRoster(name,num,shrink)
 	{
+		var lowerCaseLetters;
 		var newName = "";
 		var newNum = "";
 
@@ -283,6 +287,18 @@ function createAdjustmentDialog()
 		if(curRosterName)
 		{
 			curRosterName.contents = name;
+			if(shrink)
+			{
+				lowerCaseLetters = findLowercase(name);
+				if(lowerCaseLetters.length)
+				{
+					for(var x=0,len=lowerCaseLetters.length;x<len;x++)
+					{
+						curRosterName.textRange.characters[lowerCaseLetters[x]].characterAttributes.verticalScale = 80;
+					}
+				}
+
+			}
 		}
 		if(curRosterNumber)
 		{

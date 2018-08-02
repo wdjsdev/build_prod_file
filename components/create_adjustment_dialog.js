@@ -16,6 +16,7 @@ function createAdjustmentDialog()
 {
 	var result = true;
 	var doc = app.activeDocument;
+	var nameInputSelection = [];
 
 	var w = new Window("dialog");
 		w.alignChildren["fill","fill"];
@@ -247,13 +248,28 @@ function createAdjustmentDialog()
 				inputGroup.orientation = "column";
 
 				var nameInput = inputGroup.nameInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+					nameInput.addEventListener("mouseout",function()
+					{
+						nameInputSelection = [nameInput.text.indexOf(nameInput.textselection), nameInput.textselection.length];
+					})
 				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
-		// var smallLetterPreferenceGroup = UI.group(parent);
-		// 	var shrinkLetterHeight = UI.checkbox(smallLetterPreferenceGroup,"Shrink \"lowercase\" letters height?");
+		var smallLetterPreferenceGroup = UI.group(parent);
+			var shrinkLetterHeight = UI.button(smallLetterPreferenceGroup,"Shrink Selected Letters",function()
+			{
+				var curScale,range,rangeIndex = nameInputSelection[0];
+				for(var x=0,len=nameInputSelection[1];x<len;x++)
+				{
+					range = curRosterName.textRange.characters[rangeIndex];
+					curScale = range.characterAttributes.verticalScale;
+					range.characterAttributes.verticalScale = (curScale === 100) ? 75 : 100;
+					rangeIndex++;
+				}
+				app.redraw();
+			});
 
 		var btnGroup = parent.btnGroup = UI.group(parent);
-			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text)});
+			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,shrinkLetterHeight.value)});
 	}
 
 	function updateEditRosterEntryGroup(parent)
@@ -287,18 +303,6 @@ function createAdjustmentDialog()
 		if(curRosterName)
 		{
 			curRosterName.contents = name;
-			if(shrink)
-			{
-				lowerCaseLetters = findLowercase(name);
-				if(lowerCaseLetters.length)
-				{
-					for(var x=0,len=lowerCaseLetters.length;x<len;x++)
-					{
-						curRosterName.textRange.characters[lowerCaseLetters[x]].characterAttributes.verticalScale = 80;
-					}
-				}
-
-			}
 		}
 		if(curRosterNumber)
 		{

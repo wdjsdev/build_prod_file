@@ -19,7 +19,7 @@ function findLowercase(str)
 
 	for(var x=0,len=str.length;x<len;x++)
 	{
-		if(str[x].toUpperCase !== str[x])
+		if(str[x].toUpperCase() !== str[x])
 		{
 			result.push(x);
 		}

@@ -29,25 +29,28 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 	curRosterGroup = curRosterName = curRosterNumber = undefined;
 	var piece = doc.layers["Artwork"].pageItems[pieceName];
 	curRosterGroup = piece.groupItems["Roster"].pageItems[rosterGroupName];
+	getRosterTextFrames(curRosterGroup);
 	// curRosterGroup.hidden = false;
-	try
-	{
-		curRosterName = curRosterGroup.pageItems["Name"];
-	}
-	catch(e)
-	{
-		//no roster name
-		//just move on
-	}
-	try
-	{
-		curRosterNumber = curRosterGroup.pageItems["Number"];
-	}
-	catch(e)
-	{
-		//no roster number
-		//just move on
-	}
+	// try
+	// {
+	// 	// curRosterName = curRosterGroup.pageItems["Name"];
+	// 	curRosterName = getRosterTextFrame(curRosterGroup.pageItems["Name"]);
+	// }
+	// catch(e)
+	// {
+	// 	//no roster name
+	// 	//just move on
+	// }
+	// try
+	// {
+	// 	// curRosterNumber = curRosterGroup.pageItems["Number"];
+	// 	curRosterNumber = getRosterTextFrame(curRosterGroup.pageItems["Number"])
+	// }
+	// catch(e)
+	// {
+	// 	//no roster number
+	// 	//just move on
+	// }
 
 	//create the artboard
 	doc.selection = null;

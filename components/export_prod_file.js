@@ -146,7 +146,7 @@ function exportProdFile(pdfFolderName, destFolder)
 						catch(e)
 						{
 							expand(duplicateName);
-							duplicateName = tmpNameLay.groupItems[0];
+							duplicateName = tmpNameLay.pageItems[0];
 							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;

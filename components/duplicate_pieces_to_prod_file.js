@@ -142,7 +142,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 				log.l("curSize layer = " + ppLay.layers[x]);
 				return ppLay.layers[x];
 			}
-			else if(sizeType === "wxh" && ppLay.layers[x].name.indexOf(curSize)>-1)
+			else if(sizeType === "wxh" && ppLay.layers[x].name.indexOf(curSize) === 0)
 			{
 				log.l("curSize layer = " + ppLay.layers[x]);
 				return ppLay.layers[x];

@@ -70,6 +70,7 @@ function splitDataByGarment()
 				{
 					curWaist = curSize;
 					curSize = curInseam;
+					curSize = curSize.replace(/[\"\']/g,"");
 					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};

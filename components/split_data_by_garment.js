@@ -36,6 +36,7 @@ function splitDataByGarment()
 		{
 			log.l(curItem + " is a proper garment line.");
 			curSize = getSize(curItem);
+			curSize = curSize.replace(/[\"\']/g,"");
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
 			if (!curStyle)

@@ -31,16 +31,11 @@ function findTextFrame(item)
 	function dig(item)
 	{
 		if(result)return;
-		if(item.typename.indexOf("PathItem")>=0)
+		if(item.typename.indexOf("PathItem")>=0 || item.typename.indexOf("Raster") > -1 || item.typename.indexOf("Placed")>-1)
 		{
 			return;
 		}
-		else if(item.typename === "TextFrame")
-		{
-			result = item;
-			return;
-		}
-		else if(item.typename === "GroupItem" && item.clipped && item.textFrames.length)
+		else if(item.typename === "TextFrame" || (item.typename === "GroupItem" && item.clipped && item.textFrames.length))
 		{
 			result = item;
 			return;

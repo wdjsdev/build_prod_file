@@ -157,7 +157,7 @@ function splitDataByGarment()
 	function isSeparator(str)
 	{
 		str = str.toLowerCase();
-		return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1)
+		return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1 || str.indexOf("onfile") > -1 || str.indexOf("custom") > -1 || str.indexOf("provided") > -1)
 	}
 
 }

@@ -82,7 +82,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 				alert("curFrame is not a textFrame");
 				continue;
 			}
-			if (curFrame.name.toLowerCase().indexOf("name") > -1)
+			if (curFrame.name.toLowerCase().indexOf("name") > -1 || curFrame.contents.toLowerCase().indexOf("play")>-1)
 			{
 				// centerPoint = curFrame.left + curFrame.width / 2;
 				if(curPlayer.name.indexOf("(") === -1)

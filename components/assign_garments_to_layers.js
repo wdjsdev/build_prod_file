@@ -16,7 +16,7 @@ function assignGarmentsToLayers()
 {
 	var rel = [];
 
-	var curGarment;
+	var curGarment,sep,playerNameCase;
 
 	var garmentOptions = ["Skip This Garment"];
 	for(var x=0;x<garmentLayers.length;x++)
@@ -38,6 +38,11 @@ function assignGarmentsToLayers()
 		rel[x].msg2 = UI.static(rel[x].group,curGarment.age === "A" ? "Adult" : "Youth");
 		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
 		rel[x].dropdown.selection = (x+1);
+		curGarment.nameCaseDropdown = UI.dropdown(rel[x].group,["lowercase","Title Case","UPPERCASE"]);
+		curGarment.nameCaseDropdown.selection = 0;
+		// curGarment.nameWidthMsg = UI.static(rel[x].group,"Enter the maximum player name width in inches:");
+		// curGarment.nameWidthEntry = UI.edit(rel[x].group,"9",10);
+		sep = UI.hseparator(w,200);
 	}
 
 	var btnGroup = UI.group(w);
@@ -54,6 +59,16 @@ function assignGarmentsToLayers()
 			if(rel[x].dropdown.selection.text.indexOf("Skip")=== -1)
 			{
 				garmentsNeeded[rel[x].index].parentLayer = layers[rel[x].dropdown.selection.text];
+				// playerNameCase = garmentsNeeded[rel[x].index].nameCaseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
+				garmentsNeeded[rel[x].index].playerNameCase = playerNameCase = garmentsNeeded[rel[x].index].nameCaseDropdown.selection.text;
+
+				//get the max name width setting
+				// var maxWidth = parseInt(garmentsNeeded[rel[x].index].nameWidthEntry.text);
+				// if(maxWidth.toString() !== "NaN")
+				// {
+				// 	garmentsNeeded[rel[x].index].maxNameWidth = maxWidth * INCH_TO_POINT_AT_SCALE;	
+				// }
+				convertPlayerNameCase(garmentsNeeded[rel[x].index].roster,playerNameCase);
 				log.l("garmentsNeeded[" + rel[x].index + "].parentLayer = " + layers[rel[x].dropdown.selection.text]);
 			}
 		}

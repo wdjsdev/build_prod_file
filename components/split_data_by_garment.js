@@ -36,6 +36,7 @@ function splitDataByGarment()
 		{
 			log.l(curItem + " is a proper garment line.");
 			curSize = getSize(curItem);
+			curSize = curSize.replace(/[\"\']/g,"");
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
 			if (!curStyle)
@@ -69,6 +70,7 @@ function splitDataByGarment()
 				{
 					curWaist = curSize;
 					curSize = curInseam;
+					curSize = curSize.replace(/[\"\']/g,"");
 					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
@@ -155,7 +157,7 @@ function splitDataByGarment()
 	function isSeparator(str)
 	{
 		str = str.toLowerCase();
-		return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1)
+		return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1 || str.indexOf("onfile") > -1 || str.indexOf("custom") > -1 || str.indexOf("provided") > -1)
 	}
 
 }

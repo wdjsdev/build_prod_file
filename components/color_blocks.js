@@ -167,7 +167,7 @@ function colorBlocks()
 	var valid = true;
 
 	var library = {
-		approvedColors: ['Black B', 'White B', 'Gray B', 'Gray 2 B', 'Steel B', 'Navy B', 'Navy 2 B', 'Royal Blue B', 'Columbia B', 'Teal B', 'Dark Green B', 'Kelly Green B', 'Lime Green B', 'Optic Yellow B', 'Yellow B', 'Athletic Gold B', 'Vegas Gold B', 'Orange B', 'Texas Orange B', 'Red B', 'Cardinal B', 'Maroon B', 'Hot Pink B', 'Pink B', 'Soft Pink B', 'Purple B', 'Flesh B', 'Dark Flesh B', 'Brown B', 'Cyan B', 'FLO ORANGE B', 'FLO YELLOW B', 'FLO PINK B', 'Twitch B', 'MINT B', 'Magenta B', 'Magenta 2 B', 'NEON CORAL B', 'FLAME B', 'BRIGHT PURPLE B', 'Dark Charcoal B', 'Info B', 'Jock Tag B', 'Jrock Charcoal', 'Feeney Purple B', 'Feeney Orange B', 'Feeney Orange Body B', 'Tailgater Gold B', 'Jock Tag B', 'MLBPA Red', 'MLBPA Navy', "Sangria B", "Kiwi B", "Hot Coral B", "Cobalt B"], 
+		approvedColors: BOOMBAH_APPROVED_COLORS,
 		productionColors: ['Thru-cut', 'CUT LINE', 'cut line', 'Info B', 'cutline', 'CUTLINE', 'SEW LINE', 'SEW LINES', 'SEWLINE'],
 
 	}

@@ -8,9 +8,7 @@
 		a simple export. But for any pieces with roster information
 		the same artboard will be exported once for each roster entry
 	Arguments
-		curGarment
-			current garment object
-		folderName
+		pdfFolderName
 			a string including the order number as well as any sequence letters
 			"1234567_C"
 		destFolder
@@ -21,24 +19,20 @@
 
 */
 
-function exportProdFile(curGarment, folderName, destFolder)
+function exportProdFile(pdfFolderName, destFolder)
 {
 	var result = true;
 	var doc = app.activeDocument;
+	var docName = doc.name;
 	var tmpNameLay = doc.layers.add();
 	tmpNameLay.name = "tmpname";
 	var tmpNumLay = doc.layers.add();
 	tmpNumLay.name = "tmpnum";
 
-	folderName = folderName.replace(".ai","");
-	var pdfFolder = Folder(destFolder.fsName + "/" + folderName + "_PDFs");
-	var overwriteMsg = "A PDFs folder already exists for " + curGarment.doc.name.replace(".ai","");
-	if (pdfFolder.exists && !getOverwritePreference(overwriteMsg))
-	{
-		result = false;
-		errorList.push("Production File and PDFs were not  exported for " + curGarment.parentLayer.name);
-		log.l("User chose not to overwrite the existing PDFs folder for " + curGarment.parentLayer.name);
-	}
+	loadExpandAction();
+
+	pdfFolderName = pdfFolderName.replace(".ai","");
+	var pdfFolder = Folder(destFolder.fsName + "/" + pdfFolderName + "_PDFs");
 
 	if(result)
 	{
@@ -62,16 +56,20 @@ function exportProdFile(curGarment, folderName, destFolder)
 		unlockDoc(doc);
 		sewLinesLayer.visible = false;
 
-		// var groups = doc.layers[0].groupItems;
 		var groups = artworkLayer.groupItems;
-		for(var x=0,len=groups.length;x<len;x++)
+		for(var xg=0,groupsLen=groups.length;xg<groupsLen;xg++)
 		{
-			exportPiece(groups[x]);
+			exportPiece(groups[xg]);
 		}
 	}
 
 	tmpNameLay.remove();
 	tmpNumLay.remove();
+
+	saveFile(doc,docName,destFolder);
+
+	unloadExpandAction();
+	
 	return result;
 
 
@@ -117,7 +115,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 
 			//hide all rosterGroup children
 			for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
-			{
+			{ 
 				rosterGroup.groupItems[x].hidden = true;
 			}
 
@@ -130,7 +128,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 				//so they can be expanded separately
 				for(var y=0,yLen = curRosterChild.pageItems.length;y<yLen;y++)
 				{
-					if(curRosterChild.pageItems[y].name === "Name")
+					if(curRosterChild.pageItems[y].name.indexOf("Name") >-1)
 					{
 						if(curRosterChild.pageItems[y].contents === "")
 						{
@@ -148,7 +146,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 						catch(e)
 						{
 							expand(duplicateName);
-							duplicateName = tmpNameLay.groupItems[0];
+							duplicateName = tmpNameLay.pageItems[0];
 							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
@@ -157,7 +155,7 @@ function exportProdFile(curGarment, folderName, destFolder)
 							}
 						}
 					}
-					else if(curRosterChild.pageItems[y].name === "Number")
+					else if(curRosterChild.pageItems[y].name.indexOf("Number") >-1)
 					{
 						if(curRosterChild.pageItems[y].contents === "")
 						{
@@ -168,9 +166,6 @@ function exportProdFile(curGarment, folderName, destFolder)
 						expand(duplicateNumber);
 					}
 				}
-				// duplicateRosterGroup = curRosterChild.duplicate(tmpLay);
-				// duplicateRosterGroup.hidden = false;
-				// expand(duplicateRosterGroup);
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");

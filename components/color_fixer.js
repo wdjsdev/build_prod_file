@@ -22,6 +22,8 @@ function colorFixer()
 	var swatches = doc.swatches;
 	var layers = doc.layers;
 
+	doc.selection = null;
+
 	try
 	{
 		exterminateDefault();

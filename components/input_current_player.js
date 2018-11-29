@@ -22,8 +22,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 {
 	log.h("Beginning execution of inputCurrentPlayer() function.::player name = " + curPlayer.name + "::player number = " + curPlayer.number);
 	var result = true;
-	var nameProperlyResized = false;
-	var curFrame, centerPoint;
+	var curFrame;
 	var doc = app.activeDocument;
 	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel;
 	var len = pieces.length;
@@ -70,20 +69,37 @@ function inputCurrentPlayer(pieces, curPlayer)
 		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];
-			if (curFrame.typename !== "TextFrame")
+			// if (curFrame.typename !== "TextFrame")
+			// {
+			// 	continue;
+			// }
+			if(curFrame.typename === "GroupItem" && curFrame.textFrames.length)
 			{
+				curFrame = curFrame.textFrames[0];	
+			}
+			else if(curFrame.typename !== "TextFrame")
+			{
+				alert("curFrame is not a textFrame");
 				continue;
 			}
-			if (curFrame.name.toLowerCase().indexOf("name") > -1)
+			if (curFrame.name.toLowerCase().indexOf("name") > -1 || curFrame.contents.toLowerCase().indexOf("play")>-1)
 			{
 				// centerPoint = curFrame.left + curFrame.width / 2;
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;
-					if(playerNameCase)
-					{
-						curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
-					}
+
+					////////////////////////
+					////////ATTENTION://////
+					//
+					//		deprecated in favor of converting the case in the
+					//		data instead of converting the actual text frame.
+					//
+					////////////////////////
+					// if(playerNameCase)
+					// {
+					// 	curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
+					// }
 
 					//
 					//the below is deprecated because resizing live text causes too many

@@ -50,7 +50,7 @@ function container()
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/components/build_prod_file"
 
-	var compFiles = includeComponents(devComponents,prodComponents,true);
+	var compFiles = includeComponents(devComponents,prodComponents,false);
 	if(compFiles && compFiles.length)
 	{
 		for(var x=0,len=compFiles.length;x<len;x++)
@@ -86,47 +86,8 @@ function container()
 	/*****************************************************************************/
 	//=================================  Data  =================================//
 	
-	var docRef = app.activeDocument,
-		layers = docRef.layers,
-		aB = docRef.artboards,
-		swatches = docRef.swatches,
-		LISTBOX_DIMENSIONS = [50,50,200,200];
 
-		/*
-		format of prodFileRoster object is as follows.
-		broken down by size, then each piece that contains
-		a roster group. inside of that is an array of roster
-		entries that includes the actual groupItem associated
-		with the name or number for that given roster entry
-
-		prodFileRoster =
-		{
-			"S" : 
-			{
-				"S Back" :
-				{
-					"liveText" : [GroupItem],
-					"rosterGroup" :
-					[
-						{"name":[GroupItem],"number":[GroupItem]},
-						{"name":[GroupItem],"number":[GroupItem]}
-					],
-				}
-				"S Right Sleeve" :
-				{
-					"liveText" : [GroupItem],
-					"rosterGroup":
-					[
-						{"name":undefined,"number":[GroupItem]},
-						{"name":undefined,"number":[GroupItem]}
-					]
-				}
-			}
-		}
-		*/
-		var prodFileRoster = {};
-
-
+	
 
 	//=================================  /Data  =================================//
 	/*****************************************************************************/

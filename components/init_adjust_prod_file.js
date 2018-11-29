@@ -17,8 +17,15 @@
 function initAdjustProdFile()
 {
 	var result = true;
+	var doc = app.activeDocument;
+	var layers = doc.layers;
 
-	var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
+	//reset the prodFileRoster object
+	prodFileRoster = {};
+	prodFileSizes = [];
+
+	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
+	var requiredLayers = ["Sew Lines", "Artwork"];
 
 	//verify proper prod file structure
 	try
@@ -39,7 +46,8 @@ function initAdjustProdFile()
 	}
 
 	//set the artwork layer
-	var artworkLayer = layers["Artwork"];
+	artworkLayer = layers["Artwork"];
+	sewLinesLayer = layers["Sew Lines"];
 
 	//loop the groupItems on the artwork layer and build the
 	//script global prodFileRoster object as declared in the main script.
@@ -62,6 +70,7 @@ function initAdjustProdFile()
 		if(!prodFileRoster[curSize])
 		{
 			prodFileRoster[curSize] = {};
+			prodFileSizes.push(curSize);
 		}
 
 		//initialize piece object in curSize object
@@ -110,6 +119,10 @@ function initAdjustProdFile()
 		{
 			if(group.pageItems[rg].name === name)
 			{
+				if(name === "Name")
+				{
+					prodFileHasNames = true;
+				}
 				return group.pageItems[rg];
 			}
 		}

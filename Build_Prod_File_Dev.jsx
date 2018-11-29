@@ -17,6 +17,10 @@ function container()
 	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 	// eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
 
+	if(!valid)
+	{
+		return;
+	}
 
 	if(user === "will.dowling")
 	{
@@ -31,42 +35,7 @@ function container()
 	/*****************************************************************************/
 	//=================================  Data  =================================//
 	
-	var docRef = app.activeDocument,
-		layers = docRef.layers,
-		aB = docRef.artboards,
-		swatches = docRef.swatches,
-		API_URL = "https://forms.na2.netsuite.com/app/site/hosting/scriptlet.nl?script=1377&deploy=1&compid=460511&h=b1f122a149a74010eb60&soid=",
-		LOCAL_DATA_FILE = File(homeFolderPath + "/Documents/cur_order_data.js"),
-		prodFileSaveLocation = desktopPath,
-		saveFileName,
-		saveFolder,
-		INCH_TO_POINT_AT_SCALE = 7.2,
-		tempLay,
-		artworkLayer,
-		sewLinesLayer,
-		colorBlockGroup,
-		playerNamesNeeded,
-		maxPlayerNameWidth,
-		playerNameCase,
-		addRosterDataUserPreference,
-		expandStrokesPreference,
-		curGarment;
-
-	//external components
-	var SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts";
-
-	var curOrderData;
-
-	var garmentsNeeded = [];
-	var garmentLayers = [];
-	var curProdFileIndex = 0;
-	var orderNum = "";
-
-	var pdfSaveOpts = new PDFSaveOptions();
-	pdfSaveOpts.preserveEditability = false;
-	pdfSaveOpts.viewAfterSaving = false;
-	pdfSaveOpts.compressArt = true;
-	pdfSaveOpts.optimization = true;
+	
 
 
 	//=================================  /Data  =================================//
@@ -115,62 +84,13 @@ function container()
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 	
-	//check to make sure the active document is a proper converted template
-	if(valid && !isTemplate(docRef))
-	{
-		valid = false;
-		errorList.push("Sorry, This script only works on converted template mockup files.");
-		errorList.push("Make sure you have a prepress file open.")
-		log.e("Not a converted template..::Exiting Script.");
-	}
+	//log the start time
+	timer.logStart();
+	
 
 	if(valid)
 	{
-		orderNum = getOrderNumber();
-		if(!orderNum || orderNum == "")
-		{
-			valid = false;
-		}
-		// orderNum = "2336912";
-	}
-
-	if(valid)
-	{
-		valid = getSaveLocation();
-	}
-
-	if(valid)
-	{
-		curOrderData = getOrderDataFromNetsuite(orderNum);
-	}
-
-	if(valid)
-	{
-		valid = splitDataByGarment();
-	}
-
-	if(valid)
-	{
-		garmentLayers = findGarmentLayers();
-	}
-
-	if(valid)
-	{
-		if(!garmentsNeeded.length)
-		{
-			errorList.push("Failed to find any garments to process.");
-			log.e("Failed to find any garments to process." + 
-				"::garmentsNeeded.length = " + garmentsNeeded.length + 
-				"::garmentLayers.length = " + garmentLayers.length);
-		}
-		else if(garmentsNeeded.length > 1 || garmentLayers.length > 1)
-		{
-			assignGarmentsToLayers();
-		}
-		else if(garmentsNeeded.length === 1 && garmentLayers.length === 1)
-		{
-			garmentsNeeded[0].parentLayer = garmentLayers[0];
-		}
+		initBuildProd();
 	}
 
 	if(valid)
@@ -179,14 +99,11 @@ function container()
 	}
 
 
+	//log the end time
+	timer.logEnd();
 	
+	// buildStats.buildScriptExecutionTime = timer.calculate();
 
-
-	// for(var x=0;x<garmentsNeeded.length;x++)
-	// {
-	// 	log.l(JSON.stringify(garmentsNeeded[x]) + "\n\n");
-	// 	$.sleep(500);
-	// }
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/

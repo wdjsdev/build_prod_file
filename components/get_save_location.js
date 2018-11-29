@@ -20,10 +20,21 @@ function getSaveLocation()
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
+	var docPath, newDocPath;
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
-	var docPath = "/Volumes/Macintosh HD" + docRef.path;
-	// var docPath = docRef.path.fsName;
+
+	if(docRef.path.indexOf("~")>-1)
+	{
+		newDocPath = docRef.path.replace("~",desktopPath);
+		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
+		docPath = newDocPath;
+	}
+	else
+	{
+		docPath = "/Volumes/Macintosh HD" + docRef.path;
+	}
+
 	log.l("docPath = " + docPath);
 	var userSelectedPath;
 

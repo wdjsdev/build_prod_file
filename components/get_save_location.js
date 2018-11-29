@@ -24,9 +24,9 @@ function getSaveLocation()
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
 
-	if(docRef.path.indexOf("~")>-1)
+	if(docRef.path.toString().indexOf("~/Desktop")>-1)
 	{
-		newDocPath = docRef.path.replace("~",desktopPath);
+		newDocPath = docRef.path.toString().replace("~/Desktop",desktopPath);
 		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
 		docPath = newDocPath;
 	}

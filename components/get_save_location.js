@@ -30,6 +30,12 @@ function getSaveLocation()
 		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
 		docPath = newDocPath;
 	}
+	else if(docRef.path.toString().indexOf("~/Documents")>-1)
+	{
+		newDocPath = docRef.path.toString().replace("~/Documents",documentsPath);
+		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
+		docPath = newDocPath;
+	}
 	else
 	{
 		docPath = "/Volumes/Macintosh HD" + docRef.path;

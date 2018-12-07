@@ -292,7 +292,7 @@ function createAdjustmentDialog()
 		}
 	}
 
-	function updateCurRoster(name,num,shrink)
+	function updateCurRoster(name,num)
 	{
 		var lowerCaseLetters;
 		var newName = "";
@@ -311,7 +311,6 @@ function createAdjustmentDialog()
 
 		curRosterGroup.name = newName + " " + newNum;
 		g_rosterSelect.listbox.selection.text = newName + " " + newNum;
-		w.layout.layout(true);
 		app.redraw();
 	}
 

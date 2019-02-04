@@ -32,7 +32,10 @@ function createAdjustmentDialog()
 			populateListbox(g_sizeSelect.listbox,prodFileSizes);
 			g_sizeSelect.listbox.onChange = function()
 			{
-				if(!g_sizeSelect.listbox.selection){return;};
+				if(!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				var curSizePieces = getProdFilePiecesForCurSize(g_sizeSelect.listbox.selection.text);
 				populateListbox(g_pieceSelect.listbox,curSizePieces);
 			}
@@ -42,7 +45,11 @@ function createAdjustmentDialog()
 			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
 			g_pieceSelect.listbox.onChange = function()
 			{
-				if(!g_pieceSelect.listbox.selection){return;};
+				if(	!g_pieceSelect.listbox.selection || 
+					!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
 			}
@@ -52,7 +59,12 @@ function createAdjustmentDialog()
 			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
 			g_rosterSelect.listbox.onChange = function()
 			{
-				if(!g_rosterSelect.listbox.selection){return;};
+				if(	!g_rosterSelect.listbox.selection || 
+					!g_pieceSelect.listbox.selection || 
+					!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
 				updateEditRosterEntryGroup(g_editRosterEntryGroup.inputContainerGroup.inputGroup);
 			}

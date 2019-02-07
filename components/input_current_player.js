@@ -46,7 +46,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 		{
 			// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
 			continue;
-		}
+		} 
 
 		//check whether any of the textFrames in the liveTextGroup are unnamed
 		for(var tf=0,tfLen=liveTextGroup.textFrames.length;tf<tfLen;tf++)
@@ -84,10 +84,6 @@ function inputCurrentPlayer(pieces, curPlayer)
 		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];
-			// if (curFrame.typename !== "TextFrame")
-			// {
-			// 	continue;
-			// }
 			if(curFrame.typename === "GroupItem" && curFrame.textFrames.length)
 			{
 				curFrame = curFrame.textFrames[0];	
@@ -99,34 +95,9 @@ function inputCurrentPlayer(pieces, curPlayer)
 			}
 			if (curFrame.name.toLowerCase().indexOf("name") > -1 || curFrame.contents.toLowerCase().indexOf("play")>-1)
 			{
-				// centerPoint = curFrame.left + curFrame.width / 2;
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;
-
-					////////////////////////
-					////////ATTENTION://////
-					//
-					//		deprecated in favor of converting the case in the
-					//		data instead of converting the actual text frame.
-					//
-					////////////////////////
-					// if(playerNameCase)
-					// {
-					// 	curFrame.textRange.changeCaseTo(CaseChangeType[playerNameCase]);
-					// }
-
-					//
-					//the below is deprecated because resizing live text causes too many
-					//problems, specifically with sharp angles causing large spikes
-					//in an arbitrary manner based on many unpredictable factors as
-					//a result of miter limit value
-					//
-
-					// if (maxPlayerNameWidth && curFrame.width > maxPlayerNameWidth)
-					// {
-					// 	resizeLiveText(curFrame,maxPlayerNameWidth);
-					// }
 				}
 				else
 				{
@@ -139,7 +110,6 @@ function inputCurrentPlayer(pieces, curPlayer)
 				if(curPlayer.number.indexOf("(")=== -1)
 				{
 					curFrame.contents = curPlayer.number;
-					// curFrame = expand(curFrame);
 				}
 				else
 				{
@@ -147,7 +117,6 @@ function inputCurrentPlayer(pieces, curPlayer)
 				}
 				curFrame.name = "Number";
 			}
-			// expand(curFrame);
 		}
 		rosterGroup.hidden = true;
 		liveTextGroup.hidden = true;

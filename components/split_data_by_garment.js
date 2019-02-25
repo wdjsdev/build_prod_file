@@ -71,14 +71,23 @@ function splitDataByGarment()
 					curWaist = curSize;
 					curSize = curInseam;
 					curSize = curSize.replace(/[\"\']/g,"");
+
 					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
-						// curGarment.roster[curSize].players = [];
 					}
-					curGarment.roster[curSize][curWaist] = {};
-					curGarment.roster[curSize][curWaist].qty = curLine.quantity;
-					curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
+					if(!curGarment.roster[curSize][curWaist])
+					{
+						curGarment.roster[curSize][curWaist] = {};
+						curGarment.roster[curSize][curWaist].qty = curLine.quantity;
+						curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
+					}
+					else
+					{
+						curGarment.roster[curSize][curWaist].qty = parseInt(curLine.quantity) + parseInt(curGarment.roster[curSize][curWaist].qty);
+						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(getRosterData(curLine.memo.roster));
+					}
+					
 				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
 				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);

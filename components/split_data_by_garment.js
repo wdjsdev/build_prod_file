@@ -145,23 +145,24 @@ function splitDataByGarment()
 		// initCurGarment();
 	}
 
-	function getRosterData(obj)
-	{
-		var result = [];
-		for (var grd = 0, len = obj.length; grd < len; grd++)
-		{
-			result.push(
-			{
-				name: obj[grd].name,
-				number: obj[grd].number
-			});
-			if(obj[grd].name)
-			{
-				curGarment.hasPlayerNames = true;
-			}
-		}
-		return result;
-	}
+	//deprecated in favor of external get_roster_data.js component
+	// function getRosterData(obj)
+	// {
+	// 	var result = [];
+	// 	for (var grd = 0, len = obj.length; grd < len; grd++)
+	// 	{
+	// 		result.push(
+	// 		{
+	// 			name: obj[grd].name,
+	// 			number: obj[grd].number
+	// 		});
+	// 		if(obj[grd].name)
+	// 		{
+	// 			curGarment.hasPlayerNames = true;
+	// 		}
+	// 	}
+	// 	return result;
+	// }
 
 	function isSeparator(str)
 	{

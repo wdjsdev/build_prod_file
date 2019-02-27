@@ -70,7 +70,15 @@ function getRosterData(roster)
 		}
 		else
 		{
-			curPlayer.name = curEntry;
+			if(curEntry.indexOf(" (") > -1)
+			{
+				curPlayer.name = curEntry.substring(0,curEntry.indexOf(" ("));
+				curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length);
+			}
+			else
+			{
+				curPlayer.name = curEntry;
+			}
 		}
 		result.push(curPlayer);
 	}

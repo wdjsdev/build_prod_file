@@ -24,6 +24,13 @@ function getRosterData(roster)
 	var result = [];
 	var curPlayer,curEntry;
 
+	//regex for testing a number only formatting of roster
+	//for example when the roster does not explicitly
+	//include (No Name)
+	//an example is a string like this:
+	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
+	var numOnlyRegex = /^[\d]*$/;
+
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
 	{
@@ -32,6 +39,15 @@ function getRosterData(roster)
 
 		if(curEntry === "")
 		{
+			continue;
+		}
+
+		//check for a number only format
+		if(numOnlyRegex.test(curEntry))
+		{
+			curPlayer.number = curEntry;
+			curPlayer.name = "";
+			result.push(curPlayer);
 			continue;
 		}
 

@@ -45,6 +45,11 @@ function splitDataByGarment()
 			}
 			curRoster = curLine.memo.roster;
 
+			if(!curRoster)
+			{
+				curRoster = "";
+			}
+
 			if (!curGarment || !curGarment.garmentCount)
 			{
 				initCurGarment();
@@ -64,7 +69,7 @@ function splitDataByGarment()
 				{
 					curGarment.roster[curSize] = {};
 					curGarment.roster[curSize].qty = curLine.quantity;
-					curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
+					curGarment.roster[curSize].players = getRosterData(curRoster);
 				}
 				else
 				{
@@ -80,12 +85,12 @@ function splitDataByGarment()
 					{
 						curGarment.roster[curSize][curWaist] = {};
 						curGarment.roster[curSize][curWaist].qty = curLine.quantity;
-						curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
+						curGarment.roster[curSize][curWaist].players = getRosterData(curRoster);
 					}
 					else
 					{
 						curGarment.roster[curSize][curWaist].qty = parseInt(curLine.quantity) + parseInt(curGarment.roster[curSize][curWaist].qty);
-						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(getRosterData(curLine.memo.roster));
+						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(getRosterData(curRoster));
 					}
 					
 				}

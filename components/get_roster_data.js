@@ -30,6 +30,7 @@ function getRosterData(roster)
 	//an example is a string like this:
 	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
 	var numOnlyRegex = /^[\d]*$/;
+	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
 
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
@@ -80,6 +81,8 @@ function getRosterData(roster)
 				curPlayer.name = curEntry;
 			}
 		}
+		curPlayer.name = curPlayer.name.replace(trimSpacesRegex,"");
+		curPlayer.number = curPlayer.number.replace(trimSpacesRegex,"");
 		result.push(curPlayer);
 	}
 

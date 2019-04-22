@@ -30,7 +30,7 @@ function getRosterData(roster)
 	//an example is a string like this:
 	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
 	var numOnlyRegex = /^[\d]*$/;
-	var blankJerseyRegex = /\(blank\)/;
+	var blankJerseyRegex = /\(blank\)|(no \#)/i;
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
 
 	var splitRoster = roster.split("\n");
@@ -53,7 +53,7 @@ function getRosterData(roster)
 			continue;
 		}
 
-		//check for a "(Blank)" jersey
+		//check for a "(Blank)" or "(No #)" jersey
 		if(blankJerseyRegex.test(curEntry))
 		{
 			curPlayer.number = "";

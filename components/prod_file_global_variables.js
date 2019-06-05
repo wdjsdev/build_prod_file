@@ -18,6 +18,8 @@ var docRef = app.activeDocument,
 	playerNameCase,
 	addRosterDataUserPreference,
 	expandStrokesPreference,
+	semiTransparentThruCutOpacity = 30,
+	thruCutOpacityPreference = 0,
 	textExpandSteps = [],
 	curGarment,
 

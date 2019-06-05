@@ -108,6 +108,14 @@ function createAdjustmentDialog()
 		//horizontal separator
 		UI.hseparator(w,400);
 
+		//group
+		//this section lets the user change the
+		//opacity of thru-cut lines upon export
+		var g_getThruCutOpacityPreferenceGroup = UI.group(w);
+			getThruCutOpacityPreference(g_getThruCutOpacityPreferenceGroup);
+
+		//horizontal separator
+		UI.hseparator(w,400);
 
 		//group
 		//this group holds the text expansion preferences
@@ -141,6 +149,14 @@ function createAdjustmentDialog()
 	return result;
 
 
+	function getThruCutOpacityPreference(parent)
+	{
+		var thisGroup = UI.group(parent);
+		var msg = "Set Thru-Cut strokes to 0% Opacity";
+		// var disp = UI.static(msg);
+		var checkbox = parent.checkbox = UI.checkbox(thisGroup, msg);
+			checkbox.value = true;
+	}
 
 	function createListboxGroup(parent,label)
 	{
@@ -364,6 +380,8 @@ function createAdjustmentDialog()
 			}
 			w.close();
 			maxPlayerNameWidth = parseInt(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
+			thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
+			setThruCutOpacity();
 			var docName = doc.name.replace(".ai","");
 			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 			exportProdFile(docName, Folder(docPath));

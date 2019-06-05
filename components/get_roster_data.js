@@ -32,6 +32,7 @@ function getRosterData(roster)
 	var numOnlyRegex = /^[\d]*$/;
 	var blankJerseyRegex = /\(blank\)|(no \#)/i;
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
+	var multipleInsideSpacesRegex = /\s{2,}/;
 
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
@@ -43,6 +44,7 @@ function getRosterData(roster)
 		{
 			continue;
 		}
+		curEntry = curEntry.replace(multipleInsideSpacesRegex," ");
 
 		//check for a number only format
 		if(numOnlyRegex.test(curEntry))

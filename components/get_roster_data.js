@@ -65,7 +65,7 @@ function getRosterData(roster)
 		}
 
 		//get the number
-		if(curEntry.toLowerCase().indexOf("(no number)") > -1 || numOnlyRegex.test(curEntry.substring(0,curEntry.indexOf(" "))))
+		if(curEntry.toLowerCase().indexOf("(no number)") > -1)
 		{
 			curPlayer.number = "";
 			curEntry = curEntry.replace(/\(no number\)[\s]*/i,"")

@@ -39,7 +39,41 @@ function initBuildProd()
 
 	if(valid)
 	{
-		curOrderData = getOrderDataFromNetsuite(orderNum);
+		if(user !== "will.dowling")
+		{
+			curOrderData = getOrderDataFromNetsuite(orderNum);
+		}
+		else
+		{
+			var w = new Window("dialog");
+				var msg = UI.static(w,"Real order data or test data?");
+				var realBtnGroup = UI.group(w);
+					var realBtn = UI.button(realBtnGroup,"Real Data",function()
+					{
+						curOrderData = getOrderDataFromNetsuite(orderNum);
+						w.close();
+					});
+					realBtn.active = true;
+				var testDataGroup = UI.group(w);
+					var testMsg = UI.static(testDataGroup,"Paste Test Data Here");
+					var inputBox = UI.edit(testDataGroup,"");
+						inputBox.multiline = true;
+						inputBox.preferredSize = [200,200];
+					var testBtn = UI.button(testDataGroup,"Test Data",function()
+					{
+						if(inputBox.text != "")
+						{
+							eval("curOrderData = " + inputBox.text);
+							w.close();
+						}
+						else
+						{
+							alert("enter some data, bruh..");
+						}
+					});
+			w.show();
+		}
+	
 	}
 
 	if(valid)

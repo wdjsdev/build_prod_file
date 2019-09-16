@@ -94,7 +94,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		catch(e)
 		{
 			log.e("Failed while selecting artwork for " + curSize + "::system error message: " + e + ", on line: " + e.line);
-			errorList.push("Failed to select the artwork from the prepress layer for " + curData.code + "_" + curData.styleNum);
+			errorList.push("Failed to select " + curSize + " prepress layer for " + curData.code + "_" + curData.styleNum + "\nCheck for locked or hidden items.");
 			result = false;
 		}
 	} 

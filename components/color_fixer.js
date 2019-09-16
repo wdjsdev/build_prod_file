@@ -29,7 +29,11 @@ function colorFixer()
 		exterminateDefault();
 		fixFloSwatches();
 		handleSewLines();
+<<<<<<< HEAD
 		setThruCutOpacity();
+=======
+		// setThruCutOpacity();
+>>>>>>> dev
 	}
 	catch(e)
 	{
@@ -71,6 +75,7 @@ function colorFixer()
 
 		
 
+<<<<<<< HEAD
 	}
 
 	function setThruCutOpacity()
@@ -93,7 +98,11 @@ function colorFixer()
 			}
 		}
 		catch(e){};
+=======
+>>>>>>> dev
 	}
+
+	
 
 	//fixFloSwatch Function Description
 	//Ensure capitalized names of flo swatches

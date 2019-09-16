@@ -31,7 +31,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 	//for some reason apostrophes are rendered as : ‚Äô
 	//during script execution. replace any instance
 	//of these characters with a correct apostrophe
-	curPlayer.name = curPlayer.name.replace("‚Äô","'"); 
+	curPlayer.name = curPlayer.name.replace("‚Äô","'");
 
 	for (var z = 0; z < len; z++)
 	{

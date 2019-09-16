@@ -16,6 +16,8 @@
 
 function initAdjustProdFile()
 {
+	log.h("initAdjustProdFile();");
+	
 	var result = true;
 	var doc = app.activeDocument;
 	var layers = doc.layers;

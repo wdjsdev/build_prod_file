@@ -32,7 +32,10 @@ function createAdjustmentDialog()
 			populateListbox(g_sizeSelect.listbox,prodFileSizes);
 			g_sizeSelect.listbox.onChange = function()
 			{
-				if(!g_sizeSelect.listbox.selection){return;};
+				if(!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				var curSizePieces = getProdFilePiecesForCurSize(g_sizeSelect.listbox.selection.text);
 				populateListbox(g_pieceSelect.listbox,curSizePieces);
 			}
@@ -42,7 +45,11 @@ function createAdjustmentDialog()
 			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
 			g_pieceSelect.listbox.onChange = function()
 			{
-				if(!g_pieceSelect.listbox.selection){return;};
+				if(	!g_pieceSelect.listbox.selection || 
+					!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
 			}
@@ -52,7 +59,12 @@ function createAdjustmentDialog()
 			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
 			g_rosterSelect.listbox.onChange = function()
 			{
-				if(!g_rosterSelect.listbox.selection){return;};
+				if(	!g_rosterSelect.listbox.selection || 
+					!g_pieceSelect.listbox.selection || 
+					!g_sizeSelect.listbox.selection)
+				{
+					return;
+				}
 				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
 				updateEditRosterEntryGroup(g_editRosterEntryGroup.inputContainerGroup.inputGroup);
 			}
@@ -96,6 +108,14 @@ function createAdjustmentDialog()
 		//horizontal separator
 		UI.hseparator(w,400);
 
+		//group
+		//this section lets the user change the
+		//opacity of thru-cut lines upon export
+		var g_getThruCutOpacityPreferenceGroup = UI.group(w);
+			getThruCutOpacityPreference(g_getThruCutOpacityPreferenceGroup);
+
+		//horizontal separator
+		UI.hseparator(w,400);
 
 		//group
 		//this group holds the text expansion preferences
@@ -129,6 +149,14 @@ function createAdjustmentDialog()
 	return result;
 
 
+	function getThruCutOpacityPreference(parent)
+	{
+		var thisGroup = UI.group(parent);
+		var msg = "Set Thru-Cut strokes to 0% Opacity";
+		// var disp = UI.static(msg);
+		var checkbox = parent.checkbox = UI.checkbox(thisGroup, msg);
+			checkbox.value = true;
+	}
 
 	function createListboxGroup(parent,label)
 	{
@@ -292,7 +320,7 @@ function createAdjustmentDialog()
 		}
 	}
 
-	function updateCurRoster(name,num,shrink)
+	function updateCurRoster(name,num)
 	{
 		var lowerCaseLetters;
 		var newName = "";
@@ -311,7 +339,6 @@ function createAdjustmentDialog()
 
 		curRosterGroup.name = newName + " " + newNum;
 		g_rosterSelect.listbox.selection.text = newName + " " + newNum;
-		w.layout.layout(true);
 		app.redraw();
 	}
 
@@ -353,6 +380,8 @@ function createAdjustmentDialog()
 			}
 			w.close();
 			maxPlayerNameWidth = parseInt(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
+			thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
+			setThruCutOpacity();
 			var docName = doc.name.replace(".ai","");
 			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 			exportProdFile(docName, Folder(docPath));

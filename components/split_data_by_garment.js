@@ -45,6 +45,11 @@ function splitDataByGarment()
 			}
 			curRoster = curLine.memo.roster;
 
+			if(!curRoster)
+			{
+				curRoster = "";
+			}
+
 			if (!curGarment || !curGarment.garmentCount)
 			{
 				initCurGarment();
@@ -64,21 +69,30 @@ function splitDataByGarment()
 				{
 					curGarment.roster[curSize] = {};
 					curGarment.roster[curSize].qty = curLine.quantity;
-					curGarment.roster[curSize].players = getRosterData(curLine.memo.roster);
+					curGarment.roster[curSize].players = getRosterData(curRoster);
 				}
 				else
 				{
 					curWaist = curSize;
 					curSize = curInseam;
 					curSize = curSize.replace(/[\"\']/g,"");
+
 					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
-						// curGarment.roster[curSize].players = [];
 					}
-					curGarment.roster[curSize][curWaist] = {};
-					curGarment.roster[curSize][curWaist].qty = curLine.quantity;
-					curGarment.roster[curSize][curWaist].players = getRosterData(curLine.memo.roster);
+					if(!curGarment.roster[curSize][curWaist])
+					{
+						curGarment.roster[curSize][curWaist] = {};
+						curGarment.roster[curSize][curWaist].qty = curLine.quantity;
+						curGarment.roster[curSize][curWaist].players = getRosterData(curRoster);
+					}
+					else
+					{
+						curGarment.roster[curSize][curWaist].qty = parseInt(curLine.quantity) + parseInt(curGarment.roster[curSize][curWaist].qty);
+						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(getRosterData(curRoster));
+					}
+					
 				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
 				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);
@@ -136,23 +150,24 @@ function splitDataByGarment()
 		// initCurGarment();
 	}
 
-	function getRosterData(obj)
-	{
-		var result = [];
-		for (var grd = 0, len = obj.length; grd < len; grd++)
-		{
-			result.push(
-			{
-				name: obj[grd].name,
-				number: obj[grd].number
-			});
-			if(obj[grd].name)
-			{
-				curGarment.hasPlayerNames = true;
-			}
-		}
-		return result;
-	}
+	//deprecated in favor of external get_roster_data.js component
+	// function getRosterData(obj)
+	// {
+	// 	var result = [];
+	// 	for (var grd = 0, len = obj.length; grd < len; grd++)
+	// 	{
+	// 		result.push(
+	// 		{
+	// 			name: obj[grd].name,
+	// 			number: obj[grd].number
+	// 		});
+	// 		if(obj[grd].name)
+	// 		{
+	// 			curGarment.hasPlayerNames = true;
+	// 		}
+	// 	}
+	// 	return result;
+	// }
 
 	function isSeparator(str)
 	{

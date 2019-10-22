@@ -29,11 +29,8 @@ function colorFixer()
 		exterminateDefault();
 		fixFloSwatches();
 		handleSewLines();
-<<<<<<< HEAD
 		setThruCutOpacity();
-=======
-		// setThruCutOpacity();
->>>>>>> dev
+
 	}
 	catch(e)
 	{
@@ -75,7 +72,6 @@ function colorFixer()
 
 		
 
-<<<<<<< HEAD
 	}
 
 	function setThruCutOpacity()
@@ -98,8 +94,6 @@ function colorFixer()
 			}
 		}
 		catch(e){};
-=======
->>>>>>> dev
 	}
 
 	

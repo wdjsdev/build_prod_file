@@ -84,8 +84,6 @@ function container()
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 	
-	//log the start time
-	timer.logStart();
 	
 
 	if(valid)
@@ -97,10 +95,6 @@ function container()
 	{
 		valid = masterLoop();
 	}
-
-
-	//log the end time
-	timer.logEnd();
 	
 	// buildStats.buildScriptExecutionTime = timer.calculate();
 

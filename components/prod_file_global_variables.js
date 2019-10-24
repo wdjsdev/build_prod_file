@@ -26,9 +26,6 @@ var docRef = app.activeDocument,
 //external components
 	SETUP_SCRIPTS_PATH = "/Volumes/Customization/Library/Scripts/setup_scripts",
 
-//create instance of stopwatch object
-	timer = new stopwatch(),
-
 	curOrderData,
 	garmentsNeeded = [],
 	garmentLayers = [],

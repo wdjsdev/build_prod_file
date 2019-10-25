@@ -10,6 +10,7 @@ Description: query netsuite for JSON data for a given order number,
 	
 */
 
+#target Illustrator
 function container()
 {
 	var valid = true;
@@ -84,8 +85,6 @@ function container()
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 	
-	//log the start time
-	timer.logStart();
 	
 
 	if(valid)
@@ -97,10 +96,6 @@ function container()
 	{
 		valid = masterLoop();
 	}
-
-
-	//log the end time
-	timer.logEnd();
 	
 	// buildStats.buildScriptExecutionTime = timer.calculate();
 

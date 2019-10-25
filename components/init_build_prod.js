@@ -41,7 +41,7 @@ function initBuildProd()
 	{
 		if(user !== "will.dowling")
 		{
-			curOrderData = getOrderDataFromNetsuite(orderNum);
+			curOrderData = curlData(NOD,orderNum)
 		}
 		else
 		{
@@ -50,7 +50,7 @@ function initBuildProd()
 				var realBtnGroup = UI.group(w);
 					var realBtn = UI.button(realBtnGroup,"Real Data",function()
 					{
-						curOrderData = getOrderDataFromNetsuite(orderNum);
+						curOrderData = curlData(NOD,orderNum)
 						w.close();
 					});
 					realBtn.active = true;

@@ -14,23 +14,22 @@ Description: query netsuite for JSON data for a given order number,
 function container()
 {
 	var valid = true;
+	var scriptName = "build_prod_file";
 
+	//Production Utilities
 	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
-	// eval("#include \"~/Desktop/automation/utilities/Utilities_Container.js\"");
+	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Batch_Framework.jsxbin\"");
+	
+	// //Dev Utilities
+	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Utilities_Container.js\"");
+	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Batch_Framework.js\"");
 
 	if(!valid)
 	{
 		return;
 	}
 
-	if(user === "will.dowling")
-	{
-		logDest.push(File(desktopPath + "/automation/logs/build_prod_file_dev_log.txt"));
-	}
-	else
-	{
-		logDest.push(File("/Volumes/Customization/Library/Scripts/Script Resources/Data/.script_logs/build_prod_file_log.txt"));
-	}
+	logDest.push(getLogDest(user,scriptName));
 
 
 	/*****************************************************************************/
@@ -48,7 +47,7 @@ function container()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = "/Volumes/Customization/Library/Scripts/Script Resources/components/build_prod_file"
+	var prodComponents = componentsPath + "/build_prod_file";
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
 	if(compFiles && compFiles.length)

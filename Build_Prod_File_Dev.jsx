@@ -10,6 +10,7 @@ Description: query netsuite for JSON data for a given order number,
 	
 */
 
+#target Illustrator
 function container()
 {
 	var valid = true;

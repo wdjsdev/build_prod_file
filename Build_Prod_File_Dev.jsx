@@ -29,7 +29,7 @@ function container()
 		return;
 	}
 
-	logDest.push(getLogDest(user,scriptName));
+	logDest.push(getLogDest());
 
 
 	/*****************************************************************************/

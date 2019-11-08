@@ -14,5 +14,14 @@
 
 function getCode(str)
 {
-	return str.substring(0,str.indexOf(" :"));
+	var code;
+	if(str.indexOf(" : ")>-1)
+	{
+		code = str.substring(0,str.indexOf(" :"));
+	}
+	else
+	{
+		code = str;
+	}
+	return code;
 }

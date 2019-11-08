@@ -22,6 +22,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	var sizeType = "";
 	var curSizeLayer, curItem;
 	var wxhPat = /[\d]{2}[iw]?x[\d]{2}[iw]?/i;
+	var variableInseamPat = /[\d]{2}i/i;
 	var firstPrepressLayer;
 	docRef.activate();
 	docRef.selection = null;
@@ -34,7 +35,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	{
 		var ppLay = getPPLay(srcLayer);
 		firstPrepressLayer = ppLay.layers[0];
-		if(firstPrepressLayer.name.indexOf("I")>-1)
+		if(variableInseamPat.test(firstPrepressLayer))
 		{
 			log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam.");
 			sizeType = "var"

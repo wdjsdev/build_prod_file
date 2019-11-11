@@ -16,5 +16,5 @@
 
 function getSize(str)
 {
-	return str.substring(str.lastIndexOf("-") + 1, str.length);
+	return str.substring(str.lastIndexOf("-") + 1, str.length).replace("/","-");
 }

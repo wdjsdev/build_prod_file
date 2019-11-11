@@ -35,8 +35,15 @@ function splitDataByGarment()
 		if (garPat.test(curItem) && curItem.toLowerCase().indexOf("sample") === -1 && curItem.toLowerCase().indexOf("fluorescents") === -1)
 		{
 			log.l(curItem + " is a proper garment line.");
-			curSize = getSize(curItem);
-			curSize = curSize.replace(/[\"\']/g,"");
+			if(curItem.toLowerCase().indexOf("-bag-") === -1)
+			{
+				curSize = getSize(curItem);
+				curSize = curSize.replace(/[\"\']/g,"");
+			}
+			else
+			{
+				curSize = "ONE PIECE";
+			}
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
 			if (!curStyle)

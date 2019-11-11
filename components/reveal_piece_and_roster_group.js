@@ -33,7 +33,17 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 
 	//create the artboard
 	doc.selection = null;
-	piece.pageItems[piece.pageItems.length-1].selected = true;
+	
+	for(var pi = piece.pageItems.length - 1; pi>=0; pi--)
+	{
+		piece.pageItems[pi].selected = true;
+		if(doc.selection.length)
+		{
+			break;
+		}
+	}
+	
+	// piece.pageItems[piece.pageItems.length-1].selected = true;
 	doc.fitArtboardToSelectedArt(0);
 	app.executeMenuCommand("fitall");
 

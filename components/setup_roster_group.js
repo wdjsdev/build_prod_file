@@ -22,59 +22,36 @@
 function setupRosterGroup(item)
 {
 	var result = false;
-	var curItem,frame;
+	var curItem,frame,liveTextGroup,rosterGroup;
 	try
 	{
-		var liveTextGroup = item.groupItems.add();
-		liveTextGroup.name = "Live Text";
-		var rosterGroup = item.groupItems.add();
-		rosterGroup.name = "Roster";
-
 		//move all existing textFrames into liveTextGroup
+		var subItems = [];
 		var len = item.pageItems.length;
-		for(var x=len-1;x>=2;x--)
+		for(var x=0;x<len;x++)
 		{
-			curItem = item.pageItems[x];
+			subItems.push(item.pageItems[x]);
+		}
+		for(var x = len - 1; x>=0; x--)		
+		{
+			curItem = subItems[x];
 			frame = findTextFrame(curItem);
 
 			if(frame)
 			{
+				if(!rosterGroup)
+				{
+					liveTextGroup = item.groupItems.add();
+					// liveTextGroup.zOrder(ZOrderMethod.SENDTOBACK);
+					rosterGroup = item.groupItems.add();
+					// rosterGroup.zOrder(ZOrderMethod.SENDTOBACK);
+					liveTextGroup.name = "Live Text";
+					rosterGroup.name = "Roster";
+				}
 				frame.name = curItem.name.indexOf("Name")>-1 ? "Name" : "Number";
 				frame.moveToBeginning(liveTextGroup);
 				result = true;
 			}
-			// if(curItem.typename === "TextFrame")
-			// {
-			// 	curItem.moveToBeginning(liveTextGroup);
-			// 	result = true;
-			// }
-			// else if(curItem.name !== "Live Text" && curItem.name != "Roster" && curItem.typename === "GroupItem" && curItem.textFrames.length)
-			// {
-			// 	if(curItem.textFrames.length)
-			// 	{
-			// 		curItem.textFrames[0].name = curItem.name;
-			// 		curItem.textFrames[0].moveToBeginning(liveTextGroup);
-			// 		result = true;
-			// 	}
-			// 	else
-			// 	{
-			// 		for(var y=0,yLen = curItem.pageItems.length;y<yLen;y++)
-			// 		{
-			// 			if(curItem.pageItems[y].typename === "GroupItem" && curItem.pageItems[y].clipped && curItem.pageItems[y].textFrames.length)
-			// 			{
-			// 				curItem.pageItems[y].textFrames[0].name = curItem.name;
-			// 				curItem.pageItems[y].textFrames[0].moveToBeginning(liveTextGroup);
-			// 				result = true;
-			// 			}
-			// 		}
-			// 	}
-			// }
-		}
-
-		if(!result)
-		{
-			rosterGroup.remove();
-			liveTextGroup.remove();
 		}
 		
 	}

@@ -38,7 +38,7 @@ function getRosterData(roster)
 	for(var x=0,len=splitRoster.length;x<len;x++)
 	{
 		curPlayer = {};
-		curEntry = splitRoster[x];
+		curEntry = splitRoster[x].replace(trimSpacesRegex,"");
 
 		if(curEntry === "")
 		{

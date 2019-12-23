@@ -32,7 +32,8 @@ function getRosterData(roster)
 	var numOnlyRegex = /^[\d]*$/;
 	var blankJerseyRegex = /\(blank\)|(no \#)/i;
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
-	var multipleInsideSpacesRegex = /\s{2,}/;
+	var multipleInsideSpacesRegex = /\s{2,}/g;
+	var qtyIndicatorRegex = /\*qty/i;
 
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
@@ -51,7 +52,16 @@ function getRosterData(roster)
 		{
 			curPlayer.number = curEntry;
 			curPlayer.name = "";
+			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
+			continue;
+		}
+
+		//check for a "*Qty is 8*" line item
+		//don't make a roster entry if the line
+		//matches the above format.
+		if(qtyIndicatorRegex.test(curEntry))
+		{
 			continue;
 		}
 
@@ -60,6 +70,7 @@ function getRosterData(roster)
 		{
 			curPlayer.number = "";
 			curPlayer.name = "";
+			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
 			continue;
 		}
@@ -95,6 +106,7 @@ function getRosterData(roster)
 		}
 		curPlayer.name = curPlayer.name.replace(trimSpacesRegex,"");
 		curPlayer.number = curPlayer.number.replace(trimSpacesRegex,"");
+		log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 		result.push(curPlayer);
 	}
 

@@ -24,10 +24,11 @@ function exportProdFile(pdfFolderName, destFolder)
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var tmpNameLay = doc.layers.add();
-	tmpNameLay.name = "tmpname";
 	var tmpNumLay = doc.layers.add();
 	tmpNumLay.name = "tmpnum";
+	var tmpNameLay = doc.layers.add();
+	tmpNameLay.name = "tmpname";
+	
 
 	loadExpandAction();
 

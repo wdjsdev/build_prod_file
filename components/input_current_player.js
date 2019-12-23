@@ -70,6 +70,8 @@ function inputCurrentPlayer(pieces, curPlayer)
 		try
 		{
 			var blah = rosterGroup.groupItems[curPlayerLabel];
+			liveTextGroup.hidden = true;
+			rosterGroup.hidden = true;
 			continue;
 		}
 		catch(e)

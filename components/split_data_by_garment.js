@@ -24,7 +24,7 @@ function splitDataByGarment()
 
 	var curGarment;
 
-	var curSize, curAge, curCode, curStyle, curRoster;
+	var curSize, curAge, curCode, curStyle, curRoster, additionalPlayers;
 
 	for (var x = 0, len = curOrderData.lines.length; x < len; x++)
 	{
@@ -71,12 +71,14 @@ function splitDataByGarment()
 
 			if (curCode === curGarment.code && curAge === curGarment.age)
 			{
+				log.l("curLine.quantity = " + curLine.quantity);				
 				curInseam = getInseam(curLine.options);
 				if (!curInseam)
 				{
 					curGarment.roster[curSize] = {};
 					curGarment.roster[curSize].qty = curLine.quantity;
 					curGarment.roster[curSize].players = getRosterData(curRoster);
+					log.l("Added " + curGarment.roster[curSize].players.length + " players to the roster for " + curSize + ".");
 				}
 				else
 				{
@@ -93,16 +95,18 @@ function splitDataByGarment()
 						curGarment.roster[curSize][curWaist] = {};
 						curGarment.roster[curSize][curWaist].qty = curLine.quantity;
 						curGarment.roster[curSize][curWaist].players = getRosterData(curRoster);
+						log.l("Added " + curGarment.roster[curSize][curWaist].players.length + " players to the roster for " + curSize + ".");
 					}
 					else
 					{
 						curGarment.roster[curSize][curWaist].qty = parseInt(curLine.quantity) + parseInt(curGarment.roster[curSize][curWaist].qty);
-						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(getRosterData(curRoster));
+						additionalPlayers = getRosterData(curRoster);
+						log.l("Added " + additionalPlayers.length + " new waist sizes to the roster for the inseam " + curSize + ".");	
+						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(additionalPlayers);
 					}
 					
 				}
 				curGarment.garmentCount += parseInt(curLine.quantity);
-				log.l("Added " + curLine.quantity + " players to the roster for the size: " + curSize);
 			}
 
 		}

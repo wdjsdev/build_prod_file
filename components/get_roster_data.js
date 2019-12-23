@@ -21,6 +21,7 @@
 
 function getRosterData(roster)
 {
+	log.h("Beginning getRosterData(" + roster + ");");
 	var result = [];
 	var curPlayer,curEntry;
 
@@ -40,18 +41,22 @@ function getRosterData(roster)
 	{
 		curPlayer = {};
 		curEntry = splitRoster[x].replace(trimSpacesRegex,"");
+		curEntry = curEntry.replace(multipleInsideSpacesRegex," ");
 
+		log.l("after removing spaces, curEntry = " + curEntry);
 		if(curEntry === "")
 		{
+			log.l("curEntry was an empty string. continuing loop.");
 			continue;
 		}
-		curEntry = curEntry.replace(multipleInsideSpacesRegex," ");
+
 
 		//check for a number only format
 		if(numOnlyRegex.test(curEntry))
 		{
 			curPlayer.number = curEntry;
 			curPlayer.name = "";
+			log.l("curEntry matches number only regex.");
 			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
 			continue;
@@ -62,6 +67,7 @@ function getRosterData(roster)
 		//matches the above format.
 		if(qtyIndicatorRegex.test(curEntry))
 		{
+			log.l("curEntry matches the qty indicator regex. continuing loop.")
 			continue;
 		}
 
@@ -70,6 +76,7 @@ function getRosterData(roster)
 		{
 			curPlayer.number = "";
 			curPlayer.name = "";
+			log.l("curEntry matches the blank jersey regex.")
 			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
 			continue;

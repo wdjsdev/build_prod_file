@@ -22,7 +22,7 @@
 function setupRosterGroup(item)
 {
 	var result = false;
-	var curItem,frame,liveTextGroup,rosterGroup;
+	var curItem,frame,liveTextGroup,rosterGroup,lowercaseName;
 	try
 	{
 		//move all existing textFrames into liveTextGroup
@@ -39,6 +39,7 @@ function setupRosterGroup(item)
 
 			if(frame)
 			{
+				lowercaseName = frame.name.toLowerCase();
 				if(!rosterGroup)
 				{
 					liveTextGroup = item.groupItems.add();
@@ -48,7 +49,7 @@ function setupRosterGroup(item)
 					liveTextGroup.name = "Live Text";
 					rosterGroup.name = "Roster";
 				}
-				frame.name = curItem.name.indexOf("Name")>-1 ? "Name" : "Number";
+				frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
 				frame.moveToBeginning(liveTextGroup);
 				result = true;
 			}

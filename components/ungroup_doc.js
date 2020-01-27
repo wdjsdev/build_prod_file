@@ -16,14 +16,27 @@
 
 function ungroupDoc(doc)
 {
-	var groups = doc.layers[0].groupItems;
-	var curGroup;
 
-	for(var x = groups.length -1;x>=0;x--)
+	var tmpGroup = doc.groupItems[0];
+	var parentLayer = tmpGroup.layer;
+
+	for(var tg = tmpGroup.pageItems.length - 1; tg>=0; tg--)
 	{
-		curGroup = groups[x];
-		doc.selection = null;
-		curGroup.selected = true;
-		app.executeMenuCommand("ungroup");
+		tmpGroup.pageItems[tg].moveToBeginning(parentLayer);
 	}
+	tmpGroup.remove();
+	
+	
+
+
+	// var groups = doc.layers[0].groupItems;
+	// var curGroup;
+
+	// for(var x = groups.length -1;x>=0;x--)
+	// {
+	// 	curGroup = groups[x];
+	// 	doc.selection = null;
+	// 	curGroup.selected = true;
+	// 	app.executeMenuCommand("ungroup");
+	// }
 }

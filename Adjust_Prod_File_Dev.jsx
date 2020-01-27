@@ -50,7 +50,7 @@ function container()
 		return false;
 	}
 
-	logDest.push(logDest);
+	logDest.push(getLogDest());
 
 	/*****************************************************************************/
 	//==============================  Components  ===============================//

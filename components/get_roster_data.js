@@ -21,6 +21,7 @@
 
 function getRosterData(roster)
 {
+	log.h("Beginning getRosterData(" + roster + ");");
 	var result = [];
 	var curPlayer,curEntry;
 
@@ -32,26 +33,41 @@ function getRosterData(roster)
 	var numOnlyRegex = /^[\d]*$/;
 	var blankJerseyRegex = /\(blank\)|(no \#)/i;
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
-	var multipleInsideSpacesRegex = /\s{2,}/;
+	var multipleInsideSpacesRegex = /\s{2,}/g;
+	var qtyIndicatorRegex = /\*qty/i;
 
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
 	{
 		curPlayer = {};
-		curEntry = splitRoster[x];
+		curEntry = splitRoster[x].replace(trimSpacesRegex,"");
+		curEntry = curEntry.replace(multipleInsideSpacesRegex," ");
 
+		log.l("after removing spaces, curEntry = " + curEntry);
 		if(curEntry === "")
 		{
+			log.l("curEntry was an empty string. continuing loop.");
 			continue;
 		}
-		curEntry = curEntry.replace(multipleInsideSpacesRegex," ");
+
 
 		//check for a number only format
 		if(numOnlyRegex.test(curEntry))
 		{
 			curPlayer.number = curEntry;
 			curPlayer.name = "";
+			log.l("curEntry matches number only regex.");
+			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
+			continue;
+		}
+
+		//check for a "*Qty is 8*" line item
+		//don't make a roster entry if the line
+		//matches the above format.
+		if(qtyIndicatorRegex.test(curEntry))
+		{
+			log.l("curEntry matches the qty indicator regex. continuing loop.")
 			continue;
 		}
 
@@ -60,6 +76,8 @@ function getRosterData(roster)
 		{
 			curPlayer.number = "";
 			curPlayer.name = "";
+			log.l("curEntry matches the blank jersey regex.")
+			log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 			result.push(curPlayer);
 			continue;
 		}
@@ -95,6 +113,7 @@ function getRosterData(roster)
 		}
 		curPlayer.name = curPlayer.name.replace(trimSpacesRegex,"");
 		curPlayer.number = curPlayer.number.replace(trimSpacesRegex,"");
+		log.l("pushing the following object to result::" + JSON.stringify(curPlayer));
 		result.push(curPlayer);
 	}
 

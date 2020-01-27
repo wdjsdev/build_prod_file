@@ -24,10 +24,11 @@ function exportProdFile(pdfFolderName, destFolder)
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var tmpNameLay = doc.layers.add();
-	tmpNameLay.name = "tmpname";
 	var tmpNumLay = doc.layers.add();
 	tmpNumLay.name = "tmpnum";
+	var tmpNameLay = doc.layers.add();
+	tmpNameLay.name = "tmpname";
+	
 
 	loadExpandAction();
 
@@ -93,8 +94,30 @@ function exportProdFile(pdfFolderName, destFolder)
 		}
 
 		piece.selected = true;
-		doc.fitArtboardToSelectedArt(0);
+		
+		// doc.fitArtboardToSelectedArt(0);
+
+		function makeArtboard(group,rmItems)
+		{
+			var doc = app.activeDocument
+			var dupGroup = group.duplicate();
+			for(var x = dupGroup.pageItems.length - 1; x>=0; x--)
+			{
+				if(rmItems.indexOf(dupGroup.pageItems[x].name)>-1)
+				{
+					dupGroup.pageItems[x].remove();
+				}
+			}
+			
+			doc.selection = null;
+			dupGroup.selected = true;
+			doc.fitArtboardToSelectedArt(0);
+			dupGroup.remove();
+		}
+		makeArtboard(piece,["Roster","Live Text"]);
+
 		app.executeMenuCommand("fitall");
+
 
 		colorBlocks();
 

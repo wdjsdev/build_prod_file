@@ -32,7 +32,7 @@ function inputRosterData(roster)
 	{
 		log.l("::Beginning roster loop for size: " + curSize);
 
-		log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
+		
 
 
 		//check whether this is standard sizing or variable inseam sizing
@@ -49,6 +49,7 @@ function inputRosterData(roster)
 						curSizePieces.push(pieces[z]);
 					}
 				}
+				log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
 				curQty = parseInt(roster[curSize][curWaist].qty);
 				playerLen = roster[curSize][curWaist].players.length;
 				if (curQty > playerLen)
@@ -81,6 +82,7 @@ function inputRosterData(roster)
 					curSizePieces.push(pieces[z]);
 				}
 			}
+			log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
 			curQty = parseInt(roster[curSize].qty);
 			playerLen = roster[curSize].players.length;
 			if (curQty > playerLen)

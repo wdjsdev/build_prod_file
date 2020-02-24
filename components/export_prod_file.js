@@ -24,10 +24,6 @@ function exportProdFile(pdfFolderName, destFolder)
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var tmpNumLay = doc.layers.add();
-	tmpNumLay.name = "tmpnum";
-	var tmpNameLay = doc.layers.add();
-	tmpNameLay.name = "tmpname";
 	
 
 	loadExpandAction();
@@ -158,18 +154,18 @@ function exportProdFile(pdfFolderName, destFolder)
 							//empty string. just move on
 							continue;
 						}
-						duplicateName = curRosterChild.pageItems[y].duplicate(tmpNameLay);
+						duplicateName = curRosterChild.pageItems[y].duplicate();
 						duplicateName.hidden = false;
 						try
 						{
 							var myTextPath = duplicateName.textPath;
 							resizeLiveText(duplicateName);
-							expand(duplicateName);
+							duplicateName = expand(duplicateName);
 						}
 						catch(e)
 						{
-							expand(duplicateName);
-							duplicateName = tmpNameLay.pageItems[0];
+							duplicateName = expand(duplicateName);
+							
 							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
@@ -185,16 +181,16 @@ function exportProdFile(pdfFolderName, destFolder)
 							//empty string. just move on
 							continue;
 						}
-						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
-						expand(duplicateNumber);
+						duplicateNumber = curRosterChild.pageItems[y].duplicate();
+						duplicateNumber = expand(duplicateNumber);
 					}
 				}
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
 				saveFile(doc,pdfFileName,pdfFolder);
-				removeExpandedRosterGroup(tmpNameLay);
-				removeExpandedRosterGroup(tmpNumLay);
+				// removeExpandedRosterGroup(tmpNameLay);
+				// removeExpandedRosterGroup(tmpNumLay);
 			}
 
 			liveTextGroup.hidden = false;

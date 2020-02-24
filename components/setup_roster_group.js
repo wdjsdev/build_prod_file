@@ -42,10 +42,9 @@ function setupRosterGroup(item)
 				lowercaseName = frame.name.toLowerCase();
 				if(!rosterGroup)
 				{
-					liveTextGroup = item.groupItems.add();
-					// liveTextGroup.zOrder(ZOrderMethod.SENDTOBACK);
-					rosterGroup = item.groupItems.add();
-					// rosterGroup.zOrder(ZOrderMethod.SENDTOBACK);
+					item.note = "hasRoster";
+					liveTextGroup = frame.parent.groupItems.add();
+					rosterGroup = frame.parent.groupItems.add();
 					liveTextGroup.name = "Live Text";
 					rosterGroup.name = "Roster";
 				}

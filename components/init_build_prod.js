@@ -73,6 +73,11 @@ function initBuildProd()
 					});
 			w.show();
 		}
+
+		if(!curOrderData)
+		{
+			valid = false;
+		}
 	
 	}
 

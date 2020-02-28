@@ -61,6 +61,9 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		return result;
 	}
 
+	fixImproperWomensSizing(ppLay);
+
+
 	for(var curSize in curData.roster)
 	{
 		try
@@ -130,23 +133,25 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	function getSizeLayer(curSize)
 	{
 		var len = ppLay.layers.length;;
+		var curLay;
 		for(var x=0;x<len;x++)
 		{
-			if(sizeType === "std" && ppLay.layers[x].name === curSize)
+			curLay = ppLay.layers[x];
+			if(sizeType === "std" && curLay.name === curSize)
 			{
-				log.l("curSize layer = " + ppLay.layers[x]);
-				return ppLay.layers[x];
+				log.l("curSize layer = " + curLay);
+				return curLay;
 			}
-			// else if(sizeType === "var" && ppLay.layers[x].name === curSize + "I")
-			else if(sizeType === "var" && ppLay.layers[x].name === curSize)
+			// else if(sizeType === "var" && curLay.name === curSize + "I")
+			else if(sizeType === "var" && curLay.name === curSize)
 			{
-				log.l("curSize layer = " + ppLay.layers[x]);
-				return ppLay.layers[x];
+				log.l("curSize layer = " + curLay);
+				return curLay;
 			}
-			else if(sizeType === "wxh" && ppLay.layers[x].name.indexOf(curSize) === 0)
+			else if(sizeType === "wxh" && curLay.name.indexOf(curSize) === 0)
 			{
-				log.l("curSize layer = " + ppLay.layers[x]);
-				return ppLay.layers[x];
+				log.l("curSize layer = " + curLay);
+				return curLay;
 			}
 		}
 		log.e("Failed to find a prepress size layer for " + curSize);

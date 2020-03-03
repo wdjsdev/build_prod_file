@@ -19,23 +19,33 @@ function getOrderNumber()
 	log.h("Beginning execution of getOrderNumber() function");
 	var result = "";
 
-	//get the contents of the order number text frame
-
-	for(var x=0,len=layers.length;x<len && !result;x++)
+	//get the order number from the file name
+	var doc = app.activeDocument;
+	var docName = doc.name;
+	var pat = /^.*(\d{7})([-_].*)/i;
+	result = docName.match(pat)[1];
+	if(!/[\d]{7}/.test(result))
 	{
-		log.l("Checking layer: " + layers[x].name + " for order number text frame.");
-		try
+		result = "";
+		//failed to get a proper order number from the file name
+
+		//get the contents of the order number text frame instead
+		for(var x=0,len=layers.length;x<len && !result;x++)
 		{
-			infoLay = layers[x].layers["Information"];
-			result = infoLay.textFrames["Order Number"].contents;
-			result = result.substring(0,result.indexOf(" "));
-			result = result.replace("#","");
-			log.l("Found the order number text frame. Set result to " + result);
-		}
-		catch(e)
-		{
-			log.l("Layer: " + layers[x].name + " does not have an information layer or order number text frame");
-			//just continue looking for information layer
+			log.l("Checking layer: " + layers[x].name + " for order number text frame.");
+			try
+			{
+				infoLay = layers[x].layers["Information"];
+				result = infoLay.textFrames["Order Number"].contents;
+				result = result.substring(0,result.indexOf(" "));
+				result = result.replace("#","");
+				log.l("Found the order number text frame. Set result to " + result);
+			}
+			catch(e)
+			{
+				log.l("Layer: " + layers[x].name + " does not have an information layer or order number text frame");
+				//just continue looking for information layer
+			}
 		}
 	}
 

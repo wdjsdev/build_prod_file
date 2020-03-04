@@ -22,9 +22,13 @@ function getOrderNumber()
 	//get the order number from the file name
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var pat = /^.*(\d{7})([-_].*)/i;
-	result = docName.match(pat)[1];
-	if(!/[\d]{7}/.test(result))
+	var pat = /^.*(\d{7})([-_]?.*)/i;
+	if(docName.match(pat).length && docName.match)
+	{
+		result = docName.match(pat)[1];
+	}
+	
+	if(result !== "" && !/[\d]{7}/.test(result))
 	{
 		result = "";
 		//failed to get a proper order number from the file name

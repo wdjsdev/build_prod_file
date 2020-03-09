@@ -23,7 +23,7 @@ function getOrderNumber()
 	var doc = app.activeDocument;
 	var docName = doc.name;
 	var pat = /^.*(\d{7})([-_]?.*)/i;
-	if(docName.match(pat).length && docName.match)
+	if(docName.match(pat) && docName.match(pat).length)
 	{
 		result = docName.match(pat)[1];
 	}

@@ -34,11 +34,12 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 	//create the artboard
 	doc.selection = null;
 	
+	var pieceWidth = piece.width;
 	for(var pi = piece.pageItems.length - 1; pi>=0; pi--)
 	{
-		piece.pageItems[pi].selected = true;
-		if(doc.selection.length)
+		if(piece.pageItems[pi].width > pieceWidth *.8)
 		{
+			piece.pageItems[pi].selected = true;
 			break;
 		}
 	}

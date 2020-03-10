@@ -27,7 +27,7 @@ Description: create a series of dialog boxes to allow
 	
 	
 */
-
+#target illustrator
 function container()
 {
 

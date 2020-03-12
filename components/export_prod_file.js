@@ -21,9 +21,14 @@
 
 function exportProdFile(pdfFolderName, destFolder)
 {
+	log.h("exportProdFile(" + pdfFolderName + "," + destFolder + ")");
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
+	var tmpNumLay = doc.layers.add();
+	tmpNumLay.name = "tmpnum";
+	var tmpNameLay = doc.layers.add();
+	tmpNameLay.name = "tmpname";
 	
 
 	loadExpandAction();
@@ -44,6 +49,7 @@ function exportProdFile(pdfFolderName, destFolder)
 		else
 		{
 			pdfFolder.create();
+			log.l("Created a new pdf folder.")
 		}
 	}
 
@@ -64,6 +70,7 @@ function exportProdFile(pdfFolderName, destFolder)
 	tmpNumLay.remove();
 
 	saveFile(doc,docName,destFolder);
+	log.l("Successfully saved " + docName);
 
 	unloadExpandAction();
 	
@@ -89,7 +96,7 @@ function exportProdFile(pdfFolderName, destFolder)
 			log.l("No roster or live text info here.");
 		}
 
-		piece.selected = true;
+		piece.selected = true;	
 		
 		// doc.fitArtboardToSelectedArt(0);
 
@@ -154,7 +161,7 @@ function exportProdFile(pdfFolderName, destFolder)
 							//empty string. just move on
 							continue;
 						}
-						duplicateName = curRosterChild.pageItems[y].duplicate();
+						duplicateName = curRosterChild.pageItems[y].duplicate(tmpNameLay);
 						duplicateName.hidden = false;
 						try
 						{
@@ -181,7 +188,7 @@ function exportProdFile(pdfFolderName, destFolder)
 							//empty string. just move on
 							continue;
 						}
-						duplicateNumber = curRosterChild.pageItems[y].duplicate();
+						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
 						duplicateNumber = expand(duplicateNumber);
 					}
 				}
@@ -189,12 +196,14 @@ function exportProdFile(pdfFolderName, destFolder)
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
 				saveFile(doc,pdfFileName,pdfFolder);
-				// removeExpandedRosterGroup(tmpNameLay);
-				// removeExpandedRosterGroup(tmpNumLay);
+				removeExpandedRosterGroup(tmpNameLay);
+				removeExpandedRosterGroup(tmpNumLay);
 			}
 
 			liveTextGroup.hidden = false;
 		}
+
+		log.l("Successfully exported " + pdfFileName)
 
 	}
 }

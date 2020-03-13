@@ -14,6 +14,7 @@
 
 function createAdjustmentDialog()
 {
+	log.h("Beginning execution of createAdjustmentDialog();");
 	var result = true;
 	var doc = app.activeDocument;
 	var nameInputSelection = [];
@@ -146,6 +147,7 @@ function createAdjustmentDialog()
 	w.show();
 		
 
+	log.l("End of adjustment dialog. Returning: " + result);
 	return result;
 
 
@@ -347,7 +349,6 @@ function createAdjustmentDialog()
 		var continuePreference = true;
 		var cancel = UI.button(parent,"Cancel",function(){result = false;w.close();});
 		var submit = UI.button(parent,"Submit",function(){
-			// getPlayerNameSettings(prodFileHasNames);
 			for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
 			{
 				textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
@@ -366,6 +367,7 @@ function createAdjustmentDialog()
 						var yesBtn = UI.button(ccBtnGroup,"Yes",function()
 						{
 							continuePreference = true;
+							log.l("ATTN: User chose to export the artwork without expanding the text.");
 							confirmContinue.close();
 						})
 				confirmContinue.show();
@@ -378,12 +380,20 @@ function createAdjustmentDialog()
 			{
 				return;
 			}
-			w.close();
+			log.l("Adjustment Dialog Submitted.");
+			log.l("User selected the following text expansion steps: ::" + textExpandSteps.join(", "));
+			
 			maxPlayerNameWidth = parseInt(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
+			log.l("Maximum player name width: " + maxPlayerNameWidth);
+
 			thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
+			log.l("Thru-cut Opacity preference: " + thruCutOpacityPreference);
+
 			setThruCutOpacity();
 			var docName = doc.name.replace(".ai","");
 			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
+
+			w.close();
 			exportProdFile(docName, Folder(docPath));
 		});
 	}

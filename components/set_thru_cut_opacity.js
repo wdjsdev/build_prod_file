@@ -29,6 +29,10 @@ function setThruCutOpacity()
 				selection[x].opacity = opacity;
 			}
 		}
+		log.l("Successfully set thru-cut lines' opacity to 0.");
 	}
-	catch(e){};
+	catch(e)
+	{
+		log.e("Failed to set thru-cut opacities..::e = " + e);
+	};
 }

@@ -24,23 +24,17 @@ function inputRosterData(roster)
 	var curSizePieces = [];
 	var curQty,playerLen;
 
-	tempLay = doc.layers.add();
-	tempLay.name = "temp";
-
 
 	for (var curSize in roster)
 	{
-		log.l("::Beginning roster loop for size: " + curSize);
-
-		
-
-
 		//check whether this is standard sizing or variable inseam sizing
 		if (!roster[curSize].players)
 		{
+			log.l("Garment sizing format is variable inseam.");
 			//this is a variable inseam garment
 			for (var curWaist in roster[curSize])
 			{
+
 				//get all the garment pieces that match the current size
 				for (var z = pieces.length - 1; z >= 0; z--)
 				{
@@ -49,7 +43,6 @@ function inputRosterData(roster)
 						curSizePieces.push(pieces[z]);
 					}
 				}
-				log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
 				curQty = parseInt(roster[curSize][curWaist].qty);
 				playerLen = roster[curSize][curWaist].players.length;
 				if (curQty > playerLen)
@@ -74,6 +67,7 @@ function inputRosterData(roster)
 		}
 		else
 		{
+			log.l("Garment sizing format is standard.");
 			//get all the garment pieces that match the current size
 			for (var z = pieces.length - 1; z >= 0; z--)
 			{
@@ -82,7 +76,7 @@ function inputRosterData(roster)
 					curSizePieces.push(pieces[z]);
 				}
 			}
-			log.l("Added the following pieces to the curSizePieces array: ::" + curSizePieces.join("\n"));
+
 			curQty = parseInt(roster[curSize].qty);
 			playerLen = roster[curSize].players.length;
 			if (curQty > playerLen)
@@ -112,10 +106,15 @@ function inputRosterData(roster)
 
 	if (rosterInconsistencies.length)
 	{
+		log.l("Roster inconsistencies: ::" + rosterInconsistencies.join(", "));
 		messageList.push("The following sizes had a roster/quantity discrepancy. Please double check the accuracy:\n" + rosterInconsistencies.join(", "));
 	}
 
-	tempLay.remove();
 
+	if(result)
+	{
+		log.l("Successfully input the roster data.")
+	}
+	
 	return result;
 }

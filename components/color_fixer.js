@@ -17,6 +17,7 @@
 
 function colorFixer()
 {
+	log.h("Beginning execution of colorFixer();");
 	var result = true;
 	var doc = app.activeDocument;
 	var swatches = doc.swatches;
@@ -69,31 +70,8 @@ function colorFixer()
 				doc.swatchGroups[sg].remove();
 			}
 		}
+		log.l("Sucessfully eliminated default colors.");
 
-		
-
-	}
-
-	function setThruCutOpacity()
-	{
-		try
-		{
-			var doc = app.activeDocument;
-			var thruCutSwatch = makeNewSpotColor("Thru-cut", "CMYK", {c:0,m:0,y:0,k:0});
-			doc.selection = null;
-			doc.defaultStrokeColor = thruCutSwatch.color;
-			app.executeMenuCommand("Find Stroke Color menu item");
-			setZeroOpacity(doc.selection);
-
-			function setZeroOpacity(selection)
-			{
-				for(var x=0,len=selection.length;x<len;x++)
-				{
-					selection[x].opacity = 0;
-				}
-			}
-		}
-		catch(e){};
 	}
 
 	
@@ -145,6 +123,7 @@ function colorFixer()
 				}
 			}
 		}
+		log.l("Successfully fixed flo swatches.");
 	}
 
 
@@ -187,6 +166,7 @@ function colorFixer()
 		moveSewLines(sewLinesArray);
 		doc.selection = null;
 
+		log.l("Successfully extracted sew lines.");
 
 		function moveSewLines(arr)
 		{
@@ -199,7 +179,7 @@ function colorFixer()
 				sewLinesLayer = layers.add();
 				sewLinesLayer.name = "Sew Lines";
 			}
-			// for(var x=arr.length-1;x>=0;x--)
+
 			for(var x=0,len=arr.length;x<len;x++)
 			{
 				arr[x].moveToBeginning(sewLinesLayer);

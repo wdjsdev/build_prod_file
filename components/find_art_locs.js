@@ -22,53 +22,20 @@ function findArtLocs()
 	var docItems = curDoc.layers[0].groupItems;
 	var curSize, curItem,curSubItem;
 
-	var len = docItems.length,
-		subLen,
-		// hasFrames = false,
-		frame,
-		curTextFrame;
+	var frame,
+		curTextFrame,
+		piecesWithRosterGroups = [];
 
 	try
 	{
-		for (var x = 0; x < len; x++)
+		for(var x=0,len=docItems.length;x<len;x++)
 		{
-			hasFrames = false;
 			curItem = docItems[x];
-			subLen = curItem.pageItems.length;
-			// if(curItem.textFrames.length)
-			// {
-			// 	hasFrames = true;
-			// }
-			// else
-			// {
-			// 	for(var y=0;y<subLen;y++)
-			// 	{
-			// 		curSubItem = curITem.pageItems[y];
-			// 		if(curSubItem.typename === "TextFrame")
-			// 		{
-			// 			hasFrames = true;
-			// 		}
-			// 		else if(curSubItem.typename === "GroupItem" ||  && curSubItem.textFrames.length)
-			// 		{
-			// 			hasFrames = true;
-			// 		}
-			// 		else if(curSubItem.pageItems.length)
-			// 		{
-			// 			for(var z =0;z<curSubItem.pageItems.length;z++)
-			// 			{
-			// 				if(curSubItem.pageItems[z].typename === "GroupItem" && curSubItem.pageItems[z].clipped && curSubItem.)
-			// 			}
-			// 		}
-			// 	}
-			// }
-			// if(!hasFrames)
-			// {
-			// 	log.l("no text frames present in " + curItem.name + ". skipping this item.");
-			// 	continue;
-			// }
+
 			if(setupRosterGroup(curItem))
 			{
 				log.l("Successfully setup the rosterGroup for " + curItem.name);
+				piecesWithRosterGroups.push(curItem.name);
 			}
 			else
 			{
@@ -76,6 +43,7 @@ function findArtLocs()
 				continue;
 			}
 		}
+		log.l("Successfully set up roster groups on the following pieces: ::\t" + piecesWithRosterGroups.join("\n\t"));
 	}
 	catch(e)
 	{
@@ -85,10 +53,4 @@ function findArtLocs()
 	}
 
 	return result;
-
-	function pushItemName(arr,item)
-	{
-		//strip the size off the name of the piece and push it to the given result array
-		arr.push(item.name.substring(item.name.indexOf(" ")+1,item.name.length));
-	}
 }

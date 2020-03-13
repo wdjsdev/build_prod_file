@@ -21,6 +21,7 @@
 
 function exportProdFile(pdfFolderName, destFolder)
 {
+	log.h("exportProdFile(" + pdfFolderName + "," + destFolder + ")");
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
@@ -48,6 +49,7 @@ function exportProdFile(pdfFolderName, destFolder)
 		else
 		{
 			pdfFolder.create();
+			log.l("Created a new pdf folder.")
 		}
 	}
 
@@ -68,6 +70,7 @@ function exportProdFile(pdfFolderName, destFolder)
 	tmpNumLay.remove();
 
 	saveFile(doc,docName,destFolder);
+	log.l("Successfully saved " + docName);
 
 	unloadExpandAction();
 	
@@ -93,7 +96,7 @@ function exportProdFile(pdfFolderName, destFolder)
 			log.l("No roster or live text info here.");
 		}
 
-		piece.selected = true;
+		piece.selected = true;	
 		
 		// doc.fitArtboardToSelectedArt(0);
 
@@ -164,12 +167,12 @@ function exportProdFile(pdfFolderName, destFolder)
 						{
 							var myTextPath = duplicateName.textPath;
 							resizeLiveText(duplicateName);
-							expand(duplicateName);
+							duplicateName = expand(duplicateName);
 						}
 						catch(e)
 						{
-							expand(duplicateName);
-							duplicateName = tmpNameLay.pageItems[0];
+							duplicateName = expand(duplicateName);
+							
 							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
 							{
 								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
@@ -186,7 +189,7 @@ function exportProdFile(pdfFolderName, destFolder)
 							continue;
 						}
 						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
-						expand(duplicateNumber);
+						duplicateNumber = expand(duplicateNumber);
 					}
 				}
 
@@ -199,6 +202,8 @@ function exportProdFile(pdfFolderName, destFolder)
 
 			liveTextGroup.hidden = false;
 		}
+
+		log.l("Successfully exported " + pdfFileName)
 
 	}
 }

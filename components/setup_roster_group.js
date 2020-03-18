@@ -43,8 +43,8 @@ function setupRosterGroup(item)
 				if(!rosterGroup)
 				{
 					item.note = "hasRoster";
-					liveTextGroup = frame.parent.groupItems.add();
-					rosterGroup = frame.parent.groupItems.add();
+					liveTextGroup = item.groupItems.add();
+					rosterGroup = item.groupItems.add();
 					liveTextGroup.name = "Live Text";
 					rosterGroup.name = "Roster";
 				}

@@ -27,5 +27,5 @@ function expand(frame)
 	}
 	parent.pageItems[0].selected = true;
 
-	return doc.selection;
+	return doc.selection[0];
 }

@@ -35,18 +35,28 @@ function inputCurrentPlayer(pieces, curPlayer)
 
 	for (var z = 0; z < len; z++)
 	{
-		try
+		// try
+		// {
+		// 	liveTextGroup = pieces[z].groupItems["Live Text"];
+		// 	rosterGroup = pieces[z].groupItems["Roster"];
+		// 	liveTextGroup.hidden = false;
+		// 	rosterGroup.hidden = false;
+		// }
+		// catch (e)
+		// {
+		// 	// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
+		// 	continue;
+		// } 
+
+		liveTextGroup = findSpecificItem(pieces[z],"GroupItem","Live Text");
+		rosterGroup = findSpecificItem(pieces[z],"GroupItem","Roster");
+
+		if(!liveTextGroup || !rosterGroup)
 		{
-			liveTextGroup = pieces[z].groupItems["Live Text"];
-			rosterGroup = pieces[z].groupItems["Roster"];
-			liveTextGroup.hidden = false;
-			rosterGroup.hidden = false;
-		}
-		catch (e)
-		{
-			// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
 			continue;
-		} 
+		}
+		liveTextGroup.hidden = false;
+		rosterGroup.hidden = false;
 
 		//check whether any of the textFrames in the liveTextGroup are unnamed
 		for(var tf=0,tfLen=liveTextGroup.textFrames.length;tf<tfLen;tf++)

@@ -34,10 +34,15 @@ function revealPieceAndRosterGroup(pieceName,rosterGroupName)
 	//create the artboard
 	doc.selection = null;
 	
+
+	//we need to select some artwork to use for creating the
+	//artboard.. but we can't select the entire piece, because
+	//it has locked/hidden artwork inside. Dig for the first
+	//unlocked piece that is at least 50% as wide as the parent piece
 	var pieceWidth = piece.width;
 	for(var pi = piece.pageItems.length - 1; pi>=0; pi--)
 	{
-		if(piece.pageItems[pi].width > pieceWidth *.8)
+		if(piece.pageItems[pi].width > pieceWidth *.5)
 		{
 			piece.pageItems[pi].selected = true;
 			break;

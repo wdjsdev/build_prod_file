@@ -318,7 +318,7 @@ function createAdjustmentDialog()
 		}
 		else
 		{
-			parent.nameInput.text = "";
+			parent.numInput.text = "";
 		}
 	}
 

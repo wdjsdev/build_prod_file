@@ -1,0 +1,9 @@
+adjustment dialog ideas:
+
+when you click on a listbox, highlight the roster listbox so you can quickly jump to using the arrow keys
+assign hotkeys to the roster listbox
+	hit s to toggle through to the next size in the list
+	hit p to toggle through to the next piece in the list
+update the "assign garments to layers" dialog. it SUCKS
+maybe a button to "convert case" of one or all player names
+export individual roster piece (back with name/number)

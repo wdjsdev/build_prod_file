@@ -45,7 +45,7 @@ function createProdFile(curGarment)
 		{
 			log.l("creating a new production file called " + orderNum + appendage)
 			// curGarment.doc = app.documents.add();
-			var prodFileTemplate = File("/Volumes/Customization/Library/Scripts/Script Resources/Files/prod_file_template.ait");
+			var prodFileTemplate = File(resourcePath + "Files/prod_file_template.ait");
 			curGarment.doc = app.open(prodFileTemplate);
 			curGarment.name = orderNum + appendage;
 			artworkLayer = app.activeDocument.layers[0];

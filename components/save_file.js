@@ -26,7 +26,7 @@ function saveFile(doc,fileName,dest)
 			dest.create();
 		}
 
-		var destFile = File(dest.fsName + "/" + fileName);
+		var destFile = File(dest.fullName + "/" + fileName);
 		if(fileName.toLowerCase().indexOf("pdf")>-1)
 		{
 			doc.saveAs(destFile,pdfSaveOpts);
@@ -39,7 +39,7 @@ function saveFile(doc,fileName,dest)
 	catch(e)
 	{
 		result = false;
-		log.e("failed to save file: " + fileName + "::in the location: " + dest.fsName);
+		log.e("failed to save file: " + fileName + "::in the location: " + dest.fullName);
 	}
 	return result;
 }

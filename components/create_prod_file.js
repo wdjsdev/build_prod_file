@@ -36,7 +36,7 @@ function createProdFile(curGarment)
 		saveFolder = Folder(prodFileSaveLocation);
 		saveFileName = orderNum + appendage + ".ai";
 		var overwriteMsg = "A production file already exists for " + saveFileName;
-		if(File(saveFolder.fsName + "/" + saveFileName).exists && !getOverwritePreference(overwriteMsg))
+		if(File(saveFolder.fullName + "/" + saveFileName).exists && !getOverwritePreference(overwriteMsg))
 		{
 			result = false;
 			log.l(saveFileName + " existed already and user chose not to overwrite.");
@@ -45,7 +45,7 @@ function createProdFile(curGarment)
 		{
 			log.l("creating a new production file called " + orderNum + appendage)
 			// curGarment.doc = app.documents.add();
-			var prodFileTemplate = File("/Volumes/Customization/Library/Scripts/Script Resources/Files/prod_file_template.ait");
+			var prodFileTemplate = File(resourcePath + "Files/prod_file_template.ait");
 			curGarment.doc = app.open(prodFileTemplate);
 			curGarment.name = orderNum + appendage;
 			artworkLayer = app.activeDocument.layers[0];

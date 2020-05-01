@@ -34,14 +34,46 @@ function container()
 	var valid = true;
 	var scriptName = "adjust_prod_file";
 
-	//Production Utilities
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Batch_Framework.jsxbin\"");
-	
-	// //Dev Utilities
-	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Utilities_Container.js\"");
-	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Batch_Framework.js\"");
+	function getUtilities()
+	{
+		var result;
+		var networkPath,utilPath;
+		if($.os.match("Windows"))
+		{
+			networkPath = "//AD4/Customization/";
+		}
+		else
+		{
+			networkPath = "/Volumes/Customization/";
+		}
 
+
+		utilPath = decodeURI(networkPath + "Library/Scripts/Script Resources/Data/");
+
+		
+		if(Folder(utilPath).exists)
+		{
+			result = utilPath;
+		}
+
+		return result;
+
+	}
+
+	var utilitiesPath = getUtilities();
+	if(utilitiesPath)
+	{
+		eval("#include \"" + utilitiesPath + "Utilities_Container.jsxbin" + "\"");
+		eval("#include \"" + utilitiesPath + "Batch_Framework.jsxbin" + "\"");
+	}
+	else
+	{
+		alert("Failed to find the utilities..");
+		return false;	
+	}
+
+
+	
 	//verify the existence of a document
 	if(app.documents.length === 0)
 	{
@@ -59,28 +91,22 @@ function container()
 	var prodComponents = componentsPath + "build_prod_file"
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
-	if(compFiles && compFiles.length)
+	if(compFiles.length)
 	{
-		for(var x=0,len=compFiles.length;x<len;x++)
+		var curComponent;
+		for(var cf=0,len=compFiles.length;cf<len;cf++)
 		{
-			try
-			{
-				eval("#include \"" + compFiles[x].fsName + "\"");
-			}
-			catch(e)
-			{
-				errorList.push("Failed to include the component: " + compFiles[x].name);
-				log.e("Failed to include the component: " + compFiles[x].name + "::System Error Message: " + e + "::System Error Line: " + e.line);
-				valid = false;
-				// break;
-			}
+			curComponent = compFiles[cf].fullName;
+			eval("#include \"" + curComponent + "\"");
+			log.l("included: " + compFiles[cf].name);
 		}
 	}
 	else
 	{
+		errorList.push("Failed to find the necessary components.");
+		log.e("No components were found.");
 		valid = false;
-		errorList.push("Failed to find any of the necessary components for this script to work.");
-		log.e("Failed to include any components. Exiting script.");
+		return valid;
 	}
 
 	

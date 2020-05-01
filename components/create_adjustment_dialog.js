@@ -39,6 +39,11 @@ function createAdjustmentDialog()
 				}
 				var curSizePieces = getProdFilePiecesForCurSize(g_sizeSelect.listbox.selection.text);
 				populateListbox(g_pieceSelect.listbox,curSizePieces);
+				g_pieceSelect.listbox.selection = 0;
+				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
+				populateListbox(g_rosterSelect.listbox,curRosterEntries);
+				g_rosterSelect.listbox.selection = 0;
+				g_rosterSelect.listbox.active = true;
 			}
 
 			//group
@@ -53,6 +58,8 @@ function createAdjustmentDialog()
 				}
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
+				g_rosterSelect.listbox.selection = 0;
+				g_rosterSelect.listbox.active = true;
 			}
 
 			//group

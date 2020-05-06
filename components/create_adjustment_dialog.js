@@ -22,6 +22,8 @@ function createAdjustmentDialog()
 	var w = new Window("dialog");
 		w.alignChildren["fill","fill"];
 
+		
+
 		//group
 		//top row of listboxes
 		var g_listboxGroup = UI.group(w);
@@ -29,7 +31,7 @@ function createAdjustmentDialog()
 
 			//group
 			//size selection listbox
-			var g_sizeSelect = createListboxGroup(g_listboxGroup,"Size");
+			var g_sizeSelect = createListboxGroup(g_listboxGroup,"(S)ize");
 			populateListbox(g_sizeSelect.listbox,prodFileSizes);
 			g_sizeSelect.listbox.onChange = function()
 			{
@@ -43,12 +45,11 @@ function createAdjustmentDialog()
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
 				g_rosterSelect.listbox.selection = 0;
-				g_rosterSelect.listbox.active = true;
 			}
 
 			//group
 			//piece name selection listbox
-			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
+			var g_pieceSelect = createListboxGroup(g_listboxGroup,"(P)iece");
 			g_pieceSelect.listbox.onChange = function()
 			{
 				if(	!g_pieceSelect.listbox.selection || 
@@ -59,12 +60,11 @@ function createAdjustmentDialog()
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
 				g_rosterSelect.listbox.selection = 0;
-				g_rosterSelect.listbox.active = true;
 			}
 
 			//group
 			//Roster entry selection listbox
-			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
+			var g_rosterSelect = createListboxGroup(g_listboxGroup,"(R)oster");
 			g_rosterSelect.listbox.onChange = function()
 			{
 				if(	!g_rosterSelect.listbox.selection || 
@@ -76,7 +76,9 @@ function createAdjustmentDialog()
 				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
 				updateEditRosterEntryGroup(g_editRosterEntryGroup.inputContainerGroup.inputGroup);
 			}
-
+			
+			
+			
 		//horizontal separator
 		UI.hseparator(w,400);
 
@@ -148,7 +150,8 @@ function createAdjustmentDialog()
 
 
 
-
+		g_sizeSelect.listbox.selection = 0;
+		g_sizeSelect.listbox.active = true;
 
 
 	w.show();
@@ -173,6 +176,7 @@ function createAdjustmentDialog()
 			thisGroup.orientation = "column";
 			thisGroup.labelText = UI.static(thisGroup,label);
 			thisGroup.listbox = UI.listbox(thisGroup,LISTBOX_DIMENSIONS,[]);
+			thisGroup.listbox.addEventListener("keydown",function(k){toggleListbox(k)});
 		return thisGroup;
 	}
 
@@ -415,5 +419,46 @@ function createAdjustmentDialog()
 		{
 			parent.add("item",arr[x]);
 		}
+	}
+
+	function toggleListbox(k)
+	{
+		if(!k)
+		{
+			alert("didn't register the keycode..");
+			return;
+		}
+
+		var listbox;
+		if(k.keyName === "S")
+		{
+			listbox = g_sizeSelect.listbox;
+		}
+		else if(k.keyName === "P")
+		{
+			listbox = g_pieceSelect.listbox;
+		}
+		else if(k.keyName === "R")
+		{
+			listbox = g_rosterSelect.listbox;
+		}
+
+		if(!listbox)
+		{
+			return;
+		}
+		if(!listbox.selection || listbox.selection.index === listbox.items.length-1)
+		{
+			listbox.selection = 0;
+		}
+		else
+		{
+			listbox.selection += 1;
+		}
+		g_rosterSelect.listbox.active = true;
+
+
+		// g_pieceSelect.listbox.
+		// g_rosterSelect.listbox.
 	}
 }

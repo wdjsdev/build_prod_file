@@ -49,11 +49,61 @@ function container()
 
 	}
 
-	var utilitiesPath = getUtilities();
-	if(utilitiesPath)
+	function getUtilities()
 	{
-		eval("#include \"" + utilitiesPath + "Utilities_Container.jsxbin" + "\"");
-		eval("#include \"" + utilitiesPath + "Batch_Framework.jsxbin" + "\"");
+		var result = [];
+		var networkPath,utilPath,ext,devUtilities;
+
+		//check for dev utilities preference file
+		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
+
+		if(devUtilitiesPreferenceFile.exists)
+		{
+			devUtilitiesPreferenceFile.open("r");
+			var prefContents = devUtilitiesPreferenceFile.read();
+			devUtilitiesPreferenceFile.close();
+
+			devUtilities = prefContents === "true" ? true : false;
+		}
+		else
+		{
+			devUtilities = false;
+		}
+
+		if(devUtilities)
+		{
+			utilPath = "~/Desktop/automation/utilities/";
+			ext = ".js";
+		}
+		else
+		{
+			if($.os.match("Windows"))
+			{
+				networkPath = "//AD4/Customization/";
+			}
+			else
+			{
+				networkPath = "/Volumes/Customization/";
+			}
+
+			utilPath = decodeURI(networkPath + "Library/Scripts/Script Resources/Data/");	
+			ext = ".jsxbin";
+
+		}
+
+		result.push(utilPath + "Utilities_Container" + ext);
+		result.push(utilPath + "Batch_Framework" + ext);
+		return result;
+
+	}
+
+	var utilities = getUtilities();
+	if(utilities)
+	{
+		for(var u=0,len=utilities.length;u<len;u++)
+		{
+			eval("#include \"" + utilities[u] + "\"");	
+		}
 	}
 	else
 	{

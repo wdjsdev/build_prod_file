@@ -34,37 +34,62 @@ function container()
 	var valid = true;
 	var scriptName = "adjust_prod_file";
 
+	
 	function getUtilities()
 	{
-		var result;
-		var networkPath,utilPath;
-		if($.os.match("Windows"))
+		var result = [];
+		var networkPath,utilPath,ext,devUtilities;
+
+		//check for dev utilities preference file
+		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
+
+		if(devUtilitiesPreferenceFile.exists)
 		{
-			networkPath = "//AD4/Customization/";
+			devUtilitiesPreferenceFile.open("r");
+			var prefContents = devUtilitiesPreferenceFile.read();
+			devUtilitiesPreferenceFile.close();
+
+			devUtilities = prefContents === "true" ? true : false;
 		}
 		else
 		{
-			networkPath = "/Volumes/Customization/";
+			devUtilities = false;
 		}
 
-
-		utilPath = decodeURI(networkPath + "Library/Scripts/Script Resources/Data/");
-
-		
-		if(Folder(utilPath).exists)
+		if(devUtilities)
 		{
-			result = utilPath;
+			utilPath = "~/Desktop/automation/utilities/";
+			ext = ".js";
+		}
+		else
+		{
+			if($.os.match("Windows"))
+			{
+				networkPath = "//AD4/Customization/";
+			}
+			else
+			{
+				networkPath = "/Volumes/Customization/";
+			}
+
+			utilPath = decodeURI(networkPath + "Library/Scripts/Script Resources/Data/");	
+			ext = ".jsxbin";
+
 		}
 
+		result.push(utilPath + "Utilities_Container" + ext);
+		result.push(utilPath + "Batch_Framework" + ext);
 		return result;
 
 	}
 
-	var utilitiesPath = getUtilities();
-	if(utilitiesPath)
+	var utilities = getUtilities();
+	if(utilities)
 	{
-		eval("#include \"" + utilitiesPath + "Utilities_Container.jsxbin" + "\"");
-		eval("#include \"" + utilitiesPath + "Batch_Framework.jsxbin" + "\"");
+		for(var u=0,len=utilities.length;u<len;u++)
+		{
+			eval("#include \"" + utilities[u] + "\"");	
+		}
 	}
 	else
 	{
@@ -91,7 +116,7 @@ function container()
 	var prodComponents = componentsPath + "build_prod_file"
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
-	if(compFiles.length)
+	if(compFiles && compFiles.length)
 	{
 		var curComponent;
 		for(var cf=0,len=compFiles.length;cf<len;cf++)

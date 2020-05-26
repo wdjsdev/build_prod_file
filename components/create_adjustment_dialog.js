@@ -189,33 +189,37 @@ function createAdjustmentDialog()
 
 	function createTransformControls(parent)
 	{
-		//translation controls
-		//move up down left and right
-		var translateGroup = UI.group(parent);
-			translateGroup.orientation = "column"
-			var translateLabel = UI.static(translateGroup,"Move the Stuff");
-			var translateBtnGroup = translateGroup.btnGroup = UI.group(translateGroup);
-				translateBtnGroup.orientation = "column";
-				var btnGroupTopRow = UI.group(translateBtnGroup);
-					var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
-				var btnGroupMiddleRow = UI.group(translateBtnGroup);
-					var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
-					var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
-				var btnGroupBottomRow = UI.group(translateBtnGroup);
-					var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
+		var transformationGroup = UI.group(parent);
+			transformationGroup.orientation = "row";
 
-		//horizontal separator
-		UI.hseparator(parent,400);
+			//translation controls
+			//move up down left and right
+			var translateGroup = UI.group(transformationGroup);
+				translateGroup.orientation = "column"
+				var translateLabel = UI.static(translateGroup,"Move the Stuff");
+				var translateBtnGroup = translateGroup.btnGroup = UI.group(translateGroup);
+					translateBtnGroup.orientation = "column";
+					var btnGroupTopRow = UI.group(translateBtnGroup);
+						var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
+					var btnGroupMiddleRow = UI.group(translateBtnGroup);
+						var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
+						var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
+					var btnGroupBottomRow = UI.group(translateBtnGroup);
+						var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
 
-		var resizeGroup = UI.group(parent)
-			resizeGroup.orientation = "column";
-			var resizeLabel = UI.static(resizeGroup,"Resize the Stuff");
-			var resizeBtnGroup = UI.group(resizeGroup);
-				var widerBtn = UI.button(resizeBtnGroup,"\u219E Wider \u21A0",function(){resizeSelectedArtwork(true,"width",nameCheckbox.value,numCheckbox.value)});
-				var narrowerBtn = UI.button(resizeBtnGroup,"\u21A0 Narrower \u219E",function(){resizeSelectedArtwork(false,"width",nameCheckbox.value,numCheckbox.value)});
-				var tallerBtn = UI.button(resizeBtnGroup,"\u219F Taller \u219F",function(){resizeSelectedArtwork(true,"height",nameCheckbox.value,numCheckbox.value)});
-				var shorterBtn = UI.button(resizeBtnGroup,"\u21A1 Shorter \u21A1",function(){resizeSelectedArtwork(false,"height",nameCheckbox.value,numCheckbox.value)});
-		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
+			var resizeGroup = UI.group(transformationGroup)
+				resizeGroup.orientation = "column";
+				var resizeLabel = UI.static(resizeGroup,"Resize the Stuff");
+				var rsBtnGroupTopRow = UI.group(resizeGroup);
+					var widerBtn = UI.button(rsBtnGroupTopRow,"\u219E Wider \u21A0",function(){resizeSelectedArtwork(true,"width",nameCheckbox.value,numCheckbox.value)});
+				var rsBtnGroupMiddleRow = UI.group(resizeGroup);
+					rsBtnGroupMiddleRow.orientation = "row";
+					var tallerBtn = UI.button(rsBtnGroupMiddleRow,"\u219F Taller \u219F",function(){resizeSelectedArtwork(true,"height",nameCheckbox.value,numCheckbox.value)});
+					var shorterBtn = UI.button(rsBtnGroupMiddleRow,"\u21A1 Shorter \u21A1",function(){resizeSelectedArtwork(false,"height",nameCheckbox.value,numCheckbox.value)});
+				var rsBtnGroupBottomRow = UI.group(resizeGroup);
+					var narrowerBtn = UI.button(rsBtnGroupBottomRow,"\u21A0 Narrower \u219E",function(){resizeSelectedArtwork(false,"width",nameCheckbox.value,numCheckbox.value)});
+					
+		var checkboxGroup = transformationGroup.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
 			var numCheckbox = UI.checkbox(checkboxGroup, "Number");
 	}

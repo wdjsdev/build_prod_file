@@ -93,8 +93,8 @@ function createAdjustmentDialog()
 
 			createTransformControls(g_transformationGroup);
 
-		//horizontal separator
-		UI.hseparator(w,400);
+		// //horizontal separator
+		// UI.hseparator(w,400);
 
 		//group
 		//this section allows for editing certain player
@@ -299,8 +299,11 @@ function createAdjustmentDialog()
 					})
 				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
-		var smallLetterPreferenceGroup = UI.group(parent);
-			var shrinkLetterHeight = UI.button(smallLetterPreferenceGroup,"Shrink Selected Letters",function()
+
+		var btnGroup = parent.btnGroup = UI.group(parent);
+			btnGroup.orientation = "row";
+
+			var shrinkLetterHeight = UI.button(btnGroup,"Shrink Selected Letters",function()
 			{
 				var curScale,range,rangeIndex = nameInputSelection[0];
 				for(var x=0,len=nameInputSelection[1];x<len;x++)
@@ -313,7 +316,6 @@ function createAdjustmentDialog()
 				app.redraw();
 			});
 
-		var btnGroup = parent.btnGroup = UI.group(parent);
 			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,shrinkLetterHeight.value)});
 	}
 
@@ -364,10 +366,19 @@ function createAdjustmentDialog()
 		var continuePreference = true;
 		var cancel = UI.button(parent,"Cancel",function(){result = false;w.close();});
 		var submit = UI.button(parent,"Submit",function(){
-			for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
+
+			for(var x=0;x<3;x++)
 			{
-				textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
+				if(g_textExpansionGroup.cboxes[x].value)
+				{
+					textExpandSteps.push(g_textExpansionGroup.cboxes[x].text)
+				}
 			}
+			alert("textExpandSteps = " + textExpandSteps.join(","));
+			// for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
+			// {
+			// 	textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
+			// }
 			if(!textExpandSteps.length)
 			{
 				var msg = "You did not select any text expansion options. Are you sure you want to proceed?";

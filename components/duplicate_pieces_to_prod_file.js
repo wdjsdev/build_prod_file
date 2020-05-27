@@ -24,6 +24,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	var wxhPat = /[\d]{2}[iw]?x[\d]{2}[iw]?/i;
 	var variableInseamPat = /[\d]{2}i/i;
 	var firstPrepressLayer;
+	var varSizeString;
 	docRef.activate();
 	docRef.selection = null;
 
@@ -79,7 +80,8 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 					for(var pp=0,len = curSizeLayer.groupItems.length;pp<len;pp++)
 					{
 						curItem = curSizeLayer.pageItems[pp];
-						if(curItem.name.indexOf(curWaistSize + "Wx" + curSize + "I")>-1)
+						varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
+						if(curItem.name.toLowerCase().indexOf(varSizeString)>-1)
 						{
 							curItem.selected = true;
 						}

@@ -374,11 +374,7 @@ function createAdjustmentDialog()
 					textExpandSteps.push(g_textExpansionGroup.cboxes[x].text)
 				}
 			}
-			alert("textExpandSteps = " + textExpandSteps.join(","));
-			// for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
-			// {
-			// 	textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
-			// }
+			
 			if(!textExpandSteps.length)
 			{
 				var msg = "You did not select any text expansion options. Are you sure you want to proceed?";

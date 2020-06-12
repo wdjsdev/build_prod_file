@@ -38,7 +38,7 @@ function inputRosterData(roster)
 				//get all the garment pieces that match the current size
 				for (var z = pieces.length - 1; z >= 0; z--)
 				{
-					if (pieces[z].name.indexOf(curWaist + "Wx" + curSize + "I") === 0)
+					if (pieces[z].name.toLowerCase().indexOf(curWaist + "wx" + curSize + "i") === 0)
 					{
 						curSizePieces.push(pieces[z]);
 					}

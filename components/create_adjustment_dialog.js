@@ -22,6 +22,8 @@ function createAdjustmentDialog()
 	var w = new Window("dialog");
 		w.alignChildren["fill","fill"];
 
+		
+
 		//group
 		//top row of listboxes
 		var g_listboxGroup = UI.group(w);
@@ -29,7 +31,7 @@ function createAdjustmentDialog()
 
 			//group
 			//size selection listbox
-			var g_sizeSelect = createListboxGroup(g_listboxGroup,"Size");
+			var g_sizeSelect = createListboxGroup(g_listboxGroup,"(S)ize");
 			populateListbox(g_sizeSelect.listbox,prodFileSizes);
 			g_sizeSelect.listbox.onChange = function()
 			{
@@ -39,11 +41,15 @@ function createAdjustmentDialog()
 				}
 				var curSizePieces = getProdFilePiecesForCurSize(g_sizeSelect.listbox.selection.text);
 				populateListbox(g_pieceSelect.listbox,curSizePieces);
+				g_pieceSelect.listbox.selection = 0;
+				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
+				populateListbox(g_rosterSelect.listbox,curRosterEntries);
+				g_rosterSelect.listbox.selection = 0;
 			}
 
 			//group
 			//piece name selection listbox
-			var g_pieceSelect = createListboxGroup(g_listboxGroup,"Piece Name");
+			var g_pieceSelect = createListboxGroup(g_listboxGroup,"(P)iece");
 			g_pieceSelect.listbox.onChange = function()
 			{
 				if(	!g_pieceSelect.listbox.selection || 
@@ -53,11 +59,12 @@ function createAdjustmentDialog()
 				}
 				var curRosterEntries = getProdFileRosterGroups(g_pieceSelect.listbox.selection.text);
 				populateListbox(g_rosterSelect.listbox,curRosterEntries);
+				g_rosterSelect.listbox.selection = 0;
 			}
 
 			//group
 			//Roster entry selection listbox
-			var g_rosterSelect = createListboxGroup(g_listboxGroup,"Player");
+			var g_rosterSelect = createListboxGroup(g_listboxGroup,"(R)oster");
 			g_rosterSelect.listbox.onChange = function()
 			{
 				if(	!g_rosterSelect.listbox.selection || 
@@ -69,7 +76,9 @@ function createAdjustmentDialog()
 				revealPieceAndRosterGroup(g_pieceSelect.listbox.selection.text, g_rosterSelect.listbox.selection.text);
 				updateEditRosterEntryGroup(g_editRosterEntryGroup.inputContainerGroup.inputGroup);
 			}
-
+			
+			
+			
 		//horizontal separator
 		UI.hseparator(w,400);
 
@@ -84,8 +93,8 @@ function createAdjustmentDialog()
 
 			createTransformControls(g_transformationGroup);
 
-		//horizontal separator
-		UI.hseparator(w,400);
+		// //horizontal separator
+		// UI.hseparator(w,400);
 
 		//group
 		//this section allows for editing certain player
@@ -141,7 +150,8 @@ function createAdjustmentDialog()
 
 
 
-
+		g_sizeSelect.listbox.selection = 0;
+		g_sizeSelect.listbox.active = true;
 
 
 	w.show();
@@ -166,6 +176,7 @@ function createAdjustmentDialog()
 			thisGroup.orientation = "column";
 			thisGroup.labelText = UI.static(thisGroup,label);
 			thisGroup.listbox = UI.listbox(thisGroup,LISTBOX_DIMENSIONS,[]);
+			thisGroup.listbox.addEventListener("keydown",function(k){toggleListbox(k)});
 		return thisGroup;
 	}
 
@@ -178,33 +189,37 @@ function createAdjustmentDialog()
 
 	function createTransformControls(parent)
 	{
-		//translation controls
-		//move up down left and right
-		var translateGroup = UI.group(parent);
-			translateGroup.orientation = "column"
-			var translateLabel = UI.static(translateGroup,"Move the Stuff");
-			var translateBtnGroup = translateGroup.btnGroup = UI.group(translateGroup);
-				translateBtnGroup.orientation = "column";
-				var btnGroupTopRow = UI.group(translateBtnGroup);
-					var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
-				var btnGroupMiddleRow = UI.group(translateBtnGroup);
-					var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
-					var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
-				var btnGroupBottomRow = UI.group(translateBtnGroup);
-					var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
+		var transformationGroup = UI.group(parent);
+			transformationGroup.orientation = "row";
 
-		//horizontal separator
-		UI.hseparator(parent,400);
+			//translation controls
+			//move up down left and right
+			var translateGroup = UI.group(transformationGroup);
+				translateGroup.orientation = "column"
+				var translateLabel = UI.static(translateGroup,"Move the Stuff");
+				var translateBtnGroup = translateGroup.btnGroup = UI.group(translateGroup);
+					translateBtnGroup.orientation = "column";
+					var btnGroupTopRow = UI.group(translateBtnGroup);
+						var upButton = UI.button(btnGroupTopRow,"\u219F",function(){moveSelectedArtwork([0,1],nameCheckbox.value,numCheckbox.value)});
+					var btnGroupMiddleRow = UI.group(translateBtnGroup);
+						var leftButton = UI.button(btnGroupMiddleRow,"\u219E",function(){moveSelectedArtwork([-1,0],nameCheckbox.value,numCheckbox.value)});
+						var rightButton = UI.button(btnGroupMiddleRow,"\u21A0",function(){moveSelectedArtwork([1,0],nameCheckbox.value,numCheckbox.value)});
+					var btnGroupBottomRow = UI.group(translateBtnGroup);
+						var downButton = UI.button(btnGroupBottomRow,"\u21A1",function(){moveSelectedArtwork([0,-1],nameCheckbox.value,numCheckbox.value)});
 
-		var resizeGroup = UI.group(parent)
-			resizeGroup.orientation = "column";
-			var resizeLabel = UI.static(resizeGroup,"Resize the Stuff");
-			var resizeBtnGroup = UI.group(resizeGroup);
-				var widerBtn = UI.button(resizeBtnGroup,"\u219E Wider \u21A0",function(){resizeSelectedArtwork(true,"width",nameCheckbox.value,numCheckbox.value)});
-				var narrowerBtn = UI.button(resizeBtnGroup,"\u21A0 Narrower \u219E",function(){resizeSelectedArtwork(false,"width",nameCheckbox.value,numCheckbox.value)});
-				var tallerBtn = UI.button(resizeBtnGroup,"\u219F Taller \u219F",function(){resizeSelectedArtwork(true,"height",nameCheckbox.value,numCheckbox.value)});
-				var shorterBtn = UI.button(resizeBtnGroup,"\u21A1 Shorter \u21A1",function(){resizeSelectedArtwork(false,"height",nameCheckbox.value,numCheckbox.value)});
-		var checkboxGroup = parent.checkboxGroup = UI.group(parent);
+			var resizeGroup = UI.group(transformationGroup)
+				resizeGroup.orientation = "column";
+				var resizeLabel = UI.static(resizeGroup,"Resize the Stuff");
+				var rsBtnGroupTopRow = UI.group(resizeGroup);
+					var widerBtn = UI.button(rsBtnGroupTopRow,"\u219E Wider \u21A0",function(){resizeSelectedArtwork(true,"width",nameCheckbox.value,numCheckbox.value)});
+				var rsBtnGroupMiddleRow = UI.group(resizeGroup);
+					rsBtnGroupMiddleRow.orientation = "row";
+					var tallerBtn = UI.button(rsBtnGroupMiddleRow,"\u219F Taller \u219F",function(){resizeSelectedArtwork(true,"height",nameCheckbox.value,numCheckbox.value)});
+					var shorterBtn = UI.button(rsBtnGroupMiddleRow,"\u21A1 Shorter \u21A1",function(){resizeSelectedArtwork(false,"height",nameCheckbox.value,numCheckbox.value)});
+				var rsBtnGroupBottomRow = UI.group(resizeGroup);
+					var narrowerBtn = UI.button(rsBtnGroupBottomRow,"\u21A0 Narrower \u219E",function(){resizeSelectedArtwork(false,"width",nameCheckbox.value,numCheckbox.value)});
+					
+		var checkboxGroup = transformationGroup.checkboxGroup = UI.group(parent);
 			var nameCheckbox = UI.checkbox(checkboxGroup,"Name");
 			var numCheckbox = UI.checkbox(checkboxGroup, "Number");
 	}
@@ -284,8 +299,11 @@ function createAdjustmentDialog()
 					})
 				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
-		var smallLetterPreferenceGroup = UI.group(parent);
-			var shrinkLetterHeight = UI.button(smallLetterPreferenceGroup,"Shrink Selected Letters",function()
+
+		var btnGroup = parent.btnGroup = UI.group(parent);
+			btnGroup.orientation = "row";
+
+			var shrinkLetterHeight = UI.button(btnGroup,"Shrink Selected Letters",function()
 			{
 				var curScale,range,rangeIndex = nameInputSelection[0];
 				for(var x=0,len=nameInputSelection[1];x<len;x++)
@@ -298,7 +316,6 @@ function createAdjustmentDialog()
 				app.redraw();
 			});
 
-		var btnGroup = parent.btnGroup = UI.group(parent);
 			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,shrinkLetterHeight.value)});
 	}
 
@@ -349,10 +366,19 @@ function createAdjustmentDialog()
 		var continuePreference = true;
 		var cancel = UI.button(parent,"Cancel",function(){result = false;w.close();});
 		var submit = UI.button(parent,"Submit",function(){
-			for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
+
+			for(var x=0;x<3;x++)
 			{
-				textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
+				if(g_textExpansionGroup.cboxes[x].value)
+				{
+					textExpandSteps.push(g_textExpansionGroup.cboxes[x].text)
+				}
 			}
+			alert("textExpandSteps = " + textExpandSteps.join(","));
+			// for(var x=0,len=g_textExpansionGroup.listbox.items.length;x<len;x++)
+			// {
+			// 	textExpandSteps.push(g_textExpansionGroup.listbox.items[x]);
+			// }
 			if(!textExpandSteps.length)
 			{
 				var msg = "You did not select any text expansion options. Are you sure you want to proceed?";
@@ -408,5 +434,46 @@ function createAdjustmentDialog()
 		{
 			parent.add("item",arr[x]);
 		}
+	}
+
+	function toggleListbox(k)
+	{
+		if(!k)
+		{
+			alert("didn't register the keycode..");
+			return;
+		}
+
+		var listbox;
+		if(k.keyName === "S")
+		{
+			listbox = g_sizeSelect.listbox;
+		}
+		else if(k.keyName === "P")
+		{
+			listbox = g_pieceSelect.listbox;
+		}
+		else if(k.keyName === "R")
+		{
+			listbox = g_rosterSelect.listbox;
+		}
+
+		if(!listbox)
+		{
+			return;
+		}
+		if(!listbox.selection || listbox.selection.index === listbox.items.length-1)
+		{
+			listbox.selection = 0;
+		}
+		else
+		{
+			listbox.selection += 1;
+		}
+		g_rosterSelect.listbox.active = true;
+
+
+		// g_pieceSelect.listbox.
+		// g_rosterSelect.listbox.
 	}
 }

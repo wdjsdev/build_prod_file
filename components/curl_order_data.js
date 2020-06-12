@@ -27,7 +27,7 @@ function curlOrderData()
 				"do shell script ",
 				"\"curl \\\"" + API_URL,
 				orderNum + "\\\" > \\\"",
-				LOCAL_DATA_FILE.fsName + "\\\"\""
+				LOCAL_DATA_FILE.fullName + "\\\"\""
 			];
 
 		var dataString = "";

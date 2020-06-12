@@ -34,7 +34,7 @@ function exportProdFile(pdfFolderName, destFolder)
 	loadExpandAction();
 
 	pdfFolderName = pdfFolderName.replace(".ai","");
-	var pdfFolder = Folder(destFolder.fsName + "/" + pdfFolderName + "_PDFs");
+	var pdfFolder = Folder(destFolder.fullName + "/" + pdfFolderName + "_PDFs");
 
 	if(result)
 	{

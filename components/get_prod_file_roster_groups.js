@@ -19,7 +19,8 @@ function getProdFileRosterGroups(pieceName)
 	var result = [];
 	var piece = doc.layers["Artwork"].pageItems[pieceName];
 	var rosterGroup = piece.groupItems["Roster"];
-	for(var x=0,len=rosterGroup.pageItems.length;x<len;x++)
+	// for(var x=0,len=rosterGroup.pageItems.length;x<len;x++)
+	for(var x = rosterGroup.pageItems.length-1;x>=0;x--)
 	{
 		result.push(rosterGroup.pageItems[x].name);
 	}

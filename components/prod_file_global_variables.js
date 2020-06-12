@@ -29,7 +29,8 @@ var docRef = app.activeDocument,
 
 //adjustment dialog variables
 
-	LISTBOX_DIMENSIONS = [50,50,200,200],
+	// LISTBOX_DIMENSIONS = [50,50,200,200],
+	LISTBOX_DIMENSIONS = [50,50,200,125],
 	NUDGE_AMOUNT = 1.8,
 	curRosterGroup,
 	curRosterName,

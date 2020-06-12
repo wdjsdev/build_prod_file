@@ -44,7 +44,8 @@ function getSaveLocation()
 	}
 	else
 	{
-		docPath = "/Volumes/Macintosh HD" + docRef.path;
+		// docPath = "/Volumes/Macintosh HD" + docRef.path;
+		docPath = desktopPath + docRef.path;
 	}
 
 	log.l("docPath = " + docPath);
@@ -54,7 +55,8 @@ function getSaveLocation()
 	{
 		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
 		errorList.push("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
-		userSelectedPath = "Volumes/Macintosh HD" + desktopFolder.selectDlg("Please select a location to save your production file(s)").fsName;
+		// userSelectedPath = "Volumes/Macintosh HD" + desktopFolder.selectDlg("Please select a location to save your production file(s)").fullName;
+		userSelectedPath = desktopFolder.selectDlg("Please select a location to save your production file(s)").fullName;
 		if(!userSelectedPath)
 		{
 			log.e("User cancelled folder select dialog.");

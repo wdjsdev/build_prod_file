@@ -26,7 +26,7 @@ function initBuildProd()
 	if(valid)
 	{
 		orderNum = getOrderNumber();
-		if(!orderNum || orderNum == "")
+		if(noOrderNumber)
 		{
 			valid = false;
 		}
@@ -40,41 +40,6 @@ function initBuildProd()
 	if(valid)
 	{
 		curOrderData = curlData(NOD,orderNum)
-		
-		// if(user !== "will.dowling")
-		// {
-		// 	curOrderData = curlData(NOD,orderNum)
-		// }
-		// else
-		// {
-		// 	var w = new Window("dialog");
-		// 		var msg = UI.static(w,"Real order data or test data?");
-		// 		var realBtnGroup = UI.group(w);
-		// 			var realBtn = UI.button(realBtnGroup,"Real Data",function()
-		// 			{
-		// 				curOrderData = curlData(NOD,orderNum)
-		// 				w.close();
-		// 			});
-		// 			realBtn.active = true;
-		// 		var testDataGroup = UI.group(w);
-		// 			var testMsg = UI.static(testDataGroup,"Paste Test Data Here");
-		// 			var inputBox = UI.edit(testDataGroup,"");
-		// 				inputBox.multiline = true;
-		// 				inputBox.preferredSize = [200,200];
-		// 			var testBtn = UI.button(testDataGroup,"Test Data",function()
-		// 			{
-		// 				if(inputBox.text != "")
-		// 				{
-		// 					eval("curOrderData = " + inputBox.text);
-		// 					w.close();
-		// 				}
-		// 				else
-		// 				{
-		// 					alert("enter some data, bruh..");
-		// 				}
-		// 			});
-		// 	w.show();
-		// }
 
 		if(!curOrderData)
 		{
@@ -88,6 +53,11 @@ function initBuildProd()
 		valid = splitDataByGarment();
 	}
 
+	if(noOrderNumber)
+	{
+		valid = true;
+		curOrderData = manuallyPopulateOrderData();
+	}
 	if(valid)
 	{
 		garmentLayers = findGarmentLayers();

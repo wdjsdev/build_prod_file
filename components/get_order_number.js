@@ -66,7 +66,7 @@ function getOrderNumber()
 			var cancelButton = UI.button(btnGroup, "Cancel", cancel);
 			var submitButton = UI.button(btnGroup, "Submit", submit);
 		var noOrderBtnGroup = UI.group(w);
-			var noOrderNumberButton = UI.button(noOrderBtnGroup, "No Order Number", noOrderNumber)
+			var noOrderNumberButton = UI.button(noOrderBtnGroup, "No Order Number", setNoOrderNumber)
 	w.show();
 
 	function submit()
@@ -93,10 +93,11 @@ function getOrderNumber()
 		w.close();
 	}
 
-	function noOrderNumber()
+	function setNoOrderNumber()
 	{
-		result = true;
-		log.l()
+		result = "";
+		noOrderNumber = true;
+		w.close();
 	}
 
 

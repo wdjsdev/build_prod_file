@@ -13,7 +13,7 @@
 	Arguments
 		none
 	Return value
-		garment object
+		void
 
 */
 
@@ -65,9 +65,9 @@ function manuallyPopulateOrderData()
 			var submit = UI.button(btnGroup,"Submit",function()
 			{
 				result.layer = curGarmentLayer;
-				for(var a=0,len=sizeListbox.items.length;a<len;a++)
+				for(var a=0,len=sizeListbox.selection.length;a<len;a++)
 				{
-					result.sizes.push(sizeListbox.items[a].text);
+					result.sizes.push(sizeListbox.selection[a].text);
 				}
 				if(!result.layer)
 				{
@@ -100,7 +100,44 @@ function manuallyPopulateOrderData()
 
 
 	w.show();
-	return result;
+
+	if(result.valid)
+	{
+		var newGarment = {};
+		
+		var pat = /(.*)([-_][a-z\d]{3,}([-_][a-z])?)/i;
+		// var underscorePat = /([fpb][dsm])[_]/i;
+		var underscorePat = /([a-z]*)[_]/i;
+		newGarment.code = curGarmentLayer.name.match(pat)[1];
+		while(newGarment.code.match(underscorePat))
+		{
+			newGarment.code = newGarment.code.replace(underscorePat,newGarment.code.match(underscorePat)[1] + "-");
+		}
+
+		//get the style number
+		var pat = /(.*)[-_]([a-z\d]{3,}([-_][a-z])?)/i;
+		newGarment.styleNum = curGarmentLayer.name.match(pat)[2];
+		 
+
+		newGarment.age = getAge(newGarment.code);
+		newGarment.parentLayer = curGarmentLayer;
+
+		newGarment.roster = {};
+		
+		var curSize;
+		var curRoster;
+		for(var a = 0, len = result.sizes.length; a < len; a++)
+		{
+			curSize = result.sizes[a];
+			curRoster = newGarment.roster[curSize] = {};
+			curRoster.qty = 1;
+			curRoster.players = [];
+			curRoster.players.push({name: "", number: ""})
+		}
+		newGarment.garmentCount = result.sizes.length;
+		garmentsNeeded.push(newGarment);
+	}
+	// return result;
 
 
 
@@ -121,7 +158,7 @@ function manuallyPopulateOrderData()
 		//clear out listbox
 		for(var a = lb.items.length -1; a>=0; a--)
 		{
-			lb.items[a].remove();
+			lb.remove(lb.items[a]);
 		}
 
 		//repopulate listbox

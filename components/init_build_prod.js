@@ -56,11 +56,8 @@ function initBuildProd()
 	if(noOrderNumber)
 	{
 		valid = true;
-		curOrderData = manuallyPopulateOrderData();
-	}
-	if(valid)
-	{
-		garmentLayers = findGarmentLayers();
+		// curOrderData = manuallyPopulateOrderData();
+		manuallyPopulateOrderData();
 	}
 
 	if(valid)
@@ -72,6 +69,11 @@ function initBuildProd()
 				"::garmentsNeeded.length = " + garmentsNeeded.length + 
 				"::garmentLayers.length = " + garmentLayers.length);
 		}
-		assignGarmentsToLayers();
 	}
+
+	if(valid && !noOrderNumber)
+	{
+		garmentLayers = findGarmentLayers();
+		assignGarmentsToLayers();
+	} 
 }

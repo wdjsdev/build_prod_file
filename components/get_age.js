@@ -16,6 +16,6 @@
 
 function getAge(str)
 {
-	return str.match(/[yg]$/i) ? "Y" : "A";
+	return str.match(/[yg]/i) ? "Y" : "A";
 
 }

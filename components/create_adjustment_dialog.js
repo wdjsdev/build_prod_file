@@ -93,8 +93,7 @@ function createAdjustmentDialog()
 
 			createTransformControls(g_transformationGroup);
 
-		// //horizontal separator
-		// UI.hseparator(w,400);
+
 
 		//group
 		//this section allows for editing certain player
@@ -317,6 +316,12 @@ function createAdjustmentDialog()
 			});
 
 			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,shrinkLetterHeight.value)});
+			var addNewRoster = parent.addNewRosterBtn = UI.button(btnGroup,"Add Player",function()
+			{
+				addRosterEntry(g_sizeSelect.listbox.selection.text,nameInput.text,numInput.text);
+				populateListbox(g_rosterSelect.listbox,getProdFileRosterGroups(g_pieceSelect.listbox.selection.text));
+				toggleListbox("R")
+			})
 	}
 
 	function updateEditRosterEntryGroup(parent)
@@ -420,15 +425,15 @@ function createAdjustmentDialog()
 		});
 	}
 
-	function populateListbox(parent,arr)
+	function populateListbox(listbox,arr)
 	{
-		for(var x = parent.items.length - 1;x>=0;x--)
+		for(var x = listbox.items.length - 1;x>=0;x--)
 		{
-			parent.remove(parent.items[x]);
+			listbox.remove(listbox.items[x]);
 		}
 		for(var x=0,len=arr.length;x<len;x++)
 		{
-			parent.add("item",arr[x]);
+			listbox.add("item",arr[x]);
 		}
 	}
 

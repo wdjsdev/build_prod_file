@@ -63,8 +63,10 @@ function getOrderNumber()
 			var rosterInputPrefCheckbox = UI.checkbox(rosterInputPrefGroup,"Automatically add roster data?");
 				rosterInputPrefCheckbox.value = true;
 		var btnGroup = UI.group(w);
-			var submitButton = UI.button(btnGroup, "Submit", submit);
 			var cancelButton = UI.button(btnGroup, "Cancel", cancel);
+			var submitButton = UI.button(btnGroup, "Submit", submit);
+		var noOrderBtnGroup = UI.group(w);
+			var noOrderNumberButton = UI.button(noOrderBtnGroup, "No Order Number", setNoOrderNumber)
 	w.show();
 
 	function submit()
@@ -88,6 +90,13 @@ function getOrderNumber()
 	{
 		result = false;
 		log.l("User cancelled order number dialog.");
+		w.close();
+	}
+
+	function setNoOrderNumber()
+	{
+		result = "";
+		noOrderNumber = true;
 		w.close();
 	}
 

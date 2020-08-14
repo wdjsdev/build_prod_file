@@ -26,6 +26,12 @@ var docRef = app.activeDocument,
 	curProdFileIndex = 0,
 	orderNum = "",
 
+	//boolean for no order number
+	//if true, skip the curlData function
+	//and open a separate dialog for manual 
+	//input of sizing and roster info
+	noOrderNumber = false, 
+
 
 //adjustment dialog variables
 

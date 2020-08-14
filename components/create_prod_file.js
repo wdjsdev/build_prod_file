@@ -16,6 +16,17 @@
 function createProdFile(curGarment)
 {
 	var result = true;
+
+	if(!orderNum)
+	{
+		orderNum = uiPrompt("Please enter a name for this production file.","Enter File Name");
+	}
+	if(!orderNum)
+	{
+		result = false;
+		log.l("User cancelled the prod file name input dialog.");
+		return result;
+	}
 	
 	try
 	{
@@ -46,7 +57,14 @@ function createProdFile(curGarment)
 			log.l("creating a new production file called " + orderNum + appendage)
 			// curGarment.doc = app.documents.add();
 			var prodFileTemplate = File(resourcePath + "Files/prod_file_template.ait");
-			curGarment.doc = app.open(prodFileTemplate);
+			if(prodFileTemplate.exists)
+			{
+				curGarment.doc = app.open(prodFileTemplate);
+			}
+			else
+			{
+				curGarment.doc = app.documents.add();
+			}
 			curGarment.name = orderNum + appendage;
 			artworkLayer = app.activeDocument.layers[0];
 			artworkLayer.name = "Artwork";

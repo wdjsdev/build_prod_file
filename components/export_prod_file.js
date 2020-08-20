@@ -195,6 +195,7 @@ function exportProdFile(pdfFolderName, destFolder)
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
+				log.l("saving pdf: ::doc = " + doc + "::pdfFileName = " + pdfFileName + "::pdfFolder = " + pdfFolder + "::pdfFolder.exists = " + pdfFolder.exists);
 				saveFile(doc,pdfFileName,pdfFolder);
 				removeExpandedRosterGroup(tmpNameLay);
 				removeExpandedRosterGroup(tmpNumLay);

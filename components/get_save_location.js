@@ -44,8 +44,9 @@ function getSaveLocation()
 	}
 	else
 	{
+		docPath = docRef.path.replace("/Users/",homeFolderPath);
 		// docPath = "/Volumes/Macintosh HD" + docRef.path;
-		docPath = desktopPath + docRef.path;
+		// docPath = desktopPath + docRef.path;
 	}
 
 	log.l("docPath = " + docPath);

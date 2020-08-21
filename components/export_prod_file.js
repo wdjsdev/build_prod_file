@@ -11,7 +11,7 @@
 		pdfFolderName
 			a string including the order number as well as any sequence letters
 			"1234567_C"
-		destFolder
+		destFolderPath
 			folder object where the production file was saved
 			the PDFs folder should be saved in the same location
 	Return value
@@ -19,9 +19,9 @@
 
 */
 
-function exportProdFile(pdfFolderName, destFolder)
+function exportProdFile(pdfFolderName, destFolderPath)
 {
-	log.h("exportProdFile(" + pdfFolderName + "," + destFolder + ")");
+	log.h("exportProdFile(" + pdfFolderName + "," + destFolderPath + ")");
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
@@ -34,7 +34,7 @@ function exportProdFile(pdfFolderName, destFolder)
 	loadExpandAction();
 
 	pdfFolderName = pdfFolderName.replace(".ai","");
-	var pdfFolder = Folder(destFolder.fullName + "/" + pdfFolderName + "_PDFs");
+	var pdfFolder = Folder(destFolderPath + "/" + pdfFolderName + "_PDFs");
 
 	if(result)
 	{
@@ -69,7 +69,7 @@ function exportProdFile(pdfFolderName, destFolder)
 	tmpNameLay.remove();
 	tmpNumLay.remove();
 
-	saveFile(doc,docName,destFolder);
+	saveFile(doc,docName,Folder(destFolderPath));
 	log.l("Successfully saved " + docName);
 
 	unloadExpandAction();
@@ -195,6 +195,7 @@ function exportProdFile(pdfFolderName, destFolder)
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 				pdfFileName = pdfFileName.replace(/\s/g,"_");
+				log.l("saving pdf: ::doc = " + doc + "::pdfFileName = " + pdfFileName + "::pdfFolder = " + pdfFolder + "::pdfFolder.exists = " + pdfFolder.exists);
 				saveFile(doc,pdfFileName,pdfFolder);
 				removeExpandedRosterGroup(tmpNameLay);
 				removeExpandedRosterGroup(tmpNumLay);

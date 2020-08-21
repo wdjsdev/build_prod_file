@@ -24,29 +24,24 @@ function getSaveLocation()
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
 
-	if(docRef.path.toString().indexOf("~/Desktop")>-1)
+	if(docRef.path.toString().indexOf("Desktop")>-1)
 	{
-		newDocPath = docRef.path.toString().replace("~/Desktop",desktopPath);
-		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
-		docPath = newDocPath;
+		docPath = docRef.path.toString().replace(/.*desktop(\/)?/i,desktopPath);
 	}
-	else if(docRef.path.toString().indexOf("~/Documents")>-1)
+	else if(docRef.path.toString().indexOf("Documents")>-1)
 	{
-		newDocPath = docRef.path.toString().replace("~/Documents",documentsPath);
-		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
-		docPath = newDocPath;
+		docPath = docRef.path.toString().replace(/.*documents(\/)?/i,documentsPath);
 	}
-	else if(docRef.path.toString().indexOf("~/Downloads")>-1)
+	else if(docRef.path.toString().indexOf("Downloads")>-1)
 	{
-		newDocPath = docRef.path.toString().replace("~/Downloads",desktopPath);
-		log.l("found a tilde in the file path name. updated path to: " + newDocPath);
-		docPath = newDocPath;
+		docPath = docRef.path.toString().replace(/.*downloads(\/)?/i,desktopPath);
 	}
 	else
 	{
-		// docPath = "/Volumes/Macintosh HD" + docRef.path;
-		docPath = desktopPath + docRef.path;
+		docPath = docPath.replace(/(^~\/)|(.*\/users\/[^\/]*.)/ig,homeFolderPath);
 	}
+
+
 
 	log.l("docPath = " + docPath);
 	var userSelectedPath;
@@ -71,7 +66,7 @@ function getSaveLocation()
 	}
 	else
 	{
-		prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
+		prodFileSaveLocation = docPath + orderNum + "_IHFD";
 		log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 	}
 

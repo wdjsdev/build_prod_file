@@ -421,7 +421,7 @@ function createAdjustmentDialog()
 			var docPath = decodeURI(doc.path).replace("/Users/","/Volumes/Macintosh HD/Users/");
 
 			w.close();
-			exportProdFile(docName, Folder(docPath));
+			exportProdFile(docName, prodFileSaveLocation);
 		});
 	}
 

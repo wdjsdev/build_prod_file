@@ -110,6 +110,15 @@ function initAdjustProdFile()
 		log.l("Successfully set up the Live Text and Roster groups on the " + curPiece.name);
 	}
 
+	if(!prodFileSaveLocation)
+	{
+		//get the save location..
+		var docPath = docRef.path;
+		docPath = docPath.toString().replace(/(^~\/)|(.*\/users\/[^\/]*.)/i,homeFolderPath);
+		prodFileSaveLocation = docPath;
+	}
+
+
 	return result;
 
 

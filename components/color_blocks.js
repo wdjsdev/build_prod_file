@@ -8,6 +8,31 @@ function colorBlocks()
 	///Logic Container///
 	/////////////////////
 
+	function preflightSwatches()
+	{
+		var result = true;
+
+		var dupSwatches = [];
+
+		var dupSwatchPat = /[a-z\s]*b[\d]$/i
+		var bSwatchPat = /^b[\d]{1,}$/i;
+
+		for(var x=0;x<swatches.length;x++)
+		{
+			if(dupSwatchPat.test(swatches[x].name) && !bSwatchPat.test(swatches[x].name))
+			{
+				dupSwatches.push(swatches[x].name);
+			}
+		}
+
+		if(dupSwatches.length)
+		{
+			result = false;
+			alert("Document contains the following colors that need to be merged:\n" + dupSwatches.join("\n"));
+		}
+		return result;
+	}
+
 	function getDocInks()
 	{
 		var result = true;
@@ -21,7 +46,7 @@ function colorBlocks()
 		getUniqueInks(curArtboardInks.undesirable,badInks);
 
 		//check for the existence of any badInks
-		if(curArtboardInks.undesirable.length)
+		if(curArtboardInks.undesirable.length || !preflightSwatches())
 		{
 			hasWrongColors = true;
 		}

@@ -24,15 +24,16 @@ function getSaveLocation()
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
 
-	docPath = docPath.replace(/(^~\/)|(.*\/users\/[^\/]*.)/i,homeFolderPath);
 
-	log.l("docPath = " + docPath);
-
+	//if the file is saved on the customization drive,
+	//alert the user and ask them for a local folder
+	//to save the production files
 	if(docPath.indexOf("Customization")>-1)
 	{
 		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
-		errorList.push("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
-		docPath = desktopFolder.selectDlg("Please select a location to save your production file(s)").fullName;
+		alert("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
+
+		docPath = Folder.selectDialog(desktopFolder,"Please select a location to save your production file(s)");
 		if(!docPath)
 		{
 			log.e("User cancelled folder select dialog.");
@@ -40,6 +41,15 @@ function getSaveLocation()
 			result = false;
 		}
 	}
+
+	if(typeof docPath !== "string")
+	{
+		docPath = docPath.fullName;
+	}
+	docPath = docPath.replace(/(^~\/)|(.*\/users\/[^\/]*.)/i,homeFolderPath);
+
+	log.l("docPath = " + docPath);
+
 	prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
 	log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 

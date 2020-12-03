@@ -20,55 +20,38 @@ function getSaveLocation()
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
-	var docPath, newDocPath;
+	var docPath = docRef.path.toString();
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
 
-	if(docRef.path.toString().indexOf("Desktop")>-1)
-	{
-		docPath = docRef.path.toString().replace(/.*desktop(\/)?/i,desktopPath);
-	}
-	else if(docRef.path.toString().indexOf("Documents")>-1)
-	{
-		docPath = docRef.path.toString().replace(/.*documents(\/)?/i,documentsPath);
-	}
-	else if(docRef.path.toString().indexOf("Downloads")>-1)
-	{
-		docPath = docRef.path.toString().replace(/.*downloads(\/)?/i,desktopPath);
-	}
-	else
-	{
-		docPath = docPath.replace(/(^~\/)|(.*\/users\/[^\/]*.)/ig,homeFolderPath);
-	}
 
-
-
-	log.l("docPath = " + docPath);
-	var userSelectedPath;
-
+	//if the file is saved on the customization drive,
+	//alert the user and ask them for a local folder
+	//to save the production files
 	if(docPath.indexOf("Customization")>-1)
 	{
 		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
-		errorList.push("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
-		// userSelectedPath = "Volumes/Macintosh HD" + desktopFolder.selectDlg("Please select a location to save your production file(s)").fullName;
-		userSelectedPath = desktopFolder.selectDlg("Please select a location to save your production file(s)").fullName;
-		if(!userSelectedPath)
+		alert("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
+
+		docPath = Folder.selectDialog(desktopFolder,"Please select a location to save your production file(s)");
+		if(!docPath)
 		{
 			log.e("User cancelled folder select dialog.");
 			errorList.push("Destination folder select dialog was cancelled. Exited script.");
 			result = false;
 		}
-		else
-		{
-			prodFileSaveLocation = userSelectedPath + "/" + orderNum + "_IHFD";
-			log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
-		}
 	}
-	else
+
+	if(typeof docPath !== "string")
 	{
-		prodFileSaveLocation = docPath + orderNum + "_IHFD";
-		log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
+		docPath = docPath.fullName;
 	}
+	docPath = docPath.replace(/(^~\/)|(.*\/users\/[^\/]*.)/i,homeFolderPath);
+
+	log.l("docPath = " + docPath);
+
+	prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
+	log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 
 	log.l("End of getSaveLocation function.");
 	return result;

@@ -25,20 +25,20 @@ function colorFixer()
 
 	doc.selection = null;
 
-	try
-	{
-		exterminateDefault();
-		fixFloSwatches();
-		handleSewLines();
-		setThruCutOpacity();
+	// try
+	// {
+	exterminateDefault();
+	fixFloSwatches();
+	handleSewLines();
+	setThruCutOpacity();
 
-	}
-	catch(e)
-	{
-		result = false;
-		errorList.push("Failed while fixing colors and hiding sew lines.");
-		log.e("Failed while fixing colors and hiding sew lines.::System error = " + e + "::error line = " + e.line);
-	}
+	// }
+	// catch(e)
+	// {
+	// 	result = false;
+	// 	errorList.push("Failed while fixing colors and hiding sew lines.");
+	// 	log.e("Failed while fixing colors and hiding sew lines.::System error = " + e + "::error line = " + e.line);
+	// }
 
 	return result;
 

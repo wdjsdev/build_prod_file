@@ -163,6 +163,10 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	function selectArtworkFromSizeLayer(layer)
 	{
+		app.selection = null;
+		layer.locked = false;
+		layer.visible = true;
+		// layer.hasSelectedArtwork = true;
 		for(var x=0,len=layer.groupItems.length;x<len;x++)
 		{
 			layer.groupItems[x].selected = true;

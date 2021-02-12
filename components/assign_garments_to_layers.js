@@ -24,6 +24,27 @@ function assignGarmentsToLayers()
 		garmentOptions.push(garmentLayers[x].name);
 	}
 
+	//should the script automatically adjust player name case?
+	var autoNameCase = false;
+	var nameFont;
+	if(garmentLayers.length < 3)
+	{
+		var artLay = findSpecificLayer(garmentLayers[0].layers,"Artwork","any");
+		for(var x=0;x<artLay.layers.length;x++)
+		{
+			if(artLay.layers[x].textFrames.length)
+			{
+				playerNameCase = playerNameCaseDatabase[artLay.layers[x].textFrames[0].textRange.textFont.name];
+				if(!playerNameCase)
+				{
+					log.e("there was an error automatically determining the correct name case.");
+					autoNameCase = false;
+				}
+			}
+		}
+	}
+
+
 
 	var w = new Window("dialog","Please select the appropriate layer for each garment on the sales order");
 
@@ -38,8 +59,12 @@ function assignGarmentsToLayers()
 		rel[x].msg2 = UI.static(rel[x].group,curGarment.age === "A" ? "Adult" : "Youth");
 		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
 		rel[x].dropdown.selection = (x+1);
-		curGarment.nameCaseDropdown = UI.dropdown(rel[x].group,["lowercase","Title Case","UPPERCASE"]);
-		curGarment.nameCaseDropdown.selection = 0;
+
+		if(!autoNameCase)
+		{
+			curGarment.nameCaseDropdown = UI.dropdown(rel[x].group,["lowercase","Title Case","UPPERCASE"]);
+			curGarment.nameCaseDropdown.selection = 0;
+		}
 		// curGarment.nameWidthMsg = UI.static(rel[x].group,"Enter the maximum player name width in inches:");
 		// curGarment.nameWidthEntry = UI.edit(rel[x].group,"9",10);
 		sep = UI.hseparator(w,200);
@@ -60,7 +85,11 @@ function assignGarmentsToLayers()
 			{
 				garmentsNeeded[rel[x].index].parentLayer = layers[rel[x].dropdown.selection.text];
 				// playerNameCase = garmentsNeeded[rel[x].index].nameCaseDropdown.selection.text.toUpperCase().replace(/\s/g,"");
-				garmentsNeeded[rel[x].index].playerNameCase = playerNameCase = garmentsNeeded[rel[x].index].nameCaseDropdown.selection.text;
+				
+				if(!autoNameCase)
+				{
+					garmentsNeeded[rel[x].index].playerNameCase = playerNameCase = garmentsNeeded[rel[x].index].nameCaseDropdown.selection.text;
+				}
 
 				//get the max name width setting
 				// var maxWidth = parseInt(garmentsNeeded[rel[x].index].nameWidthEntry.text);
@@ -68,6 +97,10 @@ function assignGarmentsToLayers()
 				// {
 				// 	garmentsNeeded[rel[x].index].maxNameWidth = maxWidth * INCH_TO_POINT_AT_SCALE;	
 				// }
+
+				//get the player name item 
+
+
 				convertPlayerNameCase(garmentsNeeded[rel[x].index].roster,playerNameCase);
 				log.l("garmentsNeeded[" + rel[x].index + "].parentLayer = " + layers[rel[x].dropdown.selection.text]);
 			}
@@ -81,6 +114,12 @@ function assignGarmentsToLayers()
 		errorList.push("Exited the script because the layer prompt dialog was cancelled.");
 		valid = false;
 		w.close();
+	}
+
+
+	function getPlayerName()
+	{
+
 	}
 
 

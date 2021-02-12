@@ -84,3 +84,8 @@ var docRef = app.activeDocument,
 		pdfSaveOpts.viewAfterSaving = false;
 		pdfSaveOpts.compressArt = true;
 		pdfSaveOpts.optimization = true;
+
+
+
+//database that holds the relationships between the codes on the sales order ("FD-SLOW-SS" = "FD-161")
+var MGR = midGarmentRelationshipDatabasePath = dataPath + "build_mockup_data/mid_garment_relationship_database.js";

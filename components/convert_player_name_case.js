@@ -29,11 +29,11 @@ function convertPlayerNameCase(roster,nameCase)
 				{
 					curSize.players[x].name = curSize.players[x].name.toLowerCase();
 				}
-				else if(nameCase === "UPPERCASE")
+				else if(nameCase === "uppercase")
 				{
 					curSize.players[x].name = curSize.players[x].name.toUpperCase();
 				}
-				else
+				else if (nameCase === "titlecase")
 				{
 					curSize.players[x].name = titleCase(curSize.players[x].name);
 				}

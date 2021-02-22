@@ -20,7 +20,7 @@ function splitDataByGarment()
 	var result = true;
 	var garPat = /[fpb][dsma][-_](.*[\:])?/i;
 
-	var curLine, curItem, curInseam, curWaist;
+	var curLine, curItem, curInseam, curWaist,curMid;
 
 	var curGarment;
 
@@ -35,6 +35,8 @@ function splitDataByGarment()
 		if (garPat.test(curItem) && curItem.toLowerCase().indexOf("sample") === -1 && curItem.toLowerCase().indexOf("fluorescents") === -1)
 		{
 			log.l(curItem + " is a proper garment line.");
+
+			
 			if(curItem.toLowerCase().indexOf("-bag-") === -1)
 			{
 				curSize = getSize(curItem);
@@ -50,11 +52,40 @@ function splitDataByGarment()
 			{
 				curStyle = getStyleNum(curLine);
 			}
+
+
+			log.l("checking for mid");
+			for(var opt = 0,curOpt;opt<curLine.options.length && !curMid;opt++)
+			{
+				curOpt = curLine.options[opt];
+				if(curOpt.name.toLowerCase() === "mid" && curOpt.value !== "")
+				{
+					curMid = curOpt.value;
+				}
+			}
+
+			if(curMid)
+			{
+				log.l("Found the mid value. it is: " + curMid);
+			}
+			else
+			{
+				log.e("No mid value was detected for " + curCode);
+			}
+
+
 			curRoster = curLine.memo.roster;
 
 			if(!curRoster)
 			{
 				curRoster = "";
+			}
+
+			if(curRoster.match(/add.*inch/i))
+			{
+				messageList.push("Please don't forget to setup the custom inseam as well.");
+				messageList.push(curMid + "_" + curStyle + " size " + curSize + (curWaist ? "x" + curWaist : ""));
+				messageList.push("Look for the note on the sales order that says: " + curRoster);
 			}
 
 			if (!curGarment || !curGarment.garmentCount)
@@ -140,12 +171,12 @@ function splitDataByGarment()
 	return result;
 
 
-
 	function initCurGarment()
 	{
 		log.l("Initializing new curGarment object.");
 		curGarment = {};
 		curGarment.code = curCode;
+		curGarment.mid = curMid;
 		curGarment.age = curAge;
 		curGarment.styleNum = curStyle;
 		curGarment.roster = {};

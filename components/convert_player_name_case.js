@@ -15,8 +15,9 @@
 
 */
 
-function convertPlayerNameCase(roster,nameCase)
+function convertPlayerNameCase(curGarment,nameCase)
 {
+	var roster = curGarment.roster;
 	var curSize;
 	for(var size in roster)
 	{

@@ -62,7 +62,14 @@ function container()
 
 	if(!valid)return;
 
+	if(user === "will.dowling")
+	{
+		DEV_LOGGING = true;
+	}
+
 	logDest.push(getLogDest());
+
+
 
 
 	/*****************************************************************************/

@@ -70,6 +70,19 @@ function initBuildProd()
 	if(valid && !noOrderNumber)
 	{
 		garmentLayers = findGarmentLayers();
+
+
+
+		// var scurMid;
+		// for(var x=0;x< garmentsNeeded.length;x++)
+		// {
+		// 	curMid = garmentsNeeded[x].mid;
+		// 	for(var y=0;y < garmentLayers.length;y++)
+		// 	{
+		// 		if(garmentLayers[y].name.match())
+		// 	}
+		// }
+
 		assignGarmentsToLayers();
 	} 
 }

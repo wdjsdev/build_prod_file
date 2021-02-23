@@ -64,6 +64,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	fixImproperWomensSizing(ppLay);
 
+	app.selection = null;
 
 	for(var curSize in curData.roster)
 	{
@@ -93,6 +94,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 			{
 				curSizeLayer = getSizeLayer(curSize);
 				// curSizeLayer.hasSelectedArtwork = true;
+
 				selectArtworkFromSizeLayer(curSizeLayer);
 				log.l("selected the artwork on layer: " + curSize);
 			}
@@ -163,7 +165,6 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	function selectArtworkFromSizeLayer(layer)
 	{
-		app.selection = null;
 		layer.locked = false;
 		layer.visible = true;
 		// layer.hasSelectedArtwork = true;

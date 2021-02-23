@@ -90,7 +90,7 @@ function container()
 	var prodComponents = componentsPath + "/build_prod_file";
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
-	if(compFiles.length)
+	if(compFiles && compFiles.length)
 	{
 		var curComponent;
 		for(var cf=0,len=compFiles.length;cf<len;cf++)

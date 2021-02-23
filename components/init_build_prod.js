@@ -15,7 +15,7 @@
 function initBuildProd()
 {
 	//check to make sure the active document is a proper converted template
-	if(valid && !isTemplate(docRef))
+	if (valid && !isTemplate(docRef))
 	{
 		valid = false;
 		errorList.push("Sorry, This script only works on converted template mockup files.");
@@ -23,66 +23,63 @@ function initBuildProd()
 		log.e("Not a converted template..::Exiting Script.");
 	}
 
-	if(valid)
+	if (valid)
 	{
 		orderNum = getOrderNumber();
-		if(noOrderNumber)
+		if (noOrderNumber)
 		{
 			valid = false;
 		}
 		getSaveLocation();
 	}
 
-	if(valid)
+	if (valid)
 	{
-		curOrderData = curlData(NOD,orderNum)
+		curOrderData = curlData(NOD, orderNum)
 
-		if(!curOrderData)
+		if (!curOrderData)
 		{
 			valid = false;
 		}
-	
+
 	}
 
-	if(valid)
+	if (valid)
 	{
 		valid = splitDataByGarment();
 	}
 
-	if(noOrderNumber)
+	if (noOrderNumber)
 	{
 		valid = true;
 		// curOrderData = manuallyPopulateOrderData();
 		manuallyPopulateOrderData();
 	}
 
-	if(valid)
+	if (valid)
 	{
-		if(!garmentsNeeded.length)
+		if (!garmentsNeeded.length)
 		{
 			errorList.push("Failed to find any garments to process.");
-			log.e("Failed to find any garments to process." + 
-				"::garmentsNeeded.length = " + garmentsNeeded.length + 
+			log.e("Failed to find any garments to process." +
+				"::garmentsNeeded.length = " + garmentsNeeded.length +
 				"::garmentLayers.length = " + garmentLayers.length);
 		}
 	}
 
-	if(valid && !noOrderNumber)
+	if (valid && !noOrderNumber)
 	{
+
 		garmentLayers = findGarmentLayers();
-
-
-
-		// var scurMid;
-		// for(var x=0;x< garmentsNeeded.length;x++)
+		
+		getPlayerNameCase();
+		// if(!matched)
 		// {
-		// 	curMid = garmentsNeeded[x].mid;
-		// 	for(var y=0;y < garmentLayers.length;y++)
-		// 	{
-		// 		if(garmentLayers[y].name.match())
-		// 	}
+			assignGarmentsToLayers();	
 		// }
 
-		assignGarmentsToLayers();
-	} 
+
+
+		
+	}
 }

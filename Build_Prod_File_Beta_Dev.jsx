@@ -87,7 +87,7 @@ function container()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = componentsPath + "/build_prod_file";
+	var prodComponents = componentsPath + "/build_prod_file_beta";
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
 	if(compFiles && compFiles.length)

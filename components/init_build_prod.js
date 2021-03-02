@@ -72,11 +72,11 @@ function initBuildProd()
 
 		garmentLayers = findGarmentLayers();
 		
-		getPlayerNameCase();
-		// if(!matched)
-		// {
-			assignGarmentsToLayers();	
-		// }
+		
+
+		assignGarmentsToLayers();	
+		// assignGarmentsToLayersDialog(garmentsNeeded);
+		
 
 
 

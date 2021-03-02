@@ -15,32 +15,27 @@
 
 */
 
-function convertPlayerNameCase(curGarment,nameCase)
+function convertPlayerNameCase(playerName,nameCase)
 {
-	var roster = curGarment.roster;
-	var curSize;
-	for(var size in roster)
+	var result;
+	if(nameCase === "lowercase")
 	{
-		curSize = roster[size];
-		if(curSize.players)
-		{
-			for(var x=0,len=curSize.players.length;x<len;x++)
-			{
-				if(nameCase === "lowercase")
-				{
-					curSize.players[x].name = curSize.players[x].name.toLowerCase();
-				}
-				else if(nameCase === "uppercase")
-				{
-					curSize.players[x].name = curSize.players[x].name.toUpperCase();
-				}
-				else if (nameCase === "titlecase")
-				{
-					curSize.players[x].name = titleCase(curSize.players[x].name);
-				}
-			}
-		}
+		result = playerName.toLowerCase();
 	}
+	else if(nameCase === "uppercase")
+	{
+		result = playerName.toUpperCase();
+	}
+	else if (nameCase === "titlecase")
+	{
+		result = titleCase(playerName);
+	}
+	else
+	{
+		result = playerName;
+	}
+
+	return result;
 
 	function titleCase(str)
 	{

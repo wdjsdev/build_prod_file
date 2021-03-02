@@ -35,18 +35,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 
 	for (var z = 0; z < len; z++)
 	{
-		// try
-		// {
-		// 	liveTextGroup = pieces[z].groupItems["Live Text"];
-		// 	rosterGroup = pieces[z].groupItems["Roster"];
-		// 	liveTextGroup.hidden = false;
-		// 	rosterGroup.hidden = false;
-		// }
-		// catch (e)
-		// {
-		// 	// log.l("No textFrame or roster groups on the piece: " + pieces[z].name);
-		// 	continue;
-		// } 
+
 
 		liveTextGroup = findSpecificItem(pieces[z],"GroupItem","Live Text");
 		rosterGroup = findSpecificItem(pieces[z],"GroupItem","Roster");
@@ -107,6 +96,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 			}
 			if (curFrame.name.toLowerCase().indexOf("name") > -1 || curFrame.contents.toLowerCase().indexOf("play")>-1)
 			{
+				curPlayer.name = convertPlayerNameCase(curPlayer.name,getPlayerNameCase(curFrame));
 				if(curPlayer.name.indexOf("(") === -1)
 				{
 					curFrame.contents = curPlayer.name;

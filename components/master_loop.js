@@ -20,7 +20,13 @@ function masterLoop()
 {
 	log.h("Beginning execution of masterLoop() function");
 	var result = true;
-	var curGarmentLayer;
+	var curGarmentLayer,curNameCase;
+
+	var pcw; //player case window
+	var pcw_msg;
+	var pcw_dropdown;
+	var pcw_dropdown_items = ["lowercase","uppercase","titlecase"];
+	var pcw_submitBtn;
 
 	for (var ml = 0, len = garmentsNeeded.length; ml < len && result; ml++)
 	{
@@ -33,6 +39,37 @@ function masterLoop()
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
+
+		// debugger;
+		// //get the playerNameCase for this garment
+		// curNameCase = getPlayerNameCase(curGarmentLayer);
+		// if(curNameCase === "not_found")
+		// {
+		// 	pcw = new Window("dialog");
+		// 	pcw_msg = UI.static(pcw,"Please choose the appropriate player name case");
+		// 	pcw_dropdown = UI.dropdown(pcw,pcw_dropdown_items);
+		// 	pcw_dropdown.selection = 1;
+		// 	pcw_submitBtn = UI.button(pcw,"Submit",function()
+		// 	{
+		// 		if(pcw_dropdown.selection)
+		// 		{
+		// 			pcw.close();
+		// 			curNameCase = pcw_dropdown.selection.text;	
+		// 		}
+		// 		else
+		// 		{
+		// 			alert("make a selection.");
+		// 		}
+				
+		// 	})
+		// 	pcw.show();
+		// }
+		
+		// if(curNameCase && curNameCase !== "no_names")
+		// {
+		// 	log.l("converting player name case for " + garmentsNeeded[ml].dialogLabel + " to " + curNameCase);
+		// 	convertPlayerNameCase(garmentsNeeded[ml],curNameCase);
+		// }
 
 		//create a new production file for the current garment
 		if (result)
@@ -123,7 +160,6 @@ function masterLoop()
 		//clear out maxPlayerNameWidth and playerNameCase variables so they
 		//don't interfere with the next garment accidentally
 		maxPlayerNameWidth = undefined;
-		playerNameCase = undefined;
 		textExpandSteps = [];
 
 	}

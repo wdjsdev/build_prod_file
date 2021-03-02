@@ -26,6 +26,11 @@ function splitDataByGarment()
 
 	var curSize, curAge, curCode, curStyle, curRoster, additionalPlayers,curDesignNumber;
 
+
+
+	var curGarmentIndex = 0;
+	var firstGarmentAppendage = "A";
+
 	for (var x = 0, len = curOrderData.lines.length; x < len; x++)
 	{
 		curLine = curOrderData.lines[x];
@@ -60,7 +65,18 @@ function splitDataByGarment()
 				curOpt = curLine.options[opt];
 				if(curOpt.name.toLowerCase() === "mid" && curOpt.value !== "")
 				{
+
 					curMid = curOpt.value;
+					var womensPat = /w$/i;
+					var mensPat = /[^wgy]$/i;
+					if(curAge == "Y")
+					{
+						curMid = curMid.replace(womensPat,"G");
+						if(mensPat.test(curMid))
+						{
+							curMid += "Y"
+						}
+					}
 					log.l("set curMid to " + curMid);
 				}
 				else if(curOpt.name.toLowerCase() === "design" && curOpt.value !== "")
@@ -188,6 +204,8 @@ function splitDataByGarment()
 		curGarment.roster = {};
 		curGarment.garmentCount = 0;
 		curGarment.designNumber = curDesignNumber;
+		curGarment.garmentsNeededIndex = String.fromCharCode(firstGarmentAppendage.charCodeAt(0) + curGarmentIndex);
+		curGarmentIndex++;
 
 	}
 

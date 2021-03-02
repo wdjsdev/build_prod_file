@@ -5,6 +5,9 @@
 	Description: 
 		try to use the design number to automatically
 		choose the correct garments from the order
+		otherwise compare the mid value to the layer names
+		
+		the goal is to assign parentLayer properties to the garment objects
 	Arguments
 		none
 	Return value
@@ -14,61 +17,58 @@
 
 function assignGarmentsToLayers()
 {
-	
-
-
-	//dialog variables
-	var w; //window object for layer select dialog
-	var w_msg;
-	var w_lb;
-
-
-	var curMid,
-		curGarment,
+	var	curGarment,
 		matchedGarments = [],
 		success = false;
 
 	var documentDesignNumber = docRef.name.match(/[a-z0-9]{12}/i);
+	var fdUnderscorePat = /[fbp][dsm](_)/i;
+	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
 
-	if(documentDesignNumber)
+	var curGarmentLayer,cglName;
+	for(var g=0;g<garmentLayers.length;g++)
 	{
-		documentDesignNumber = documentDesignNumber[0];
-		for(var y=0;y<garmentsNeeded.length;y++)
+		curGarmentLayer = garmentLayers[g];
+		cglName = curGarmentLayer.name;
+		if(fdUnderscorePat.test(cglName))
 		{
-			curGarment = garmentsNeeded[y];
-			if(curGarment.designNumber && curGarment.designNumber === documentDesignNumber)
-			{
-				matchedGarments.push(curGarment);
-			}
+			cglName = cglName.replace("_","-");
 		}
-		
-		if(matchedGarments.length)
+		if(threeDigitStyleNumPat.test(cglName))
 		{
-			for(var mg=0;mg<matchedGarments.length;mg++)
+			cglName = cglName.replace("_0","_10");
+			curGarmentLayer.name = cglName;
+		}
+		var searchTerm;
+		for(var x=0;x<garmentsNeeded.length;x++)
+		{
+			curGarment = garmentsNeeded[x];
+			if(cglName.indexOf(curGarment.mid + "_" + curGarment.styleNum)>-1)
 			{
-				curGarment = matchedGarments[mg];
-				curGarment.parentLayer = findSpecificLayer(docRef.layers,curGarment.mid + "_" + curGarment.styleNum,"any");
-				
-				if(curGarment.parentLayer)
+				if(documentDesignNumber && documentDesignNumber[0] === curGarment.designNumber)
 				{
-					curGarment.ready = true;
+					curGarment.parentLayer = curGarmentLayer;
 					success = true;
 				}
-
+				else
+				{
+					matchedGarments.push(curGarment);
+				}	
 			}
+				
+
 		}
-		else
+		if(matchedGarments.length && matchedGarments.length == 1)
 		{
-			log.e("found no matching garments for " + documentDesignNumber);
-			assignGarmentsToLayersDialog();
+			curGarment.parentLayer = curGarmentLayer;
+			success = true;
 		}
-		matchedGarments = [];
 	}
-	else
+
+
+	if(!success)
 	{
-		assignGarmentsToLayersDialog();
+		assignGarmentsToLayersDialog(matchedGarments.length ? matchedGarments : garmentsNeeded);
 	}
-
-
 		
 }

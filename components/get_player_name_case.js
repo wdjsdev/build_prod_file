@@ -12,76 +12,25 @@
 
 */
 
-function getPlayerNameCase()
+function getPlayerNameCase(frame)
 {
+	var nameFont;
+	var result;
+
+	nameFont = frame.textRange.textFont.name;
+	log.l("found a player name. font = " + nameFont);
+	result = playerNameCaseDatabase[nameFont];
+	if(!result)
+	{
+		result = "not_found";
+		log.e("No entry in the database for: " + nameFont);
+	}	
+	else
+	{
+		log.l("Set player name case to: " + result);
+	}
+	return result;
+
+
 	
-
-	//should the script automatically adjust player name case?
-	var autoNameCase = false;
-	var nameFont,nameFrame;
-	if(garmentLayers.length < 3)
-	{
-		log.l("Attempting to get the player name case automatically.")
-		var artLay = findSpecificLayer(garmentLayers[0].layers,"Artwork","any");
-		var curLay;
-		for(var x=0;x<artLay.layers.length && !playerNameCase;x++)
-		{
-			curLay = artLay.layers[x];
-			if(curLay.textFrames.length)
-			{
-				nameFrame = curLay.textFrames[0];
-				if(nameFrame.contents.toLowerCase() == "player")
-				{
-					nameFont = nameFrame.textRange.textFont.name;
-					log.l("found a player name. font = " + nameFont);
-					playerNameCase = playerNameCaseDatabase[nameFont];
-					if(!playerNameCase)
-					{
-						log.e("No entry in the database for: " + nameFont);
-					}	
-					else
-					{
-						log.l("Set player name case to: " + playerNameCase);
-						autoNameCase = true;
-					}
-				}
-				
-			}
-		}
-	}
-
-	var curGarmentLayer;
-	var nameFont,nameFrame;
-	for(var g = 0;g<garmentLayers.length;g++)
-	{
-		curGarmentLayer = garmentLayers[g];
-		log.l("Attempting to get the player name case automatically.")
-		var artLay = findSpecificLayer(garmentLayers[0].layers,"Artwork","any");
-		var curLay;
-		for(var x=0;x<artLay.layers.length && !playerNameCase;x++)
-		{
-			curLay = artLay.layers[x];
-			if(curLay.textFrames.length)
-			{
-				nameFrame = curLay.textFrames[0];
-				if(nameFrame.contents.toLowerCase() == "player")
-				{
-					nameFont = nameFrame.textRange.textFont.name;
-					log.l("found a player name. font = " + nameFont);
-					playerNameCase = playerNameCaseDatabase[nameFont];
-					if(!playerNameCase)
-					{
-						log.e("No entry in the database for: " + nameFont);
-					}	
-					else
-					{
-						log.l("Set player name case to: " + playerNameCase);
-						autoNameCase = true;
-					}
-				}
-				
-			}
-		}
-		curGarmentLayer.nameCase = playerNameCase;
-	}
 }

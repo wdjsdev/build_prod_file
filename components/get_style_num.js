@@ -34,10 +34,13 @@ function getStyleNum(obj)
 			if (opt[x].name === "Style")
 			{
 				result = opt[x].value;
-				log.l("Found the style number: " + opt[x].value);
+				result = result.replace(/^[a-z]*$/i,"1000");
+				log.l("Found the style number: " + result);
 			}
 		}
 	}
+
+	
 
 	log.l("End of getStyleNum function. Returning: " + result);
 	return result;

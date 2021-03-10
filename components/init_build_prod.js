@@ -30,6 +30,10 @@ function initBuildProd()
 		{
 			valid = false;
 		}
+	}
+
+	if(valid)
+	{
 		getSaveLocation();
 	}
 

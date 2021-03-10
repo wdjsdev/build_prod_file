@@ -62,6 +62,7 @@ function assignGarmentsToLayers()
 		{
 			matchedGarments[0].parentLayer = curGarmentLayer;
 			success = true;
+			matchedGarments = [];
 		}
 	}
 

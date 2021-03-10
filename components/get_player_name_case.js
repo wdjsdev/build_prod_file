@@ -14,21 +14,21 @@
 
 function getPlayerNameCase(frame)
 {
-	var nameFont;
 	var result;
-
-	nameFont = frame.textRange.textFont.name;
+	var nameFont = frame.textRange.textFont.name;
 	log.l("found a player name. font = " + nameFont);
 	result = playerNameCaseDatabase[nameFont];
 	if(!result)
 	{
 		result = "not_found";
-		log.e("No entry in the database for: " + nameFont);
+		log.e("**NAME CASE ERROR**::No entry in the database for: " + nameFont);
 	}	
 	else
 	{
 		log.l("Set player name case to: " + result);
 	}
+
+
 	return result;
 
 

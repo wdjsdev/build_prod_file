@@ -22,11 +22,7 @@ function masterLoop()
 	var result = true;
 	var curGarmentLayer,curNameCase;
 
-	var pcw; //player case window
-	var pcw_msg;
-	var pcw_dropdown;
-	var pcw_dropdown_items = ["lowercase","uppercase","titlecase"];
-	var pcw_submitBtn;
+	
 
 	for (var ml = 0, len = garmentsNeeded.length; ml < len && result; ml++)
 	{
@@ -39,37 +35,6 @@ function masterLoop()
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
-
-		// debugger;
-		// //get the playerNameCase for this garment
-		// curNameCase = getPlayerNameCase(curGarmentLayer);
-		// if(curNameCase === "not_found")
-		// {
-		// 	pcw = new Window("dialog");
-		// 	pcw_msg = UI.static(pcw,"Please choose the appropriate player name case");
-		// 	pcw_dropdown = UI.dropdown(pcw,pcw_dropdown_items);
-		// 	pcw_dropdown.selection = 1;
-		// 	pcw_submitBtn = UI.button(pcw,"Submit",function()
-		// 	{
-		// 		if(pcw_dropdown.selection)
-		// 		{
-		// 			pcw.close();
-		// 			curNameCase = pcw_dropdown.selection.text;	
-		// 		}
-		// 		else
-		// 		{
-		// 			alert("make a selection.");
-		// 		}
-				
-		// 	})
-		// 	pcw.show();
-		// }
-		
-		// if(curNameCase && curNameCase !== "no_names")
-		// {
-		// 	log.l("converting player name case for " + garmentsNeeded[ml].dialogLabel + " to " + curNameCase);
-		// 	convertPlayerNameCase(garmentsNeeded[ml],curNameCase);
-		// }
 
 		//create a new production file for the current garment
 		if (result)
@@ -87,18 +52,6 @@ function masterLoop()
 			saveFile(curGarment.doc,saveFileName,saveFolder);
 		}
 
-		//artwork has been pasted into production file. save changes
-		// if (result)
-		// {
-		// 	result = saveFile(curGarment.doc, saveFileName, saveFolder)
-		// }
-
-		// if(result && !addRosterDataUserPreference)
-		// {
-		// 	log.l("User chose not to automatically add roster data. End of masterLoop[" + ml + "].");
-		// 	continue;
-		// }
-
 
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
@@ -106,23 +59,6 @@ function masterLoop()
 		{
 			result = findArtLocs();
 		}
-
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		deprecated in favor of getting these prefs
-		//		upon export. 
-		//
-		////////////////////////
-		// //prompt the user for player name case and max player name width
-		// if(result && curGarment.hasPlayerNames)
-		// {
-		// 	result = getPlayerNameSettings(true);
-		// }
-		// else if(result && !curGarment.hasPlayerNames)
-		// {
-		// 	result = getPlayerNameSettings(false);
-		// }
 
 		//input the actual roster data into the roster groups
 		if (result)

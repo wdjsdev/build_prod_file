@@ -157,6 +157,9 @@ function container()
 	{
 		sendErrors(errorList);
 	}
+
+	printLog();
+
 	return valid
 
 }

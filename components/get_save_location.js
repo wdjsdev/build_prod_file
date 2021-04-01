@@ -50,7 +50,7 @@ function getSaveLocation()
 
 	log.l("docPath = " + docPath);
 
-	prodFileSaveLocation = docPath + "/" + orderNum + "_IHFD";
+	prodFileSaveLocation = docPath + "/" + orderNum + (docPath.indexOf("_IHFD")>-1 ? "" : "_IHFD");
 	log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 
 	log.l("End of getSaveLocation function.");

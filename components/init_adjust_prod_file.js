@@ -27,6 +27,7 @@ function initAdjustProdFile()
 	prodFileSizes = [];
 
 	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
+	var requiredLayers = ["Artwork","Sew Lines"];
 
 	//verify proper prod file structure
 	try

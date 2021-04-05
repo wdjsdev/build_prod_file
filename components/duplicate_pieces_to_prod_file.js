@@ -123,8 +123,18 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		tempLay.remove();
 
 		curData.doc.activate();
-		tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
-		tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+
+		//disabling this repositioning logic because it seems to cause an
+		//issue on some pants.. i think the issue is that it's trying to move
+		//stuff off the drawing area.. but i can't be sure. commenting these lines
+		//gets rid of the error.. And i can't remember why i put these here in the first place.
+		//it shouldn't matter where things are on the drawing area. 
+		//
+		// tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
+		// tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+		//
+
+		
 		curData.doc.fitArtboardToSelectedArt(0);
 		ungroupDoc(curData.doc);
 

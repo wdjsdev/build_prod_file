@@ -22,7 +22,7 @@ function fixImproperWomensSizing(ppLay)
 		//So to prevent that from happening, let's just check to see if
 		//the prepress size layer is called "ONE PIECE" and if so,
 		//just exit this function since we don't want to change anything.
-		if(curLay.name.toLowerCase.indexOf("piece")>-1)return;
+		if(curLay.name.toLowerCase().indexOf("piece")>-1)return;
 		renameTheThing(curLay);
 		for(var y=0,yLen=curLay.pageItems.length;y<yLen;y++)
 		{

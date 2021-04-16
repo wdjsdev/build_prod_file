@@ -96,7 +96,7 @@ function container()
 	/*****************************************************************************/
 	//==============================  Components  ===============================//
 
-	var devComponents = desktopPath + "/automation/build_prod_file/components";
+	var devComponents = desktopPath + "/automation/build_prod_file_beta/components";
 	var prodComponents = componentsPath + "build_prod_file"
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);

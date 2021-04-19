@@ -107,6 +107,10 @@ function inputCurrentPlayer(pieces, curPlayer)
 				}
 				curFrame.name = "Name";
 			}
+			else if(curFrame.name.toLowerCase().indexOf("grad")>-1 && curPlayer.extraInfo)
+			{
+				curFrame.contents = curPlayer.extraInfo;
+			}
 			else
 			{
 				if(curPlayer.number.indexOf("(")=== -1)

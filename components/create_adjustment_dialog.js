@@ -107,6 +107,12 @@ function createAdjustmentDialog()
 		//horizontal separator
 		UI.hseparator(w,400);
 
+
+		var g_nameCaseAdjustmentGroup = createNameCaseAdjustmentGroup(w);
+
+		//horizontal separator
+		UI.hseparator(w,400);
+
 		//group
 		//this section lets the user input the max
 		//player name width settings
@@ -176,6 +182,28 @@ function createAdjustmentDialog()
 			thisGroup.labelText = UI.static(thisGroup,label);
 			thisGroup.listbox = UI.listbox(thisGroup,LISTBOX_DIMENSIONS,[]);
 			thisGroup.listbox.addEventListener("keydown",function(k){toggleListbox(k)});
+		return thisGroup;
+	}
+
+	function createNameCaseAdjustmentGroup(parent)
+	{
+		var thisGroup = UI.group(parent);
+			thisGroup.orientation = "row";
+			thisGroup.labelText = UI.static(thisGroup,"Convert Player Name Case:");
+			thisGroup.btnGroup = UI.group(thisGroup);
+			thisGroup.btnGroup.lc = UI.button(thisGroup.btnGroup,"lowercase",function()
+			{
+				convertProdFileNameCase(doc.layers["Artwork"],"lowercase");
+			})
+			thisGroup.btnGroup.uc = UI.button(thisGroup.btnGroup,"UPPERCASE",function()
+			{
+				convertProdFileNameCase(doc.layers["Artwork"],"uppercase");
+			})
+			thisGroup.btnGroup.tc = UI.button(thisGroup.btnGroup,"Title Case",function()
+			{
+				convertProdFileNameCase(doc.layers["Artwork"],"titlecase");
+			})
+		
 		return thisGroup;
 	}
 

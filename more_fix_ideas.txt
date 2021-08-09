@@ -1,0 +1,24 @@
+idea for the build/adujust prod script.
+
+the export should happen in real time as each piece is processed in the prod file
+instead of just inputting all the data and then going back to loop through everything again
+to export each piece (what if we don't want to export all the pieces again..?)
+
+for size in roster
+	for each piece in size
+		create artboard around piece
+		check for text frames
+		if frames
+			make live text group
+			make roster group
+			for each player in size
+				duplicate live text group to roster group
+				rename
+				update contents
+				duplicate current roster group for expansion
+				hide current roster group
+				expand duplicate roster group
+					(need to figure out how to get expansion prefs..)
+				export customized garment piece
+		else
+			export plain garment piece

@@ -1,5 +1,8 @@
-var docRef = app.activeDocument,
-	layers = docRef.layers,
+if(app.documents.length)
+{
+	var docRef = app.activeDocument;
+}
+var	layers = docRef.layers,
 	aB = docRef.artboards,
 	swatches = docRef.swatches,
 	prodFileSaveLocation = desktopPath,

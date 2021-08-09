@@ -18,7 +18,7 @@ function splitDataByGarment()
 {
 	log.h("Beginning execution of splitDataByGarment() function");
 	var result = true;
-	var garPat = /[fpb][dsma][-_](.*[\:])?/i;
+	var garPat = /[fpbmc][dsmabf][b]?[-_](.*[\:])?/i;
 
 	var curLine, curItem, curInseam, curWaist,curMid;
 

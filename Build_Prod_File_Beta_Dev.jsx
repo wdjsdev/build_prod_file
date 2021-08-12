@@ -16,10 +16,25 @@ function container()
 	var valid = true;
 	var scriptName = "build_prod_file_beta";
 
+	
+	function isDrUser()
+	{
+		var files = Folder("/Volumes/").getFiles();
+
+		for(var x=0;x<files.length;x++)
+		{
+			if(files[x].name.toLowerCase().indexOf("customizationdr")>-1)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	function getUtilities()
 	{
 		var result = [];
-		var utilPath = "/Volumes/Customization/Library/Scripts/Script_Resources/Data/";
+		var utilPath = "/Volumes/" + (isDrUser() ? "CustomizationDR" : "Customization") + "/Library/Scripts/Script_Resources/Data/";
 		var ext = ".jsxbin"
 
 		//check for dev utilities preference file

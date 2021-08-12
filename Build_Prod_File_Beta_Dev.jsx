@@ -58,7 +58,7 @@ function container()
 		}
 
 		result.push(utilPath + "Utilities_Container" + ext);
-		result.push(utilPath + "Batch_Framework" + ext);
+		// result.push(utilPath + "Batch_Framework" + ext);
 
 		if(!result.length)
 		{

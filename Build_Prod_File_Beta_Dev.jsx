@@ -104,7 +104,8 @@ function container()
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
-	var compFiles = includeComponents(devComponents,prodComponents,false);
+	// var compFiles = includeComponents(devComponents,prodComponents,false);
+	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev")>-1 ? devComponents : prodComponents);
 	if(compFiles && compFiles.length)
 	{
 		var curComponent;

@@ -19,27 +19,21 @@
 function saveFile(doc,fileName,dest)
 {
 	var result = true;
-	try
-	{
-		if(!dest.exists)
-		{
-			dest.create();
-		}
 
-		var destFile = File(dest.fullName + "/" + fileName);
-		if(fileName.toLowerCase().indexOf("pdf")>-1)
-		{
-			doc.saveAs(destFile,pdfSaveOpts);
-		}
-		else
-		{
-			doc.saveAs(destFile);
-		}
-	}
-	catch(e)
+	if(!dest.exists)
 	{
-		result = false;
-		log.e("failed to save file: " + fileName + "::in the location: " + dest.fullName);
+		dest.create();
 	}
+
+	var destFile = File(dest.fullName + "/" + fileName);
+	if(fileName.toLowerCase().indexOf("pdf")>-1)
+	{
+		doc.saveAs(destFile,pdfSaveOpts);
+	}
+	else
+	{
+		doc.saveAs(destFile);
+	}
+
 	return result;
 }

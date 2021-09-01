@@ -152,6 +152,8 @@ function container()
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
+	unloadExpandAction();
+	
 	if(errorList.length)
 	{
 		sendErrors(errorList);

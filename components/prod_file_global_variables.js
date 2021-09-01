@@ -8,6 +8,7 @@ if(app.documents.length)
 var	prodFileSaveLocation = desktopPath,
 	saveFileName,
 	saveFolder,
+	pdfFolder,
 	INCH_TO_POINT_AT_SCALE = 7.2,
 	tempLay,
 	artworkLayer,

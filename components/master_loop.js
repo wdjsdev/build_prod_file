@@ -74,6 +74,11 @@ function masterLoop()
 			result = colorFixer();
 		}
 
+		//export the PDFS. after exporting pdfs, the
+		//adjustment dialog will be displayed to give the user
+		//an opportunity to adjust and re-export individual pdfs
+		exportProdFile();
+
 		//open up the adjustment dialog to capture any necessary adjustments.
 
 		if(result)
@@ -83,15 +88,8 @@ function masterLoop()
 
 		if(result)
 		{
-			result = createAdjustmentDialog();
+			createAdjustmentDialog();
 		}
-
-		//export the PDFs
-		// if(result)
-		// {
-		// 	// result = exportProdFile(curGarment, curGarment.doc.name, saveFolder);
-		// 	result = exportProdFile(curGarment.doc.name, saveFolder);
-		// }
 
 		//clear out maxPlayerNameWidth and playerNameCase variables so they
 		//don't interfere with the next garment accidentally

@@ -32,45 +32,4 @@ function getExpansionPreferences(parent)
 	var outlineCbox = parent.cboxes[1] = UI.checkbox(parent,"Create Outlines");
 	var expandStrokeCbox = parent.cboxes[2] = UI.checkbox(parent,"Expand Stroke");
 
-	// var listbox_size = [0,0,200,200];
-	// var dispGroup = UI.group(parent);
-	// 	dispGroup.orientation = "column";
-	// 	var disp = UI.static(dispGroup,"Please input the proper order of operations");
-	// 	var disp2 = UI.static(dispGroup,"to properly expand the text.");
-
-	// var prefGroup = UI.group(parent);
-	// 	prefGroup.orientation = "row";
-
-	// 	var btnGroup = UI.group(prefGroup);
-	// 		btnGroup.orientation = "column";
-	// 		var outlineButton = btnGroup.outline = UI.button(btnGroup,"Create Outlines");
-	// 		var expandAppearanceButton = btnGroup.expandAppearance = UI.button(btnGroup,"Expand Appearance");
-	// 		var expandStrokeButton = btnGroup.expandStroke = UI.button(btnGroup,"Expand Stroke");
-	// 		var separator = UI.hseparator(btnGroup,100);
-	// 		var rmButton = btnGroup.rmItem = UI.button(btnGroup,"Remove Item");
-
-	// 	var lbGroup = UI.group(prefGroup);
-	// 		var listbox = parent.listbox = UI.listbox(lbGroup,listbox_size);
-
-	// 		outlineButton.onClick = function()
-	// 		{
-	// 			listbox.add("item","Create Outlines");
-	// 		}
-	// 		expandAppearanceButton.onClick = function()
-	// 		{
-	// 			listbox.add("item","Expand Appearance");
-	// 		}
-	// 		expandStrokeButton.onClick = function()
-	// 		{
-	// 			listbox.add("item", "Expand");
-	// 		}
-	// 		rmButton.onClick = function()
-	// 		{
-	// 			if(listbox.selection)
-	// 			{
-	// 				listbox.remove(listbox.selection);
-	// 			}
-	// 		}
-
-
 }

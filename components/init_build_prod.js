@@ -39,6 +39,7 @@ function initBuildProd()
 
 	if (valid)
 	{
+		loadExpandAction();
 		curOrderData = curlData(NOD, orderNum)
 
 		if (!curOrderData)

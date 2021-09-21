@@ -26,7 +26,7 @@ function initBuildProd()
 	if(valid)
 	{
 		orderNum = getOrderNumber();
-		if(noOrderNumber)
+		if(noOrderNumber || !orderNum)
 		{
 			valid = false;
 		}

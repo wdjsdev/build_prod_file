@@ -17,9 +17,11 @@
 
 function getSaveLocation()
 {
+
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
+	var docRef = app.activeDocument;
 	var docPath = docRef.path.toString();
 	log.l("docRef = " + docRef);
 	log.l("docRef.path = " + docRef.path);
@@ -50,7 +52,7 @@ function getSaveLocation()
 
 	log.l("docPath = " + docPath);
 
-	prodFileSaveLocation = docPath + "/" + orderNum + (docPath.indexOf("_IHFD")>-1 ? "" : "_IHFD");
+	prodFileSaveLocation = decodeURI(docPath + "/" + orderNum + (docPath.indexOf("_IHFD")>-1 ? "" : "_IHFD"));
 	log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 
 	log.l("End of getSaveLocation function.");

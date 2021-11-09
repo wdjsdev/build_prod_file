@@ -348,8 +348,15 @@ function createAdjustmentDialog()
 			{
 				addRosterEntry(g_sizeSelect.listbox.selection.text,nameInput.text,numInput.text);
 				populateListbox(g_rosterSelect.listbox,getProdFileRosterGroups(g_pieceSelect.listbox.selection.text));
-				toggleListbox("R")
+				toggleListbox("R");
 			})
+			var deleteRoster = parent.deleteRosterBtn = UI.button(btnGroup,"Delete Player",function()
+			{
+				curRosterGroup.remove();
+				populateListbox(g_rosterSelect.listbox,getProdFileRosterGroups(g_pieceSelect.listbox.selection.text));
+				toggleListbox("R");
+			})
+			
 	}
 
 	function updateEditRosterEntryGroup(parent)
@@ -454,7 +461,7 @@ function createAdjustmentDialog()
 	}
 
 	function populateListbox(listbox,arr)
-	{
+	{		
 		for(var x = listbox.items.length - 1;x>=0;x--)
 		{
 			listbox.remove(listbox.items[x]);
@@ -467,42 +474,49 @@ function createAdjustmentDialog()
 
 	function toggleListbox(k)
 	{
+		var slb = g_sizeSelect.listbox;
+		var rlb = g_rosterSelect.listbox;
+		var plb = g_pieceSelect.listbox;
+		rlb.active = true;
+
 		if(!k)
 		{
 			alert("didn't register the keycode..");
 			return;
 		}
 
+		
+		
 		var listbox;
-		if(k.keyName === "S")
+		if(k.keyName === "S" || k === "S")
 		{
-			listbox = g_sizeSelect.listbox;
+			listbox = slb;
+			plb.selection = 0;
+			rlb.selection = 0;
 		}
-		else if(k.keyName === "P")
+		else if(k.keyName === "P" || k === "P")
 		{
-			listbox = g_pieceSelect.listbox;
+			listbox = plb;
+			rlb.selection = 0;
 		}
-		else if(k.keyName === "R")
+		else if(k.keyName === "R" || k === "R")
 		{
-			listbox = g_rosterSelect.listbox;
-		}
-
-		if(!listbox)
-		{
-			return;
-		}
-		if(!listbox.selection || listbox.selection.index === listbox.items.length-1)
-		{
-			listbox.selection = 0;
+			listbox = rlb;
 		}
 		else
 		{
+			return;
+		}
+
+		if (!listbox.selection || listbox.selection.index === listbox.items.length - 1) {
+			listbox.selection = 0;
+		}
+		else {
 			listbox.selection += 1;
 		}
-		g_rosterSelect.listbox.active = true;
 
+		app.redraw();
+		rlb.active = true;
 
-		// g_pieceSelect.listbox.
-		// g_rosterSelect.listbox.
 	}
 }

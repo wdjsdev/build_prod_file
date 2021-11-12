@@ -102,6 +102,56 @@ function splitDataByGarment()
 			{
 				curRoster = "";
 			}
+			else
+			{
+				if(curRoster.match(/add.*inch/i))
+				{
+					messageList.push("Please don't forget to setup the custom inseam as well.");
+					messageList.push(curMid + "_" + curStyle + " size " + curSize + (curWaist ? "x" + curWaist : ""));
+					messageList.push("Look for the note on the sales order that says: " + curRoster);
+				}
+			}
+
+
+
+			log.l("checking for mid && design number");
+			for(var opt = 0,curOpt;opt<curLine.options.length;opt++)
+			{
+				curOpt = curLine.options[opt];
+				if(curOpt.name.toLowerCase() === "mid" && curOpt.value !== "")
+				{
+
+					curMid = curOpt.value;
+					var womensPat = /w$/i;
+					var mensPat = /[^wgy]$/i;
+					if(curAge == "Y")
+					{
+						curMid = curMid.replace(womensPat,"G");
+						if(mensPat.test(curMid))
+						{
+							curMid += "Y"
+						}
+					}
+					log.l("set curMid to " + curMid);
+				}
+				else if(curOpt.name.toLowerCase() === "design" && curOpt.value !== "")
+				{
+					curDesignNumber = curOpt.value;
+					log.l("set curDesignNumber = " + curDesignNumber);
+				}
+			}
+
+			if(curMid)
+			{
+				log.l("Found the mid value. it is: " + curMid);
+			}
+			else
+			{
+				log.e("No mid value was detected for " + curCode);
+			}
+
+
+			
 
 			if(curRoster.match(/add.*inch/i))
 			{

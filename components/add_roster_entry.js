@@ -1,4 +1,4 @@
-function addRosterEntry(size,name,number)
+function addRosterEntry(size,name,number,grad)
 {
 	var sizeObj = prodFileRoster[size];
 
@@ -11,7 +11,13 @@ function addRosterEntry(size,name,number)
 		curRosterGroup = curPiece.groupItems["Roster"];
 		curRosterGroup.hidden = false;
 		newRosterGroup = curPiece.groupItems["Live Text"].duplicate(curRosterGroup);
-		newRosterGroup.name = (!name ? "(no name)" : name) + " " + (!number ? "(no number)" : number);
+		newRosterGroup.name = getRosterLabel(name,number,grad);
+		// newRosterGroup.name = (!name ? "(no name)" : name) + " " + (!number ? "(no number)" : number);
+		// if(grad && grad !== "")
+		// {
+		// 	newRosterGroup.name += " " + grad;
+		// }
+
 		for(var a = 0,len=newRosterGroup.pageItems.length;a<len;a++)
 		{
 			curRosterItem = newRosterGroup.pageItems[a];
@@ -20,13 +26,19 @@ function addRosterEntry(size,name,number)
 				numberObject = curRosterItem;
 				curRosterItem.contents = number;
 			}
-			else
+			else if(curRosterItem.name === "Name")
 			{
 				nameObject = curRosterItem;
 				curRosterItem.contents = name;
 			}
+			else if(curRosterItem.name.match(/grad/i))
+			{
+				gradObject = curRosterItem;
+				curRosterItem.contents = grad;
+			}
+
 		}
-		sizeObj[pieceName].rosterGroup.push({name:nameObject,number:numberObject})
+		sizeObj[pieceName].rosterGroup.push({name:nameObject,number:numberObject,grad:gradObject});
 		
 	}
 }

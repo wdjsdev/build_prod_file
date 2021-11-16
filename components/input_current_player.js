@@ -24,7 +24,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 	var result = true;
 	var curFrame;
 	var doc = app.activeDocument;
-	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel;
+	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel,existingRosterGroup;
 	var len = pieces.length;
 
 	//fix up a specific anomoly regarding apostrophes.
@@ -57,31 +57,21 @@ function inputCurrentPlayer(pieces, curPlayer)
 			}
 		}
 
-		//determine how to name the newPlayerGroup
-		//basically build a string using player name and number
-		//if possible, otherwise use "(no name)" and/or "(no number)"
-		curPlayerLabel = (curPlayer.name === "" ? "(no name)" : curPlayer.name) + " " + (curPlayer.number === "" ? "(no number)" : curPlayer.number);
-
-
 		//check to see whether an identical roster entry has already been created
 		//this would be the case if there are two garments of the same size with
 		//the same name and number. if so, just skip it.
-		try
+		existingRosterGroup = findSpecificPageItem(rosterGroup,curPlayer.label)
+		if(existingRosterGroup)
 		{
-			var blah = rosterGroup.groupItems[curPlayerLabel];
 			liveTextGroup.hidden = true;
 			rosterGroup.hidden = true;
-			continue;
-		}
-		catch(e)
-		{
-			//no group exists with this same name. just keep going.
+			continue;	
 		}
 
 
 		log.l("Inputting roster info on the " + pieces[z].name);
 		newPlayerGroup = liveTextGroup.duplicate(rosterGroup);
-		newPlayerGroup.name = curPlayerLabel;
+		newPlayerGroup.name = curPlayer.label;
 		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
 		{
 			curFrame = newPlayerGroup.pageItems[t];

@@ -20,9 +20,11 @@ function getSaveLocation()
 	log.h("Beginning of getSaveLocation() function.");
 
 	var result = true;
-	var docPath = docRef.path.toString();
-	log.l("docRef = " + docRef);
-	log.l("docRef.path = " + docRef.path);
+	var doc = app.activeDocument;
+
+	var docPath = doc.path.toString();
+	log.l("doc = " + doc);
+	log.l("doc.path = " + doc.path);
 
 
 	//if the file is saved on the customization drive,
@@ -30,7 +32,7 @@ function getSaveLocation()
 	//to save the production files
 	if(docPath.indexOf("Customization")>-1)
 	{
-		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + docRef.name + " file path = " + docRef.fullName);
+		log.l("Active document lives on AD4. Reminding user to work off their desktop.::" + doc.name + " file path = " + doc.fullName);
 		alert("Please do not work from the network. Make sure you're duplicating files to your desktop before beginning to work on the order.");
 
 		docPath = Folder.selectDialog(desktopFolder,"Please select a location to save your production file(s)");

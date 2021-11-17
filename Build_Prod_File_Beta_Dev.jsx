@@ -14,12 +14,27 @@ Description: query netsuite for JSON data for a given order number,
 function container()
 {
 	var valid = true;
-	var scriptName = "build_prod_file";
+	var scriptName = "build_prod_file_beta";
+
+	
+	function isDrUser()
+	{
+		var files = Folder("/Volumes/").getFiles();
+
+		for(var x=0;x<files.length;x++)
+		{
+			if(files[x].name.toLowerCase().indexOf("customizationdr")>-1)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	function getUtilities()
 	{
 		var result = [];
-		var utilPath = "/Volumes/Customization/Library/Scripts/Script_Resources/Data/";
+		var utilPath = "/Volumes/" + (isDrUser() ? "CustomizationDR" : "Customization") + "/Library/Scripts/Script_Resources/Data/";
 		var ext = ".jsxbin"
 
 		//check for dev utilities preference file
@@ -43,7 +58,7 @@ function container()
 		}
 
 		result.push(utilPath + "Utilities_Container" + ext);
-		result.push(utilPath + "Batch_Framework" + ext);
+		// result.push(utilPath + "Batch_Framework" + ext);
 
 		if(!result.length)
 		{
@@ -62,7 +77,14 @@ function container()
 
 	if(!valid)return;
 
+	if(user === "will.dowling")
+	{
+		DEV_LOGGING = true;
+	}
+
 	logDest.push(getLogDest());
+
+
 
 
 	/*****************************************************************************/
@@ -80,10 +102,11 @@ function container()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = componentsPath + "/build_prod_file";
+	var prodComponents = componentsPath + "/build_prod_file_beta";
 
-	var compFiles = includeComponents(devComponents,prodComponents,false);
-	if(compFiles.length)
+	// var compFiles = includeComponents(devComponents,prodComponents,false);
+	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev")>-1 ? devComponents : prodComponents);
+	if(compFiles && compFiles.length)
 	{
 		var curComponent;
 		for(var cf=0,len=compFiles.length;cf<len;cf++)
@@ -142,7 +165,6 @@ function container()
 	printLog();
 
 	return valid;
-
 }
 
 container();

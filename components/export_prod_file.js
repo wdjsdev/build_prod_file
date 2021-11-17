@@ -29,6 +29,8 @@ function exportProdFile(pdfFolderName, destFolderPath)
 	tmpNumLay.name = "tmpnum";
 	var tmpNameLay = doc.layers.add();
 	tmpNameLay.name = "tmpname";
+	var tmpGradLay = doc.layers.add();
+	tmpGradLay.name = "tmpgrad";
 	
 
 	loadExpandAction();
@@ -68,6 +70,7 @@ function exportProdFile(pdfFolderName, destFolderPath)
 
 	tmpNameLay.remove();
 	tmpNumLay.remove();
+	tmpGradLay.remove();
 
 	saveFile(doc,docName,Folder(destFolderPath));
 	log.l("Successfully saved " + docName);
@@ -82,7 +85,7 @@ function exportProdFile(pdfFolderName, destFolderPath)
 	{
 		doc.selection = null;
 		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName;
-		var curNameFrame,curNumFrame,duplicateName,duplicateNumber;
+		var curNameFrame,curNumFrame,duplicateName,duplicateNumber,duplicateGrad;
 		var playerNameCenterPoint;
 		try
 		{
@@ -154,13 +157,15 @@ function exportProdFile(pdfFolderName, destFolderPath)
 				//so they can be expanded separately
 				for(var y=0,yLen = curRosterChild.pageItems.length;y<yLen;y++)
 				{
+					if(curRosterChild.pageItems[y].contents === "")
+					{
+						//empty string. just move on
+						continue;
+					}
+
+
 					if(curRosterChild.pageItems[y].name.indexOf("Name") >-1)
 					{
-						if(curRosterChild.pageItems[y].contents === "")
-						{
-							//empty string. just move on
-							continue;
-						}
 						duplicateName = curRosterChild.pageItems[y].duplicate(tmpNameLay);
 						duplicateName.hidden = false;
 						try
@@ -183,13 +188,15 @@ function exportProdFile(pdfFolderName, destFolderPath)
 					}
 					else if(curRosterChild.pageItems[y].name.indexOf("Number") >-1)
 					{
-						if(curRosterChild.pageItems[y].contents === "")
-						{
-							//empty string. just move on
-							continue;
-						}
+						
 						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
 						duplicateNumber = expand(duplicateNumber);
+					}
+					else if(curRosterChild.pageItems[y].name.toLowerCase().indexOf("grad")>-1)
+					{
+						curRosterChild.name = piece.name + "_" + curRosterChild.pageItems[y].contents;
+						duplicateGrad = curRosterChild.pageItems[y].duplicate(tmpGradLay);
+						duplicateGrad = expand(duplicateGrad);
 					}
 				}
 
@@ -199,6 +206,7 @@ function exportProdFile(pdfFolderName, destFolderPath)
 				saveFile(doc,pdfFileName,pdfFolder);
 				removeExpandedRosterGroup(tmpNameLay);
 				removeExpandedRosterGroup(tmpNumLay);
+				removeExpandedRosterGroup(tmpGradLay);
 			}
 
 			liveTextGroup.hidden = false;

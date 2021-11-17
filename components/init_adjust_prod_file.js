@@ -27,7 +27,7 @@ function initAdjustProdFile()
 	prodFileSizes = [];
 
 	// var requiredLayers = ["Sew Lines", "Artwork", "Color Blocks"];
-	var requiredLayers = ["Sew Lines", "Artwork"];
+	var requiredLayers = ["Artwork","Sew Lines"];
 
 	//verify proper prod file structure
 	try
@@ -110,13 +110,7 @@ function initAdjustProdFile()
 		log.l("Successfully set up the Live Text and Roster groups on the " + curPiece.name);
 	}
 
-	if(!prodFileSaveLocation)
-	{
-		//get the save location..
-		var docPath = docRef.path;
-		docPath = docPath.toString().replace(/(^~\/)|(.*\/users\/[^\/]*.)/i,homeFolderPath);
-		prodFileSaveLocation = docPath;
-	}
+	getSaveLocation();
 
 
 	return result;

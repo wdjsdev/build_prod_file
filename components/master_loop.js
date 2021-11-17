@@ -20,7 +20,9 @@ function masterLoop()
 {
 	log.h("Beginning execution of masterLoop() function");
 	var result = true;
-	var curGarmentLayer;
+	var curGarmentLayer,curNameCase;
+
+	
 
 	for (var ml = 0, len = garmentsNeeded.length; ml < len && result; ml++)
 	{
@@ -50,18 +52,6 @@ function masterLoop()
 			saveFile(curGarment.doc,saveFileName,saveFolder);
 		}
 
-		//artwork has been pasted into production file. save changes
-		// if (result)
-		// {
-		// 	result = saveFile(curGarment.doc, saveFileName, saveFolder)
-		// }
-
-		// if(result && !addRosterDataUserPreference)
-		// {
-		// 	log.l("User chose not to automatically add roster data. End of masterLoop[" + ml + "].");
-		// 	continue;
-		// }
-
 
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
@@ -69,23 +59,6 @@ function masterLoop()
 		{
 			result = findArtLocs();
 		}
-
-		////////////////////////
-		////////ATTENTION://////
-		//
-		//		deprecated in favor of getting these prefs
-		//		upon export. 
-		//
-		////////////////////////
-		// //prompt the user for player name case and max player name width
-		// if(result && curGarment.hasPlayerNames)
-		// {
-		// 	result = getPlayerNameSettings(true);
-		// }
-		// else if(result && !curGarment.hasPlayerNames)
-		// {
-		// 	result = getPlayerNameSettings(false);
-		// }
 
 		//input the actual roster data into the roster groups
 		if (result)
@@ -123,7 +96,6 @@ function masterLoop()
 		//clear out maxPlayerNameWidth and playerNameCase variables so they
 		//don't interfere with the next garment accidentally
 		maxPlayerNameWidth = undefined;
-		playerNameCase = undefined;
 		textExpandSteps = [];
 
 	}

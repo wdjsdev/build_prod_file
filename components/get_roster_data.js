@@ -104,13 +104,18 @@ function getRosterData(roster)
 			if(curEntry.indexOf(" (") > -1)
 			{
 				curPlayer.name = curEntry.substring(0,curEntry.indexOf(" ("));
-				curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length);
+				curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length).replace(/\(|\)/g,"");
 			}
 			else
 			{
 				curPlayer.name = curEntry;
 			}
 		}
+
+		// if(curEntry.match(/\([\d]*\)/)
+		// {
+		// 	curPlayer.gradYear = curEntry.replace(/\(|\)/g,"");
+		// }
 		curPlayer.name = curPlayer.name.replace(trimSpacesRegex,"");
 		curPlayer.number = curPlayer.number.replace(trimSpacesRegex,"");
 		log.l("pushing the following object to result::" + JSON.stringify(curPlayer));

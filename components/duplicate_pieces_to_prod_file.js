@@ -64,6 +64,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	fixImproperWomensSizing(ppLay);
 
+	app.selection = null;
 
 	for(var curSize in curData.roster)
 	{
@@ -93,6 +94,7 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 			{
 				curSizeLayer = getSizeLayer(curSize);
 				// curSizeLayer.hasSelectedArtwork = true;
+
 				selectArtworkFromSizeLayer(curSizeLayer);
 				log.l("selected the artwork on layer: " + curSize);
 			}
@@ -121,8 +123,18 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 		tempLay.remove();
 
 		curData.doc.activate();
-		tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
-		tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+
+		//disabling this repositioning logic because it seems to cause an
+		//issue on some pants.. i think the issue is that it's trying to move
+		//stuff off the drawing area.. but i can't be sure. commenting these lines
+		//gets rid of the error.. And i can't remember why i put these here in the first place.
+		//it shouldn't matter where things are on the drawing area. 
+		//
+		// tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
+		// tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
+		//
+
+		
 		curData.doc.fitArtboardToSelectedArt(0);
 		ungroupDoc(curData.doc);
 
@@ -163,6 +175,9 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 
 	function selectArtworkFromSizeLayer(layer)
 	{
+		layer.locked = false;
+		layer.visible = true;
+		// layer.hasSelectedArtwork = true;
 		for(var x=0,len=layer.groupItems.length;x<len;x++)
 		{
 			layer.groupItems[x].selected = true;

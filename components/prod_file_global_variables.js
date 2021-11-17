@@ -1,8 +1,11 @@
-var docRef = app.activeDocument,
+if(app.documents.length)
+{
+	var docRef = app.activeDocument,
 	layers = docRef.layers,
 	aB = docRef.artboards,
-	swatches = docRef.swatches,
-	prodFileSaveLocation = desktopPath,
+	swatches = docRef.swatches;
+}
+var	prodFileSaveLocation = desktopPath,
 	saveFileName,
 	saveFolder,
 	INCH_TO_POINT_AT_SCALE = 7.2,
@@ -12,7 +15,6 @@ var docRef = app.activeDocument,
 	colorBlockGroup,
 	playerNamesNeeded,
 	maxPlayerNameWidth,
-	playerNameCase,
 	addRosterDataUserPreference,
 	expandStrokesPreference,
 	semiTransparentThruCutOpacity = 30,
@@ -41,6 +43,7 @@ var docRef = app.activeDocument,
 	curRosterGroup,
 	curRosterName,
 	curRosterNumber,
+	curRosterGrad,
 	prodFileRoster = {},
 	prodFileSizes = [],
 	prodFileHasNames = false;
@@ -84,3 +87,8 @@ var docRef = app.activeDocument,
 		pdfSaveOpts.viewAfterSaving = false;
 		pdfSaveOpts.compressArt = true;
 		pdfSaveOpts.optimization = true;
+
+
+
+//database that holds the relationships between the codes on the sales order ("FD-SLOW-SS" = "FD-161")
+var MGR = midGarmentRelationshipDatabasePath = dataPath + "build_mockup_data/mid_garment_relationship_database.js";

@@ -48,7 +48,14 @@ function setupRosterGroup(item)
 					liveTextGroup.name = "Live Text";
 					rosterGroup.name = "Roster";
 				}
-				frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
+				if(lowercaseName.indexOf("grad")>-1)
+				{
+					frame.name = "Grad Year";
+				}
+				else
+				{
+					frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
+				}
 				frame.moveToBeginning(liveTextGroup);
 				result = true;
 			}

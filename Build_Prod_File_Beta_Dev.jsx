@@ -165,7 +165,6 @@ function container()
 	printLog();
 
 	return valid;
-
 }
 
 container();

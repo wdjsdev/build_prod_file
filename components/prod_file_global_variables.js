@@ -43,6 +43,7 @@ var	prodFileSaveLocation = desktopPath,
 	curRosterGroup,
 	curRosterName,
 	curRosterNumber,
+	curRosterGrad,
 	prodFileRoster = {},
 	prodFileSizes = [],
 	prodFileHasNames = false;

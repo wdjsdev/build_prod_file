@@ -315,6 +315,7 @@ function createAdjustmentDialog()
 
 				var nameLabel = UI.static(labelGroup,"Name:");
 				var numLabel = UI.static(labelGroup,"Number:");
+				var gradLabel = UI.static(labelGroup,"Grad:");
 
 			var inputGroup = inputContainerGroup.inputGroup = UI.group(inputContainerGroup);
 				inputGroup.orientation = "column";
@@ -325,6 +326,7 @@ function createAdjustmentDialog()
 						nameInputSelection = [nameInput.text.indexOf(nameInput.textselection), nameInput.textselection.length];
 					})
 				var numInput = inputGroup.numInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
+				var gradInput = inputGroup.gradInput = UI.edit(inputGroup,"",INPUTCHARACTERS);
 
 
 		var btnGroup = parent.btnGroup = UI.group(parent);
@@ -343,10 +345,10 @@ function createAdjustmentDialog()
 				app.redraw();
 			});
 
-			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,shrinkLetterHeight.value)});
+			var submit = parent.submitBtn = UI.button(btnGroup,"Update This Player",function(){updateCurRoster(nameInput.text,numInput.text,gradInput.text)});
 			var addNewRoster = parent.addNewRosterBtn = UI.button(btnGroup,"Add Player",function()
 			{
-				addRosterEntry(g_sizeSelect.listbox.selection.text,nameInput.text,numInput.text);
+				addRosterEntry(g_sizeSelect.listbox.selection.text,nameInput.text,numInput.text,gradInput.text);
 				populateListbox(g_rosterSelect.listbox,getProdFileRosterGroups(g_pieceSelect.listbox.selection.text));
 				toggleListbox("R");
 			})
@@ -361,43 +363,93 @@ function createAdjustmentDialog()
 
 	function updateEditRosterEntryGroup(parent)
 	{
-		if(curRosterName)
+		// var splitName = curRosterGroup.name.split(" ");
+
+		//split the curRosterGroup.name by space unless the space is inside paranthasis
+		// debugger;
+		var nameStr = curRosterGroup.name;
+		var splitName = [];
+
+		if(nameStr.indexOf("(no name)")>-1)
 		{
-			parent.nameInput.text = curRosterName.contents;
+			splitName[0] = "(no name)";
 		}
 		else
 		{
-			parent.nameInput.text = "";
+			splitName[0] = nameStr.split(" ")[0];
 		}
-		if(curRosterNumber)
+		nameStr = nameStr.substr(splitName[0].length+1,nameStr.length);
+
+		if(nameStr.indexOf("(no number)")>-1)
 		{
-			parent.numInput.text = curRosterNumber.contents;
+			splitName[1] = "(no number)";
 		}
 		else
 		{
-			parent.numInput.text = "";
+			splitName[1] = nameStr.split(" ")[0];
 		}
+		nameStr = nameStr.substr(splitName[1].length+1,nameStr.length);
+
+		if(nameStr.length)
+		{
+			splitName[2] = trimSpaces(nameStr);
+		}
+
+		parent.nameInput.text = splitName[0];
+		parent.numInput.text = splitName[1];
+		if(splitName.length>2)
+		{
+			parent.gradInput.text = splitName[2];
+		}
+		// if(curRosterName)
+		// {
+		// 	parent.nameInput.text = curRosterName.contents;
+		// }
+		// else
+		// {
+		// 	parent.nameInput.text = "";
+		// }
+		// if(curRosterNumber)
+		// {
+		// 	parent.numInput.text = curRosterNumber.contents;
+		// }
+		// else
+		// {
+		// 	parent.numInput.text = "";
+		// }
+		// if(curRosterGrad)
+		// {
+		// 	parent.gradInput.text = curRosterGrad.contents;
+		// }
 	}
 
-	function updateCurRoster(name,num)
+	function updateCurRoster(name,num,grad)
 	{
 		var lowerCaseLetters;
 		var newName = "";
 		var newNum = "";
+		var newGrad = "";
 
 		newName = (name === "") ? "(no name)" : name;
 		newNum = (num === "") ? "(no number)" : num;
+		newGrad = (grad === "") ? "" : " " + grad;
+
 		if(curRosterName)
 		{
-			curRosterName.contents = name;
+			curRosterName.contents = newName;
 		}
 		if(curRosterNumber)
 		{
-			curRosterNumber.contents = num;
+			curRosterNumber.contents = newNum;
+		}
+		if(curRosterGrad)
+		{
+			curRosterGrad.contents = newGrad;
 		}
 
-		curRosterGroup.name = newName + " " + newNum;
-		g_rosterSelect.listbox.selection.text = newName + " " + newNum;
+		curRosterGroup.name = getRosterLabel(name,num,grad);
+		// g_rosterSelect.listbox.selection.text = newName + " " + newNum + newGrad;
+		g_rosterSelect.listbox.selection.text = curRosterGroup.name.replace(/ \d{4}$/,"") + newGrad;
 		app.redraw();
 	}
 

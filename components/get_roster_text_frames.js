@@ -31,6 +31,10 @@ function getRosterTextFrames(group)
 			{
 				curRosterName = item;
 			}
+			else if(item.name.match(/grad/i))
+			{
+				curRosterGrad = item;
+			}
 		}
 		else if(item.typename === "GroupItem")
 		{

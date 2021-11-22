@@ -28,113 +28,87 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	docRef.activate();
 	docRef.selection = null;
 
+	//create a temp group to hold all the selected pieces.
+	var tmpLay = layers.add();
+	var tmpGroup = tmpLay.groupItems.add();
+	var curItem;
+
 	//Determine how to handle the sizing format
 	//var = variable inseam, for example 30Ix32W or 36Ix34W
-	//wxy = fixed inseam/waist relationship. sizing is measured in inseam/waist but relationships are not variable
+	//wxh = fixed inseam/waist relationship. sizing is measured in inseam/waist but relationships are not variable
 	//std = standard sizing structure. S M L XL etc
-	try
+	var ppLay = getPPLay(srcLayer);
+	firstPrepressLayer = ppLay.layers[0];
+	if(variableInseamPat.test(firstPrepressLayer))
 	{
-		var ppLay = getPPLay(srcLayer);
-		firstPrepressLayer = ppLay.layers[0];
-		if(variableInseamPat.test(firstPrepressLayer))
-		{
-			log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam.");
-			sizeType = "var"
-		}
-		else if(wxhPat.test(firstPrepressLayer))
-		{
-			log.l(ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height.");
-			sizeType = "wxh"
-		}
-		else
-		{
-			log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing.");
-			sizeType = "std";
-		}
-		ppLay.visible = true;
-		log.l("set ppLay to " + ppLay);
+		log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam.");
+		sizeType = "var"
 	}
-	catch(e)
+	else if(wxhPat.test(firstPrepressLayer))
 	{
-		log.e("Failed to determine the prepress layer.::system error message = " + e + ", on line: " + e.line);
-		errorList.push("Failed to find a prepress layer for " + curData.code + "_" + curData.styleNum);
-		result = false;
-		return result;
+		log.l(ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height.");
+		sizeType = "wxh"
 	}
+	else
+	{
+		log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing.");
+		sizeType = "std";
+	}
+	ppLay.visible = true;
+	log.l("set ppLay to " + ppLay);
 
+
+	//if this garment is built with "women's sizing"
+	//for example, "WM", "WL", "WXL"
+	//then strip out the W
 	fixImproperWomensSizing(ppLay);
 
 	app.selection = null;
 
 	for(var curSize in curData.roster)
 	{
-		try
+		if(sizeType === "var")
 		{
-			if(sizeType === "var")
+			curSizeLayer = getSizeLayer(curSize + "I");
+			//loop each item in the curSizeLayer and find pieces
+			//which match the waist and inseam of the current garment
+			//and select each one.
+			for(var curWaistSize in curData.roster[curSize])
 			{
-				curSizeLayer = getSizeLayer(curSize + "I");
-				//loop each item in the curSizeLayer and find pieces
-				//which match the waist and inseam of the current garment
-				//and select each one.
-				for(var curWaistSize in curData.roster[curSize])
+				for(var pp=0,len = curSizeLayer.groupItems.length;pp<len;pp++)
 				{
-					for(var pp=0,len = curSizeLayer.groupItems.length;pp<len;pp++)
+					curItem = curSizeLayer.pageItems[pp];
+					varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
+					if(curItem.name.toLowerCase().indexOf(varSizeString)>-1)
 					{
-						curItem = curSizeLayer.pageItems[pp];
-						varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
-						if(curItem.name.toLowerCase().indexOf(varSizeString)>-1)
-						{
-							curItem.selected = true;
-						}
+						curItem.duplicate(tmpGroup);
 					}
-					
 				}
-			}
-			else
-			{
-				curSizeLayer = getSizeLayer(curSize);
-				// curSizeLayer.hasSelectedArtwork = true;
-
-				selectArtworkFromSizeLayer(curSizeLayer);
-				log.l("selected the artwork on layer: " + curSize);
+				
 			}
 		}
-		catch(e)
+		else
 		{
-			log.e("Failed while selecting artwork for " + curSize + "::system error message: " + e + ", on line: " + e.line);
-			errorList.push("Failed to select " + curSize + " prepress layer for " + curData.code + "_" + curData.styleNum + "\nCheck for locked or hidden items.");
-			result = false;
+			curSizeLayer = getSizeLayer(curSize);
+			for(var x=curSizeLayer.pageItems.length -1;x>=0;x--)
+			{
+				curItem = curSizeLayer.pageItems[x];
+				if(curItem.typename === "GroupItem")
+					curItem.duplicate(tmpGroup);
+			}
 		}
+
+		
 	} 
 
 	if(result)
 	{
-		//create a temp group to hold all the selected pieces.
-		var tempLay = layers.add();
-		var tmpGroup = tempLay.groupItems.add();
-		for(var x=docRef.selection.length -1;x>=0;x--)
-		{
-			if(docRef.selection[x].typename === "GroupItem")
-				docRef.selection[x].duplicate(tmpGroup);
-		}
-
 		//duplicate the temp group to the production file
 		var tmpGroupCopy = tmpGroup.duplicate(curData.doc);
-		tempLay.remove();
+		tmpLay.remove();
 
 		curData.doc.activate();
 
-		//disabling this repositioning logic because it seems to cause an
-		//issue on some pants.. i think the issue is that it's trying to move
-		//stuff off the drawing area.. but i can't be sure. commenting these lines
-		//gets rid of the error.. And i can't remember why i put these here in the first place.
-		//it shouldn't matter where things are on the drawing area. 
-		//
-		// tmpGroupCopy.left = curData.doc.artboards[0].artboardRect[0];
-		// tmpGroupCopy.top = curData.doc.artboards[0].artboardRect[1];
-		//
-
-		
 		curData.doc.fitArtboardToSelectedArt(0);
 		ungroupDoc(curData.doc);
 

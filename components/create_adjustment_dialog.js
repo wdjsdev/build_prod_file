@@ -491,7 +491,7 @@ function createAdjustmentDialog()
 			log.l("Adjustment Dialog Submitted.");
 			log.l("User selected the following text expansion steps: ::" + textExpandSteps.join(", "));
 			
-			maxPlayerNameWidth = parseInt(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
+			maxPlayerNameWidth = Number(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
 			log.l("Maximum player name width: " + maxPlayerNameWidth);
 
 			thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;

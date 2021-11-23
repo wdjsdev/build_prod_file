@@ -50,7 +50,7 @@ function setupRosterGroup(item)
 				}
 				if(lowercaseName.indexOf("grad")>-1)
 				{
-					frame.name = "Grad Year";
+					frame.name = "Grad";
 				}
 				else
 				{

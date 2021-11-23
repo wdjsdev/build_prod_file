@@ -84,16 +84,16 @@ function inputCurrentPlayer(pieces, curPlayer)
 				alert("curFrame is not a textFrame");
 				continue;
 			}
+			
 			if (curFrame.name.match(/name/i) || curFrame.contents.match(/play/i))
 			{
 				curPlayer.name = convertPlayerNameCase(curPlayer.name,getPlayerNameCase(curFrame));
 				curFrame.contents = curPlayer.name.match(/\(/g) ? "" : curPlayer.name;
 				curFrame.name = "Name";
 			}
-			else if(curFrame.name.match(/grad/i)>-1 || curFrame.contents.match(/[\d]{4}/))
+			else if(curFrame.name.match(/grad/i) || curFrame.contents.match(/[\d]{4}/))
 			{
-
-				curFrame.contents = curPlayer.extraInfo ? curPlayer.extraInfo : "";
+				curFrame.contents = curPlayer.extraInfo || "";
 			}
 			else if(curFrame.name.match(/number/i))
 			{

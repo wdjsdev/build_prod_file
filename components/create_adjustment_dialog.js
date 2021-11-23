@@ -426,30 +426,24 @@ function createAdjustmentDialog()
 	function updateCurRoster(name,num,grad)
 	{
 		var lowerCaseLetters;
-		var newName = "";
-		var newNum = "";
-		var newGrad = "";
-
-		newName = (name === "") ? "(no name)" : name;
-		newNum = (num === "") ? "(no number)" : num;
-		newGrad = (grad === "") ? "" : " " + grad;
+		
+		grad = (grad === "") ? "" : " " + grad;
 
 		if(curRosterName)
 		{
-			curRosterName.contents = newName;
+			curRosterName.contents = name;
 		}
 		if(curRosterNumber)
 		{
-			curRosterNumber.contents = newNum;
+			curRosterNumber.contents = num;
 		}
 		if(curRosterGrad)
 		{
-			curRosterGrad.contents = newGrad;
+			curRosterGrad.contents = grad;
 		}
 
 		curRosterGroup.name = getRosterLabel(name,num,grad);
-		// g_rosterSelect.listbox.selection.text = newName + " " + newNum + newGrad;
-		g_rosterSelect.listbox.selection.text = curRosterGroup.name.replace(/ \d{4}$/,"") + newGrad;
+		g_rosterSelect.listbox.selection.text = curRosterGroup.name.replace(/[\s]*\d{4}$/,"") + grad;
 		app.redraw();
 	}
 

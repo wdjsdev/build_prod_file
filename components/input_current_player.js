@@ -60,7 +60,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 		//check to see whether an identical roster entry has already been created
 		//this would be the case if there are two garments of the same size with
 		//the same name and number. if so, just skip it.
-		existingRosterGroup = findSpecificPageItem(rosterGroup,curPlayer.label)
+		existingRosterGroup = findSpecificPageItem(rosterGroup,curPlayer.label,"imatch")
 		if(existingRosterGroup)
 		{
 			liveTextGroup.hidden = true;

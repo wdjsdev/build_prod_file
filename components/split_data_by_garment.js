@@ -189,12 +189,17 @@ function splitDataByGarment()
 					curSize = curInseam;
 					curSize = curSize.replace(/[\"\']/g,"");
 
+					//if no garment object exists create one
 					if (curGarment.roster && !curGarment.roster[curSize])
 					{
 						curGarment.roster[curSize] = {};
 					}
+
+					
 					if(!curGarment.roster[curSize][curWaist])
 					{
+						//no curWaist property for this garment.
+						//This is a standard size garment
 						curGarment.roster[curSize][curWaist] = {};
 						curGarment.roster[curSize][curWaist].qty = curLine.quantity;
 						curGarment.roster[curSize][curWaist].players = getRosterData(curRoster);
@@ -202,9 +207,12 @@ function splitDataByGarment()
 					}
 					else
 					{
+						//curWaist property exists for this garment.
+						//This is a variable inseam garment
 						curGarment.roster[curSize][curWaist].qty = parseInt(curLine.quantity) + parseInt(curGarment.roster[curSize][curWaist].qty);
 						additionalPlayers = getRosterData(curRoster);
 						log.l("Added " + additionalPlayers.length + " new waist sizes to the roster for the inseam " + curSize + ".");	
+						log.l("the following players were added: " + additionalPlayers.join("\n"));
 						curGarment.roster[curSize][curWaist].players = curGarment.roster[curSize][curWaist].players.concat(additionalPlayers);
 					}
 					

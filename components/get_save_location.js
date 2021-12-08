@@ -56,6 +56,10 @@ function getSaveLocation()
 	{
 		prodFileSaveLocation = decodeURI(docPath + "/" + orderNum + "_IHFD");
 	}
+	else
+	{
+		prodFileSaveLocation = docPath;
+	}
 	log.l("Setting prodFileSaveLocation to " + prodFileSaveLocation);
 
 	log.l("End of getSaveLocation function.");

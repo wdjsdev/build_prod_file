@@ -3,7 +3,7 @@ function addRosterEntry(size,name,number,grad)
 	var sizeObj = prodFileRoster[size];
 
 	var curPiece,curRosterGroup,newRosterGroup;
-	var curRosterItem,numberObject,nameObject;
+	var curRosterItem,numberObject,nameObject,gradObject;
 
 	for(var pieceName in sizeObj)
 	{

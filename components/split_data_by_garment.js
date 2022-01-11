@@ -26,6 +26,14 @@ function splitDataByGarment()
 
 	var curSize, curAge, curCode, curStyle, curRoster, additionalPlayers,curDesignNumber;
 
+	var garmentCodeConverter = 
+	{
+		"FD-500":"FD-500W",
+		"FD-400":"FD-400W",
+		"PS-2035G":"PS-2035Y",
+		"PS-4070G":"PS-4070Y"
+	}
+
 
 
 	var curGarmentIndex = 0;
@@ -95,6 +103,17 @@ function splitDataByGarment()
 				log.e("No mid value was detected for " + curCode);
 			}
 
+			//fix broken mid values.
+			//an example is FD-500. This code should be FD-500W,
+			//but the builder exports the wrong code for this garment
+			//so we just have to brute force overwrite the problem
+			//garments here.
+
+			if(garmentCodeConverter[curMid])
+			{
+				curMid = garmentCodeConverter[curMid];
+			}
+
 
 			curRoster = curLine.memo.roster;
 
@@ -102,63 +121,17 @@ function splitDataByGarment()
 			{
 				curRoster = "";
 			}
-			else
-			{
-				if(curRoster.match(/add.*inch/i))
-				{
-					messageList.push("Please don't forget to setup the custom inseam as well.");
-					messageList.push(curMid + "_" + curStyle + " size " + curSize + (curWaist ? "x" + curWaist : ""));
-					messageList.push("Look for the note on the sales order that says: " + curRoster);
-				}
-			}
-
-
-
-			log.l("checking for mid && design number");
-			for(var opt = 0,curOpt;opt<curLine.options.length;opt++)
-			{
-				curOpt = curLine.options[opt];
-				if(curOpt.name.toLowerCase() === "mid" && curOpt.value !== "")
-				{
-
-					curMid = curOpt.value;
-					var womensPat = /w$/i;
-					var mensPat = /[^wgy]$/i;
-					if(curAge == "Y")
-					{
-						curMid = curMid.replace(womensPat,"G");
-						if(mensPat.test(curMid))
-						{
-							curMid += "Y"
-						}
-					}
-					log.l("set curMid to " + curMid);
-				}
-				else if(curOpt.name.toLowerCase() === "design" && curOpt.value !== "")
-				{
-					curDesignNumber = curOpt.value;
-					log.l("set curDesignNumber = " + curDesignNumber);
-				}
-			}
-
-			if(curMid)
-			{
-				log.l("Found the mid value. it is: " + curMid);
-			}
-			else
-			{
-				log.e("No mid value was detected for " + curCode);
-			}
-
-
-			
-
-			if(curRoster.match(/add.*inch/i))
+			else if(curRoster.match(/add.*inch/i))
 			{
 				messageList.push("Please don't forget to setup the custom inseam as well.");
 				messageList.push(curMid + "_" + curStyle + " size " + curSize + (curWaist ? "x" + curWaist : ""));
 				messageList.push("Look for the note on the sales order that says: " + curRoster);
 			}
+
+
+
+
+
 
 			if (!curGarment || !curGarment.garmentCount)
 			{

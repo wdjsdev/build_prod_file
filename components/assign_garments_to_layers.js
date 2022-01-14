@@ -58,7 +58,7 @@ function assignGarmentsToLayers()
 				}	
 			}
 		}
-		if(matchedGarments.length && matchedGarments.length == 1)
+		if(!success && matchedGarments.length && matchedGarments.length == 1)
 		{
 			matchedGarments[0].parentLayer = curGarmentLayer;
 			success = true;

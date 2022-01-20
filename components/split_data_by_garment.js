@@ -59,6 +59,9 @@ function splitDataByGarment()
 			{
 				curSize = "ONE PIECE";
 			}
+
+			//replace any "half sizes" that use slashes or hyphens with a ".5"
+			curSize = curSize.replace(/\s?1[\\\-\/]2/,".5");
 			curAge = getAge(curSize);
 			curCode = getCode(curItem);
 			if (!curStyle)

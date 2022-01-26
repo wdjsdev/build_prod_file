@@ -50,7 +50,8 @@ function splitDataByGarment()
 			log.l(curItem + " is a proper garment line.");
 
 			
-			if(curItem.toLowerCase().indexOf("-bag-") === -1)
+			// if(curItem.toLowerCase().indexOf("-bag-") === -1)
+			if(!curItem.match(/bag/i))
 			{
 				curSize = getSize(curItem);
 				curSize = curSize.replace(/[\"\']/g,"");

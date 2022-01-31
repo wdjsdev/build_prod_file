@@ -31,12 +31,9 @@ function assignGarmentsToLayers()
 	for(var g=0;g<garmentLayers.length;g++)
 	{
 		curGarmentLayer = garmentLayers[g];
-		cglName = curGarmentLayer.name.replace(/-/g, "_");
-		cglName = cglName.replace("_","-");
-		// if(fdUnderscorePat.test(cglName))
-		// {
-		// 	cglName = cglName.replace(/_/g,"-");
-		// }
+
+		cglName = curGarmentLayer.name.replace(/-/g, "_").replace("_","-");
+		
 		if(threeDigitStyleNumPat.test(cglName))
 		{
 			cglName = cglName.replace("_0","_10");

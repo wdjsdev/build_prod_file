@@ -31,11 +31,12 @@ function assignGarmentsToLayers()
 	for(var g=0;g<garmentLayers.length;g++)
 	{
 		curGarmentLayer = garmentLayers[g];
-		cglName = curGarmentLayer.name;
-		if(fdUnderscorePat.test(cglName))
-		{
-			cglName = cglName.replace("_","-");
-		}
+		cglName = curGarmentLayer.name.replace(/-/g, "_");
+		cglName = cglName.replace("_","-");
+		// if(fdUnderscorePat.test(cglName))
+		// {
+		// 	cglName = cglName.replace(/_/g,"-");
+		// }
 		if(threeDigitStyleNumPat.test(cglName))
 		{
 			cglName = cglName.replace("_0","_10");
@@ -45,17 +46,15 @@ function assignGarmentsToLayers()
 		for(var x=0;x<garmentsNeeded.length;x++)
 		{
 			curGarment = garmentsNeeded[x];
-			if(cglName.indexOf(curGarment.mid + "_" + curGarment.styleNum)>-1)
+			
+			if(documentDesignNumber && documentDesignNumber.indexOf(curGarment.designNumber)>-1)
 			{
-				if(documentDesignNumber && documentDesignNumber.indexOf(curGarment.designNumber)>-1)
-				{
-					curGarment.parentLayer = curGarmentLayer;
-					success = true;					
-				}
-				else
-				{
-					matchedGarments.push(garmentsNeeded[x]);
-				}	
+				curGarment.parentLayer = curGarmentLayer;
+				success = true;					
+			}
+			else if (cglName.indexOf(curGarment.mid + "_" + curGarment.styleNum) > -1)
+			{
+				matchedGarments.push(garmentsNeeded[x]);
 			}
 		}
 		if(!success && matchedGarments.length && matchedGarments.length == 1)

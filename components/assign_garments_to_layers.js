@@ -22,6 +22,10 @@ function assignGarmentsToLayers()
 		success = false;
 
 	var documentDesignNumber = docRef.name.match(/[a-z0-9]{12}/ig);
+	if(documentDesignNumber)
+	{
+		documentDesignNumber = documentDesignNumber[0];
+	}
 	var fdUnderscorePat = /[fbp][dsm](_)/i;
 	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
 
@@ -44,15 +48,24 @@ function assignGarmentsToLayers()
 		{
 			curGarment = garmentsNeeded[x];
 			
-			if(documentDesignNumber && documentDesignNumber.indexOf(curGarment.designNumber)>-1)
+			if(documentDesignNumber && documentDesignNumber.match(curGarment.designNumber))
 			{
-				curGarment.parentLayer = curGarmentLayer;
-				success = true;					
+				if (cglName.match(curGarment.mid + "_" + curGarment.styleNum)) 
+				{
+					curGarment.parentLayer = curGarmentLayer;
+					success = true;
+				}
+				else
+				{
+					matchedGarments.push(curGarment);
+				}
+								
 			}
-			else if (cglName.indexOf(curGarment.mid + "_" + curGarment.styleNum) > -1)
+			else
 			{
-				matchedGarments.push(garmentsNeeded[x]);
+				matchedGarments.push(curGarment)
 			}
+			
 		}
 		if(!success && matchedGarments.length && matchedGarments.length == 1)
 		{

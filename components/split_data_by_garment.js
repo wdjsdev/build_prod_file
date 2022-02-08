@@ -39,6 +39,9 @@ function splitDataByGarment()
 	var curGarmentIndex = 0;
 	var firstGarmentAppendage = "A";
 
+	var womensPat = /w$/i;
+	var mensPat = /[^wgy]$/i;
+
 	for (var x = 0, len = curOrderData.lines.length; x < len; x++)
 	{
 		curLine = curOrderData.lines[x];
@@ -79,8 +82,17 @@ function splitDataByGarment()
 				{
 
 					curMid = curOpt.value;
-					var womensPat = /w$/i;
-					var mensPat = /[^wgy]$/i;
+					
+					//fix broken mid values.
+					//an example is FD-500. This code should be FD-500W,
+					//but the builder exports the wrong code for this garment
+					//so we just have to brute force overwrite the problem
+					//garments here.
+
+					curMid = garmentCodeConverter[curMid] || curMid;
+
+
+					
 					if(curAge == "Y")
 					{
 						curMid = curMid.replace(womensPat,"G");
@@ -107,16 +119,7 @@ function splitDataByGarment()
 				log.e("No mid value was detected for " + curCode);
 			}
 
-			//fix broken mid values.
-			//an example is FD-500. This code should be FD-500W,
-			//but the builder exports the wrong code for this garment
-			//so we just have to brute force overwrite the problem
-			//garments here.
-
-			if(garmentCodeConverter[curMid])
-			{
-				curMid = garmentCodeConverter[curMid];
-			}
+			
 
 
 			curRoster = curLine.memo.roster;
@@ -249,27 +252,7 @@ function splitDataByGarment()
 
 		log.l("Sending curgGarment to garmentsNeeded array and reinitializing.::curGarment = " + JSON.stringify(curGarment) + "::::");
 		garmentsNeeded.push(curGarment);
-		// initCurGarment();
 	}
-
-	//deprecated in favor of external get_roster_data.js component
-	// function getRosterData(obj)
-	// {
-	// 	var result = [];
-	// 	for (var grd = 0, len = obj.length; grd < len; grd++)
-	// 	{
-	// 		result.push(
-	// 		{
-	// 			name: obj[grd].name,
-	// 			number: obj[grd].number
-	// 		});
-	// 		if(obj[grd].name)
-	// 		{
-	// 			curGarment.hasPlayerNames = true;
-	// 		}
-	// 	}
-	// 	return result;
-	// }
 
 	function isSeparator(str)
 	{

@@ -26,7 +26,6 @@ function assignGarmentsToLayers()
 	{
 		documentDesignNumber = documentDesignNumber[0];
 	}
-	var fdUnderscorePat = /[fbp][dsm](_)/i;
 	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
 
 
@@ -43,7 +42,7 @@ function assignGarmentsToLayers()
 			cglName = cglName.replace("_0","_10");
 			curGarmentLayer.name = cglName;
 		}
-		var searchTerm;
+
 		for(var x=0;x<garmentsNeeded.length;x++)
 		{
 			curGarment = garmentsNeeded[x];

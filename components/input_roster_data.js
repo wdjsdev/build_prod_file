@@ -60,6 +60,7 @@ function inputRosterData(roster)
 				for (var cp = 0, len = roster[curSize][curWaist].players.length; cp < len; cp++)
 				{
 					curPlayer = roster[curSize][curWaist].players[cp];
+					curPlayer.label = getRosterLabel(curPlayer.name, curPlayer.number, curPlayer.extraInfo);
 					inputCurrentPlayer(curSizePieces, curPlayer);
 				}
 				curSizePieces = [];

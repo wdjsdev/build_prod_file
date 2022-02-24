@@ -21,13 +21,9 @@ function assignGarmentsToLayers()
 		matchedGarments = [],
 		success = false;
 
-	var documentDesignNumber = docRef.name.match(/[a-z0-9]{12}/ig);
-	if(documentDesignNumber)
-	{
-		documentDesignNumber = documentDesignNumber[0];
-	}
 	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
 
+	var curGarmentCode;
 
 
 	var curGarmentLayer,cglName;
@@ -46,23 +42,15 @@ function assignGarmentsToLayers()
 		for(var x=0;x<garmentsNeeded.length;x++)
 		{
 			curGarment = garmentsNeeded[x];
-			
-			if(documentDesignNumber && documentDesignNumber.match(curGarment.designNumber))
+			curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+			if(docRef.name.match(curGarment.designNumber) && cglName.match(curGarmentCode))
 			{
-				if (cglName.match(curGarment.mid + "_" + curGarment.styleNum)) 
-				{
-					curGarment.parentLayer = curGarmentLayer;
-					success = true;
-				}
-				else
-				{
-					matchedGarments.push(curGarment);
-				}
-								
+				curGarment.parentLayer = curGarmentLayer;
+				success = true;
 			}
-			else
+			else if(cglName.match(curGarment.mid + "_" + curGarment.styleNum))
 			{
-				matchedGarments.push(curGarment)
+				matchedGarments.push(curGarment);
 			}
 			
 		}

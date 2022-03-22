@@ -169,10 +169,12 @@ function createAdjustmentDialog()
 	function getThruCutOpacityPreference(parent)
 	{
 		var thisGroup = UI.group(parent);
-		var msg = "Set Thru-Cut strokes to 0% Opacity";
+		var msg = UI.static(thisGroup,"Input Thru-cut Opacity: ");
+
+		var input = parent.input = UI.edit(thisGroup,thruCutOpacityPreference,3);
 		// var disp = UI.static(msg);
-		var checkbox = parent.checkbox = UI.checkbox(thisGroup, msg);
-			checkbox.value = true;
+		// var checkbox = parent.checkbox = UI.checkbox(thisGroup, msg);
+			// checkbox.value = true;
 	}
 
 	function createListboxGroup(parent,label)
@@ -494,7 +496,9 @@ function createAdjustmentDialog()
 			maxPlayerNameWidth = Number(g_getMaxNameWidthSettingsGroup.maxWidthInput.text) * INCH_TO_POINT_AT_SCALE;
 			log.l("Maximum player name width: " + maxPlayerNameWidth);
 
-			thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
+			// thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
+			thruCutOpacityPreference = Number(g_getThruCutOpacityPreferenceGroup.input.text) || 0;
+			debugger;
 			log.l("Thru-cut Opacity preference: " + thruCutOpacityPreference);
 
 			setThruCutOpacity();

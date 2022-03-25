@@ -28,6 +28,7 @@ function masterLoop()
 	{
 		curProdFileIndex = ml;
 		curGarment = garmentsNeeded[ml];
+		
 		curGarmentLayer = curGarment.parentLayer;
 		log.l("Beginning master loop for garment number: " + curGarment.code + "_" + curGarment.styleNum);
 		if (!curGarmentLayer)
@@ -35,6 +36,8 @@ function masterLoop()
 			log.l("No parent layer for this garment. Skipping it.");
 			continue;
 		}
+
+		thruCutOpacityPreference = TCT.indexOf(curGarment.mid) > -1 ? 50 : 0;
 
 		//create a new production file for the current garment
 		if (result)

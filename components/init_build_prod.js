@@ -56,7 +56,6 @@ function initBuildProd()
 	if (noOrderNumber)
 	{
 		valid = true;
-		// curOrderData = manuallyPopulateOrderData();
 		manuallyPopulateOrderData();
 	}
 
@@ -73,17 +72,7 @@ function initBuildProd()
 
 	if (valid && !noOrderNumber)
 	{
-
 		garmentLayers = findGarmentLayers();
-		
-		
-
 		assignGarmentsToLayers();	
-		// assignGarmentsToLayersDialog(garmentsNeeded);
-		
-
-
-
-		
 	}
 }

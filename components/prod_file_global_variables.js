@@ -92,3 +92,37 @@ var	prodFileSaveLocation = desktopPath,
 
 //database that holds the relationships between the codes on the sales order ("FD-SLOW-SS" = "FD-161")
 var MGR = midGarmentRelationshipDatabasePath = dataPath + "build_mockup_data/mid_garment_relationship_database.js";
+
+//database that holds garments that automatically get a semitransparent thru-cut line
+var TCT = ["FD-1000Y",
+	"FD-1000",
+	"FD-5060G",
+	"FD-5060W",
+	"FD-5060Y",
+	"FD-5060",
+	"FD-5070G",
+	"FD-5070W",
+	"PS-5068G",
+	"PS-5068W",
+	"PS-5068Y",
+	"PS-5068",
+	"PS-5069G",
+	"PS-5069W",
+	"PS-5075G",
+	"PS-5075W",
+	"PS-5075Y",
+	"PS-5075",
+	"PS-5082Y",
+	"PS-5082",
+	"PS-5094G",
+	"PS-5094W",
+	"PS-5095G",
+	"PS-5095W",
+	"PS-5098G",
+	"PS-5098W",
+	"PS-5101W",
+	"PS-5101Y",
+	"PS-5101",
+	"PS-5105Y",
+	"PS-5105"
+];

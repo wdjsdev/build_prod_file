@@ -27,7 +27,7 @@ Description: create a series of dialog boxes to allow
 	
 	
 */
-#target illustrator
+#target Illustrator
 function container() {
 
 	var valid = true;
@@ -46,7 +46,7 @@ function container() {
 			devUtilitiesPreferenceFile.open("r");
 			var prefContents = devUtilitiesPreferenceFile.read();
 			devUtilitiesPreferenceFile.close();
-			if (prefContents === "true") {
+			if (prefContents.match(/true/i)) {
 				utilPath = "~/Desktop/automation/utilities/";
 				ext = ".js";
 			}
@@ -82,6 +82,8 @@ function container() {
 		sendErrors(errorList);
 		return false;
 	}
+
+	DEV_LOGGING = true;
 
 	logDest.push(getLogDest());
 

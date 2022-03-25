@@ -194,7 +194,7 @@ function exportProdFile(pdfFolderName, destFolderPath)
 					}
 					else if(curRosterChild.pageItems[y].name.toLowerCase().indexOf("grad")>-1)
 					{
-						curRosterChild.name = piece.name + "_" + curRosterChild.pageItems[y].contents;
+						curRosterChild.name += "_" + curRosterChild.pageItems[y].contents;
 						duplicateGrad = curRosterChild.pageItems[y].duplicate(tmpGradLay);
 						duplicateGrad = expand(duplicateGrad);
 					}

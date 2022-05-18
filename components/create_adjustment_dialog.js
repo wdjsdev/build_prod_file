@@ -498,7 +498,6 @@ function createAdjustmentDialog()
 
 			// thruCutOpacityPreference = (g_getThruCutOpacityPreferenceGroup.checkbox.value) ? 0 : semiTransparentThruCutOpacity;
 			thruCutOpacityPreference = Number(g_getThruCutOpacityPreferenceGroup.input.text) || 0;
-			debugger;
 			log.l("Thru-cut Opacity preference: " + thruCutOpacityPreference);
 
 			setThruCutOpacity();

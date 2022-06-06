@@ -82,11 +82,16 @@ var	prodFileSaveLocation = desktopPath,
 	*/
 
 //PDF save settings
+	var flatOpts = new PrintFlattenerOptions();
+		flatOpts.overprint = PDFOverprint.DISCARDPDFOVERPRINT;
+
 	var pdfSaveOpts = new PDFSaveOptions();
 		pdfSaveOpts.preserveEditability = false;
 		pdfSaveOpts.viewAfterSaving = false;
 		pdfSaveOpts.compressArt = true;
 		pdfSaveOpts.optimization = true;
+		pdfSaveOpts.flattenerOptions = flatOpts;
+		
 
 
 

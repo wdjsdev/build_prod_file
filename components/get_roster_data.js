@@ -35,6 +35,7 @@ function getRosterData(roster)
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
 	var multipleInsideSpacesRegex = /\s{2,}/g;
 	var qtyIndicatorRegex = /\*qty/i;
+	var gradYearRegex = /\(?[\s]*[\d]{4}[\s]*\)?/;
 
 	var splitRoster = roster.split("\n");
 	for(var x=0,len=splitRoster.length;x<len;x++)
@@ -49,7 +50,6 @@ function getRosterData(roster)
 			log.l("curEntry was an empty string. continuing loop.");
 			continue;
 		}
-
 
 		//check for a number only format
 		if(numOnlyRegex.test(curEntry))
@@ -101,10 +101,11 @@ function getRosterData(roster)
 		}
 		else
 		{
-			if(curEntry.indexOf(" (") > -1)
+			if(curEntry.match(gradYearRegex))
 			{
-				curPlayer.name = curEntry.substring(0,curEntry.indexOf(" ("));
-				curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length).replace(/\(|\)/g,"");
+				curPlayer.name = curEntry.substring(0,curEntry.indexOf(" (")) || "";
+				// curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length).replace(/\(|\)/g,"");
+				curPlayer.extraInfo = curEntry.match(gradYearRegex)[0].replace(/\(|\)/g,"");
 			}
 			else
 			{

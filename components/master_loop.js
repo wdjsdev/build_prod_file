@@ -22,7 +22,7 @@ function masterLoop()
 	var result = true;
 	var curGarmentLayer,curNameCase;
 
-	
+	var curFrontPiece,curPpLay;
 
 	for (var ml = 0, len = garmentsNeeded.length; ml < len && result; ml++)
 	{
@@ -37,7 +37,29 @@ function masterLoop()
 			continue;
 		}
 
+		//check mid value against list of garments that should get a 50% thrucut opacity
 		thruCutOpacityPreference = TCT.indexOf(curGarment.mid) > -1 ? 50 : 0;
+
+		//check mid value against list of reversible football garments
+		//if it's a match, locate the "front" piece, locate the C1 block,
+		//then check its fill color. if it's white, set the thrucut opacity to 50%
+		if(REV_FOOTBALL_GARMENTS.indexOf(curGarment.mid) > -1)
+		{
+			thruCutOpacityPreference = 50;
+			// (function()
+			// {
+				
+			// }
+			// )();
+			// curPpLay = findSpecificLayer(curGarmentLayer.layers,"Prepress");
+			// if(curPpLay)
+			// {
+			// 	curPpLay = curPpLay.layers[0];
+			// 	curFrontPiece = findSpecificPageItem(curPpLay.pageItems,curPpLay.name + " front","imatch");
+			// 	if
+			// }
+			
+		}
 
 		//create a new production file for the current garment
 		if (result)

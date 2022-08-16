@@ -54,7 +54,8 @@ function setupRosterGroup(item)
 				}
 				else
 				{
-					frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
+					frame.name = (frame.contents.match(/^a-z*$|player/i) || frame.name.match(/name/i)) ? "Name" : "Number";
+					// frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
 				}
 				frame.moveToBeginning(liveTextGroup);
 				result = true;

@@ -140,4 +140,5 @@ const REV_FOOTBALL_GARMENTS = [
 	"FD-5427",
 	"FD-5428Y",
 	"FD-5428"
-]
+];
+

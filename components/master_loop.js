@@ -22,7 +22,7 @@ function masterLoop()
 	var result = true;
 	var curGarmentLayer,curGarmentInfoLayer,revFootballBodyColorFlag;
 
-	var curFrontPiece,curPpLay;
+	
 
 	//filter garmentsNeeded to remove any that don't have a parent layer
 	garmentsNeeded = garmentsNeeded.filter(function(curGarment)
@@ -42,13 +42,15 @@ function masterLoop()
 		//if it's a match, locate the "front" piece, locate the C1 block,
 		//then check its fill color. if it's white, set the thrucut opacity to 50%
 		if (REV_FOOTBALL_GARMENTS.indexOf(curGarment.mid) > -1) {
-			var baseColor = getBaseColor(curGarmentLayer)
-			if(!baseColor || baseColor === "White B") {
-				thruCutOpacityPreference = 50;
-			}
+			thruCutOpacityPreference = TCT.indexOf(curGarment.mid) > -1 ? 50 : 0;
+
+			// var baseColor = getBaseColor(curGarmentLayer)
+			// if(!baseColor || baseColor === "White B") {
+			// 	thruCutOpacityPreference = 50;
+			// }
 		}
 
-
+		
 		//create a new production file for the current garment
 		if (result) {
 			if (!createProdFile(curGarment)) {

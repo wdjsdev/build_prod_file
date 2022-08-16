@@ -24,7 +24,7 @@ function inputCurrentPlayer(pieces, curPlayer)
 	var result = true;
 	var curFrame;
 	var doc = app.activeDocument;
-	var liveTextGroup, rosterGroup, newPlayerGroup, curPlayerLabel,existingRosterGroup;
+	
 	var len = pieces.length;
 
 	//fix up a specific anomoly regarding apostrophes.
@@ -33,76 +33,74 @@ function inputCurrentPlayer(pieces, curPlayer)
 	//of these characters with a correct apostrophe
 	curPlayer.name = curPlayer.name.replace("‚Äô","'");
 
-	for (var z = 0; z < len; z++)
+	pieces.forEach(function(curPiece)
 	{
+		var newPlayerGroup, curPlayerLabel, existingRosterGroup;
+		var liveTextGroup = findSpecificPageItem(curPiece, "Live Text");
+		var rosterGroup = findSpecificPageItem(curPiece, "Roster");
+		if (!liveTextGroup || !rosterGroup) return;
 
+		liveTextGroup.hidden = rosterGroup.hidden = false;
 
-		liveTextGroup = findSpecificItem(pieces[z],"GroupItem","Live Text");
-		rosterGroup = findSpecificItem(pieces[z],"GroupItem","Roster");
-
-		if(!liveTextGroup || !rosterGroup)
+		
+		//sometimes the textFrame is buried in a (possibly nested) groupItem
+		//let's go through all the items in liveTextGroup and extract the textFrames
+		//to the top level of liveTextGroup and discard everything else
+		afc(liveTextGroup).forEach(function(curItem)
 		{
-			continue;
-		}
-		liveTextGroup.hidden = false;
-		rosterGroup.hidden = false;
-
-		//check whether any of the textFrames in the liveTextGroup are unnamed
-		for(var tf=0,tfLen=liveTextGroup.textFrames.length;tf<tfLen;tf++)
+			var frame = digForTextFrame(curItem);
+			frame.name = curItem.name || (frame.contents.match(/\d{4}/) ? "Grad" : (frame.contents.match(/\d{2}/) ? "Number" : "Name"));
+			frame.moveToEnd(liveTextGroup);
+		});
+		//now remove all non-textFrames from liveTextGroup
+		afc(liveTextGroup).forEach(function(curItem)
 		{
-			if(!liveTextGroup.textFrames[tf].name)
+			if(curItem.typename !== "TextFrame")
 			{
-				errorList.push(pieces[z].name + " has unnamed text frames. This could potentially cause unexpected results.");
-				break;
+				curItem.remove();
 			}
+		});
+
+		
+		
+		if(afc(curPiece,"textFrames").filter(function(frame){return !frame.name}).length)
+		{
+			errorList.push(curPiece.name + " has unnamed text frames. This could potentially cause unexpected results.");
 		}
 
 		//check to see whether an identical roster entry has already been created
 		//this would be the case if there are two garments of the same size with
 		//the same name and number. if so, just skip it.
-		existingRosterGroup = findSpecificPageItem(rosterGroup,curPlayer.label,"imatch")
-		if(existingRosterGroup)
-		{
+		existingRosterGroup = findSpecificPageItem(rosterGroup, curPlayer.label, "imatch")
+		if (existingRosterGroup) {
 			liveTextGroup.hidden = true;
 			rosterGroup.hidden = true;
-			continue;	
+			return;
 		}
 
+		log.l("Inputting roster info on the " + curPiece.name);
 
-		log.l("Inputting roster info on the " + pieces[z].name);
-		newPlayerGroup = liveTextGroup.duplicate(rosterGroup);
+		var newPlayerGroup = liveTextGroup.duplicate(rosterGroup);
 		newPlayerGroup.name = curPlayer.label;
-		for (var t = newPlayerGroup.pageItems.length - 1; t >= 0; t--)
+		afc(newPlayerGroup,"textFrames").forEach(function(rosterFrame)
 		{
-			curFrame = newPlayerGroup.pageItems[t];
-			if(curFrame.typename === "GroupItem" && curFrame.textFrames.length)
-			{
-				curFrame = curFrame.textFrames[0];	
-			}
-			else if(curFrame.typename !== "TextFrame")
-			{
-				alert("curFrame is not a textFrame");
-				continue;
-			}
+			//curLabel is the "key" in currentPlayer, whose value is the text to be input
+			//options: "Name", "Number", "extraInfo" (extra info is currently always used for grad year)"
+			var curLabel = rosterFrame.name.match(/grad/i) ? "extraInfo" : rosterFrame.name.toLowerCase();
+
+			var inputValue = curPlayer[curLabel] || undefined;
+			if (!inputValue) return;
+
+			//check for (no name) or (no number) formatting
+			inputValue = inputValue.match(/\(.*no (name|number).*\)/i) ? "" : inputValue;
 			
-			if (curFrame.name.match(/name/i) || curFrame.contents.match(/play/i))
-			{
-				curPlayer.name = convertPlayerNameCase(curPlayer.name,getPlayerNameCase(curFrame));
-				curFrame.contents = curPlayer.name.match(/\(/g) ? "" : curPlayer.name;
-				curFrame.name = "Name";
-			}
-			else if(curFrame.name.match(/grad/i) || curFrame.contents.match(/[\d]{4}/))
-			{
-				curFrame.contents = curPlayer.extraInfo || "";
-			}
-			else if(curFrame.name.match(/number/i))
-			{
-				curFrame.contents = curPlayer.number.match(/\(/g) ? "" : curPlayer.number;
-				curFrame.name = "Number";
-			}
-		}
-		rosterGroup.hidden = true;
-		liveTextGroup.hidden = true;
-	}
+			//input the roster info into the textFrame contents
+			rosterFrame.contents = inputValue;
+		});
+		
+		//hide the live text and roster groups to prepare to process next customized garment piece
+		rosterGroup.hidden = liveTextGroup.hidden = true;
+	});
+
 	return result;
 }

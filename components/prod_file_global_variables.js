@@ -132,8 +132,7 @@ var TCT = ["FD-1000Y",
 	"PS-5105"
 ];
 
-const REV_FOOTBALL_GARMENTS = 
-[
+const REV_FOOTBALL_GARMENTS = [
 	"FD-5423",
 	"FD-5424Y",
 	"FD-5424",

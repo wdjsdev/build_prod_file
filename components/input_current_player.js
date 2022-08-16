@@ -88,8 +88,8 @@ function inputCurrentPlayer(pieces, curPlayer)
 			//options: "Name", "Number", "extraInfo" (extra info is currently always used for grad year)"
 			var curLabel = rosterFrame.name.match(/grad/i) ? "extraInfo" : rosterFrame.name.toLowerCase();
 
-			var inputValue = curPlayer[curLabel] || undefined;
-			if (!inputValue) return;
+			var inputValue = curPlayer[curLabel] || "";
+
 
 			//check for (no name) or (no number) formatting
 			inputValue = inputValue.match(/\(.*no (name|number).*\)/i) ? "" : inputValue;

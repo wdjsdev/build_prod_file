@@ -25,7 +25,7 @@ function initBuildProd()
 
 	if (valid)
 	{
-		orderNum = getOrderNumber();
+		orderNum = orderNum || getOrderNumber();
 		if (!orderNum || noOrderNumber)
 		{
 			valid = false;
@@ -39,7 +39,7 @@ function initBuildProd()
 
 	if (valid)
 	{
-		curOrderData = curlData(NOD, orderNum)
+		curOrderData = curOrderData || curlData(NOD, orderNum)
 
 		if (!curOrderData)
 		{

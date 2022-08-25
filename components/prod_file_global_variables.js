@@ -1,11 +1,18 @@
-if(app.documents.length)
+if ( app.documents.length )
 {
 	var docRef = app.activeDocument,
-	layers = docRef.layers,
-	aB = docRef.artboards,
-	swatches = docRef.swatches;
+		layers = docRef.layers,
+		aB = docRef.artboards,
+		swatches = docRef.swatches;
 }
-var	prodFileSaveLocation = desktopPath,
+
+//if the main script is the dev version, devMode is true
+//this will disable certain time consuming features
+//in favor of using local test data.
+var devMode = false;
+
+
+var prodFileSaveLocation = desktopPath,
 	saveFileName,
 	saveFolder,
 	INCH_TO_POINT_AT_SCALE = 7.2,
@@ -32,13 +39,13 @@ var	prodFileSaveLocation = desktopPath,
 	//if true, skip the curlData function
 	//and open a separate dialog for manual 
 	//input of sizing and roster info
-	noOrderNumber = false, 
+	noOrderNumber = false,
 
 
-//adjustment dialog variables
+	//adjustment dialog variables
 
 	// LISTBOX_DIMENSIONS = [50,50,200,200],
-	LISTBOX_DIMENSIONS = [50,50,200,125],
+	LISTBOX_DIMENSIONS = [ 50, 50, 200, 125 ],
 	NUDGE_AMOUNT = 1.8,
 	curRosterGroup,
 	curRosterName,
@@ -48,50 +55,43 @@ var	prodFileSaveLocation = desktopPath,
 	prodFileSizes = [],
 	prodFileHasNames = false;
 
-	/*
-	format of prodFileRoster object is as follows.
-	broken down by size, then each piece that contains
-	a roster group. inside of that is an array of roster
-	entries that includes the actual groupItem associated
-	with the name or number for that given roster entry
+/*
+format of prodFileRoster object is as follows.
+broken down by size, then each piece that contains
+a roster group. inside of that is an array of roster
+entries that includes the actual groupItem associated
+with the name or number for that given roster entry
 
-	prodFileRoster =
+prodFileRoster =
+{
+	"S" : 
 	{
-		"S" : 
+		"S Back" :
 		{
-			"S Back" :
-			{
-				"liveText" : [GroupItem],
-				"rosterGroup" :
-				[
-					{"name":[GroupItem],"number":[GroupItem]},
-					{"name":[GroupItem],"number":[GroupItem]}
-				],
-			}
-			"S Right Sleeve" :
-			{
-				"liveText" : [GroupItem],
-				"rosterGroup":
-				[
-					{"name":undefined,"number":[GroupItem]},
-					{"name":undefined,"number":[GroupItem]}
-				]
-			}
+			"liveText" : [GroupItem],
+			"rosterGroup" :
+			[
+				{"name":[GroupItem],"number":[GroupItem]},
+				{"name":[GroupItem],"number":[GroupItem]}
+			],
+		}
+		"S Right Sleeve" :
+		{
+			"liveText" : [GroupItem],
+			"rosterGroup":
+			[
+				{"name":undefined,"number":[GroupItem]},
+				{"name":undefined,"number":[GroupItem]}
+			]
 		}
 	}
-	*/
+}
+*/
 
 //PDF save settings
 	var flatOpts = new PrintFlattenerOptions();
 		flatOpts.overprint = PDFOverprint.DISCARDPDFOVERPRINT;
 
-	var pdfSaveOpts = new PDFSaveOptions();
-		pdfSaveOpts.preserveEditability = false;
-		pdfSaveOpts.viewAfterSaving = false;
-		pdfSaveOpts.compressArt = true;
-		pdfSaveOpts.optimization = true;
-		pdfSaveOpts.flattenerOptions = flatOpts;
-		
 
 
 
@@ -99,7 +99,7 @@ var	prodFileSaveLocation = desktopPath,
 var MGR = midGarmentRelationshipDatabasePath = dataPath + "build_mockup_data/mid_garment_relationship_database.js";
 
 //pseudo-database that holds garments that automatically get a semitransparent thru-cut line
-var TCT = ["FD-1000Y",
+var TCT = [ "FD-1000Y",
 	"FD-1000",
 	"FD-5060G",
 	"FD-5060W",
@@ -134,6 +134,7 @@ var TCT = ["FD-1000Y",
 
 const REV_FOOTBALL_GARMENTS = [
 	"FD-5423",
+	"FD-5423Y",
 	"FD-5424Y",
 	"FD-5424",
 	"FD-5427Y",

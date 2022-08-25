@@ -16,80 +16,90 @@
 
 */
 
-function masterLoop()
+function masterLoop ()
 {
-	log.h("Beginning execution of masterLoop() function");
+	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
-	var curGarmentLayer,curGarmentInfoLayer,revFootballBodyColorFlag;
+	var curGarmentLayer, curGarmentInfoLayer, revFootballBodyColorFlag;
 
-	
+
 
 	//filter garmentsNeeded to remove any that don't have a parent layer
-	garmentsNeeded = garmentsNeeded.filter(function(curGarment)
+	garmentsNeeded = garmentsNeeded.filter( function ( curGarment )
 	{
 		return curGarment.parentLayer;
-	});
+	} );
 
-	garmentsNeeded.forEach(function(curGarment)
+	garmentsNeeded.forEach( function ( curGarment )
 	{
-		log.l("Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum);
+		log.l( "Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum );
 		var curGarmentLayer = curGarment.parentLayer;
 		//check mid value against list of garments that should get a 50% thrucut opacity
-		thruCutOpacityPreference = TCT.indexOf(curGarment.mid) > -1 ? 50 : 0;
+		thruCutOpacityPreference = TCT.indexOf( curGarment.mid ) > -1 ? 50 : 0;
 
 
 		//check mid value against list of reversible football garments
 		//if it's a match, locate the "front" piece, locate the C1 block,
 		//then check its fill color. if it's white, set the thrucut opacity to 50%
-		if (REV_FOOTBALL_GARMENTS.indexOf(curGarment.mid) > -1) {
-			thruCutOpacityPreference = TCT.indexOf(curGarment.mid) > -1 ? 50 : 0;
+		if ( REV_FOOTBALL_GARMENTS.indexOf( curGarment.mid ) > -1 )
+		{
 
-			// var baseColor = getBaseColor(curGarmentLayer)
-			// if(!baseColor || baseColor === "White B") {
-			// 	thruCutOpacityPreference = 50;
-			// }
+			var baseColor = getBaseColor( curGarmentLayer )
+			if ( !baseColor || baseColor === "White B" )
+			{
+				thruCutOpacityPreference = 50;
+				// }
+			}
 		}
 
-		
+
 		//create a new production file for the current garment
-		if (result) {
-			if (!createProdFile(curGarment)) {
+		if ( result )
+		{
+			if ( !createProdFile( curGarment ) )
+			{
 				result = false;
 			}
 		}
 
 		//copy each piece of the necessary sizes to the new production file
-		if (result) {
-			result = duplicatePiecesToProdFile(curGarment, curGarmentLayer);
-			saveFile(curGarment.doc, saveFileName, saveFolder);
+		if ( result )
+		{
+			result = duplicatePiecesToProdFile( curGarment, curGarmentLayer );
+			saveFile( curGarment.doc, saveFileName, saveFolder );
 		}
 
 
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.
-		if (result) {
+		if ( result )
+		{
 			result = findArtLocs();
 		}
 
 		//input the actual roster data into the roster groups
-		if (result) {
-			result = inputRosterData(curGarment.roster);
+		if ( result )
+		{
+			result = inputRosterData( curGarment.roster );
 		}
 
 		//fix up the colors.
 		//move sew lines to a new layer
 		//delete default swatches.
-		if (result) {
+		if ( result )
+		{
 			result = colorFixer();
 		}
 
 		//open up the adjustment dialog to capture any necessary adjustments.
 
-		if (result) {
+		if ( result )
+		{
 			result = initAdjustProdFile();
 		}
 
-		if (result) {
+		if ( result )
+		{
 			result = createAdjustmentDialog();
 		}
 
@@ -97,9 +107,9 @@ function masterLoop()
 		//don't interfere with the next garment accidentally
 		maxPlayerNameWidth = undefined;
 		textExpandSteps = [];
-	});
+	} );
 
-	log.l("End of masterLoop function. returning: " + result);
+	log.l( "End of masterLoop function. returning: " + result );
 
 
 	return result;

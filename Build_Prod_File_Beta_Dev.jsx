@@ -11,19 +11,19 @@ Description: query netsuite for JSON data for a given order number,
 */
 
 #target Illustrator
-function container()
+function container ()
 {
 	var valid = true;
 	var scriptName = "build_prod_file_beta";
 
-	
-	function isDrUser()
-	{
-		var files = Folder("/Volumes/").getFiles();
 
-		for(var x=0;x<files.length;x++)
+	function isDrUser ()
+	{
+		var files = Folder( "/Volumes/" ).getFiles();
+
+		for ( var x = 0; x < files.length; x++ )
 		{
-			if(files[x].name.toLowerCase().indexOf("customizationdr")>-1)
+			if ( files[ x ].name.toLowerCase().indexOf( "customizationdr" ) > -1 )
 			{
 				return true;
 			}
@@ -31,66 +31,66 @@ function container()
 		return false;
 	}
 
-	function getUtilities()
+	function getUtilities ()
 	{
 		var result = [];
-		var utilPath = "/Volumes/" + (isDrUser() ? "CustomizationDR" : "Customization") + "/Library/Scripts/Script_Resources/Data/";
+		var utilPath = "/Volumes/" + ( isDrUser() ? "CustomizationDR" : "Customization" ) + "/Library/Scripts/Script_Resources/Data/";
 		var ext = ".jsxbin"
 
 		//check for dev utilities preference file
-		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
+		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
 
-		if(devUtilitiesPreferenceFile.exists)
+		if ( devUtilitiesPreferenceFile.exists )
 		{
-			devUtilitiesPreferenceFile.open("r");
+			devUtilitiesPreferenceFile.open( "r" );
 			var prefContents = devUtilitiesPreferenceFile.read();
 			devUtilitiesPreferenceFile.close();
-			if(prefContents.match(/true/i))
+			if ( prefContents.match( /true/i ) )
 			{
 				utilPath = "~/Desktop/automation/utilities/";
 				ext = ".js";
 			}
 		}
 
-		if($.os.match("Windows"))
+		if ( $.os.match( "Windows" ) )
 		{
-			utilPath = utilPath.replace("/Volumes/","//AD4/");
+			utilPath = utilPath.replace( "/Volumes/", "//AD4/" );
 		}
 
-		result.push(utilPath + "Utilities_Container" + ext);
+		result.push( utilPath + "Utilities_Container" + ext );
 		// result.push(utilPath + "Batch_Framework" + ext);
 
-		if(!result.length)
+		if ( !result.length )
 		{
 			valid = false;
-			alert("Failed to find the utilities.");
+			alert( "Failed to find the utilities." );
 		}
 		return result;
 
 	}
 
 	var utilities = getUtilities();
-	for(var u=0,len=utilities.length;u<len;u++)
+	for ( var u = 0, len = utilities.length; u < len; u++ )
 	{
-		eval("#include \"" + utilities[u] + "\"");	
+		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	if(!valid)return;
+	if ( !valid ) return;
 
-	if(user === "will.dowling")
+	if ( user === "will.dowling" )
 	{
 		DEV_LOGGING = true;
 	}
 
-	logDest.push(getLogDest());
+	logDest.push( getLogDest() );
 
 
 
 
 	/*****************************************************************************/
 	//=================================  Data  =================================//
-	
-	
+
+
 
 
 	//=================================  /Data  =================================//
@@ -105,61 +105,72 @@ function container()
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
 	// var compFiles = includeComponents(devComponents,prodComponents,false);
-	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev")>-1 ? devComponents : prodComponents);
-	if(compFiles && compFiles.length)
+	var compFiles = getComponents( $.fileName.match( /dev/i ) ? devComponents : prodComponents );
+	if ( compFiles && compFiles.length )
 	{
 		var curComponent;
-		for(var cf=0,len=compFiles.length;cf<len;cf++)
+		for ( var cf = 0, len = compFiles.length; cf < len; cf++ )
 		{
-			curComponent = compFiles[cf].fullName;
-			eval("#include \"" + curComponent + "\"");
-			log.l("included: " + compFiles[cf].name);
+			curComponent = compFiles[ cf ].fullName;
+			eval( "#include \"" + curComponent + "\"" );
+			log.l( "included: " + compFiles[ cf ].name );
 		}
 	}
 	else
 	{
-		errorList.push("Failed to find the necessary components.");
-		log.e("No components were found.");
+		errorList.push( "Failed to find the necessary components." );
+		log.e( "No components were found." );
 		valid = false;
 		return valid;
 	}
 
-	
+
 
 	//=============================  /Components  ===============================//
 	/*****************************************************************************/
 
 
+	//if dev mode, use predefined test data instead of querying netsuite
+	if ( $.fileName.match( /dev/i ) )
+	{
+		devMode = true;
+		orderNum = "1234567";
+		var devDataFile = File( documentsPath + "build_prod_file_data/dev_data.json" );
+		devDataFile.open( "r" );
+		curOrderData = JSON.parse( devDataFile.read() );
+		devDataFile.close();
+	}
+
 
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
-	
-	
 
-	if(valid)
+
+
+	if ( valid )
 	{
 		initBuildProd();
 	}
 
-	if(valid)
+	if ( valid )
 	{
 		valid = masterLoop();
 	}
-	
+
 	// buildStats.buildScriptExecutionTime = timer.calculate();
 
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if(errorList.length)
+	if ( errorList.length )
 	{
-		sendErrors(errorList);
+		sendErrors( errorList );
 	}
 
-	if(messageList.length)
+	if ( messageList.length )
 	{
-		sendScriptMessages(messageList);
+		sendScriptMessages( messageList );
 	}
 
 	printLog();

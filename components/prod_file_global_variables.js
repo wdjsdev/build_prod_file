@@ -31,6 +31,7 @@ var prodFileSaveLocation = desktopPath,
 
 	curOrderData,
 	garmentsNeeded = [],
+	relevantGarments = [], //these are the garments from the order that match the current prepress garments.
 	garmentLayers = [],
 	curProdFileIndex = 0,
 	orderNum = "",
@@ -89,8 +90,18 @@ prodFileRoster =
 */
 
 //PDF save settings
-	var flatOpts = new PrintFlattenerOptions();
-		flatOpts.overprint = PDFOverprint.DISCARDPDFOVERPRINT;
+var flatOpts = new PrintFlattenerOptions();
+flatOpts.overprint = PDFOverprint.DISCARDPDFOVERPRINT;
+//attn:
+//look into using flattener options to negate the need for text expansion.
+//attn;
+
+var pdfSaveOpts = new PDFSaveOptions();
+pdfSaveOpts.preserveEditability = false;
+pdfSaveOpts.viewAfterSaving = false;
+pdfSaveOpts.compressArt = true;
+pdfSaveOpts.optimization = true;
+pdfSaveOpts.flattenerOptions = flatOpts;
 
 
 

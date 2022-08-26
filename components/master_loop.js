@@ -25,12 +25,18 @@ function masterLoop ()
 
 
 	//filter garmentsNeeded to remove any that don't have a parent layer
-	garmentsNeeded = garmentsNeeded.filter( function ( curGarment )
+	relevantGarments = garmentsNeeded.filter( function ( curGarment )
 	{
 		return curGarment.parentLayer;
 	} );
 
-	garmentsNeeded.forEach( function ( curGarment )
+	if ( !relevantGarments.length )
+	{
+		errorList.push( "This prepress file doesn't match any garments in the order." );
+		result = false;
+	}
+
+	relevantGarments.forEach( function ( curGarment )
 	{
 		log.l( "Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum );
 		var curGarmentLayer = curGarment.parentLayer;

@@ -13,25 +13,24 @@
 
 */
 
-function createProdFile(curGarment)
+function createProdFile ( curGarment )
 {
 	var result = true;
 
-	if(!orderNum)
+	if ( !orderNum )
 	{
-		orderNum = uiPrompt("Please enter a name for this production file.","Enter File Name");
+		orderNum = uiPrompt( "Please enter a name for this production file.", "Enter File Name" );
 	}
-	if(!orderNum)
+	if ( !orderNum )
 	{
 		result = false;
-		log.l("User cancelled the prod file name input dialog.");
+		log.l( "User cancelled the prod file name input dialog." );
 		return result;
 	}
-	
+
 	try
 	{
-		log.h("Beginning execution of createProdFile() function.");
-		var sequenceLetters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","ZA","ZB","ZC","ZD","ZE","ZF","ZG","ZH","ZI","ZJ","ZK","ZL","ZM","ZN","ZO","ZP","ZQ","ZR","ZS","ZT","ZU","ZV","ZW","ZX","ZY","ZZ"];
+		log.h( "Beginning execution of createProdFile() function." );
 
 		//this variable will hold the string with
 		//which to concatenate with the order number
@@ -39,43 +38,46 @@ function createProdFile(curGarment)
 
 		//check whether an appendage is needed
 
-		if(garmentsNeeded.length > 1)
+		if ( garmentsNeeded.length > 1 )
 		{
-			appendage = "_" + sequenceLetters[curProdFileIndex];
+			appendage = "_" + curGarment.garmentsNeededIndex;
 		}
 
-		saveFolder = Folder(prodFileSaveLocation);
+		saveFolder = Folder( prodFileSaveLocation );
 		saveFileName = orderNum + appendage + ".ai";
+
+		log.l( "saving prod file as: " + saveFileName );
+
 		var overwriteMsg = "A production file already exists for " + saveFileName;
-		if(File(prodFileSaveLocation + "/" + saveFileName).exists && !getOverwritePreference(overwriteMsg))
+		if ( File( prodFileSaveLocation + "/" + saveFileName ).exists && !getOverwritePreference( overwriteMsg ) )
 		{
 			result = false;
-			log.l(saveFileName + " existed already and user chose not to overwrite.");
+			log.l( saveFileName + " existed already and user chose not to overwrite." );
 		}
 		else
 		{
-			log.l("creating a new production file called " + orderNum + appendage)
+			log.l( "creating a new production file called " + orderNum + appendage )
 			// curGarment.doc = app.documents.add();
-			var prodFileTemplate = File(resourcePath + "Files/prod_file_template.ait");
-			if(prodFileTemplate.exists)
+			var prodFileTemplate = File( resourcePath + "Files/prod_file_template.ait" );
+			if ( prodFileTemplate.exists )
 			{
-				curGarment.doc = app.open(prodFileTemplate);
+				curGarment.doc = app.open( prodFileTemplate );
 			}
 			else
 			{
 				curGarment.doc = app.documents.add();
 			}
 			curGarment.name = orderNum + appendage;
-			artworkLayer = app.activeDocument.layers[0];
+			artworkLayer = app.activeDocument.layers[ 0 ];
 			artworkLayer.name = "Artwork";
-			saveFile(curGarment.doc,saveFileName,saveFolder);
+			saveFile( curGarment.doc, saveFileName, saveFolder );
 		}
 	}
-	catch(e)
+	catch ( e )
 	{
 		result = false;
-		errorList.push("Failed to create the production file for " + curGarment.code + "_" + curGarment.styleNum);
-		log.e("Failed while creating production file for " + curGarment.code + "_" + curGarment.styleNum + ".::system error message was : " + e + ", on line: " + e.line);
+		errorList.push( "Failed to create the production file for " + curGarment.code + "_" + curGarment.styleNum );
+		log.e( "Failed while creating production file for " + curGarment.code + "_" + curGarment.styleNum + ".::system error message was : " + e + ", on line: " + e.line );
 	}
 	return result;
 }

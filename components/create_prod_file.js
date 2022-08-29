@@ -35,7 +35,7 @@ function createProdFile ( curGarment )
 		//this variable will hold the string with
 		//which to concatenate with the order number
 		//check whether an appendage is needed
-		var appendage = garmentsNeeded.length > 1 ? "_" + curGarment.sequence : "";
+		var appendage = garmentsNeeded.length > 1 ? "_" + curGarment.garmentsNeededIndex : "";
 
 		saveFolder = Folder( prodFileSaveLocation );
 		saveFileName = orderNum + appendage + ".ai";

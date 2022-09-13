@@ -49,7 +49,7 @@ function inputCurrentPlayer ( pieces, curPlayer )
 		afc( liveTextGroup ).forEach( function ( curItem )
 		{
 			var frame = digForTextFrame( curItem );
-			frame.name = ( frame.contents.match( /\d{4}/ ) ? "Grad" : ( frame.contents.match( /\d{2}/ ) ? "Number" : "Name" ) );
+			frame.name = ( frame.contents.match( /\d{4}/ ) ? "Grad" : ( frame.contents.match( /^\d*$/ ) ? "Number" : "Name" ) );
 			frame.moveToEnd( liveTextGroup );
 		} );
 		//now remove all non-textFrames from liveTextGroup

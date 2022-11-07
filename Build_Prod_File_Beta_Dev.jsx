@@ -17,63 +17,76 @@ function container ()
 	var scriptName = "build_prod_file_beta";
 
 
-	function isDrUser ()
-	{
-		var files = Folder( "/Volumes/" ).getFiles();
-
-		for ( var x = 0; x < files.length; x++ )
-		{
-			if ( files[ x ].name.toLowerCase().indexOf( "customizationdr" ) > -1 )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	function getUtilities ()
 	{
-		var result = [];
-		var utilPath = "/Volumes/" + ( isDrUser() ? "CustomizationDR" : "Customization" ) + "/Library/Scripts/Script_Resources/Data/";
-		var ext = ".jsxbin"
-
-		//check for dev utilities preference file
+		//check for dev mode
 		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
-
-		if ( devUtilitiesPreferenceFile.exists )
+		var devUtilPath = "~/Desktop/automation/utilities/";
+		var devUtils = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
+		if ( readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
 		{
-			devUtilitiesPreferenceFile.open( "r" );
-			var prefContents = devUtilitiesPreferenceFile.read();
-			devUtilitiesPreferenceFile.close();
-			if ( prefContents.match( /true/i ) )
+			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
+			return devUtils;
+		}
+
+
+
+
+
+
+		var utilNames = [ "Utilities_Container" ];
+
+		//not dev mode, use network utilities
+		var OS = $.os.match( "Windows" ) ? "pc" : "mac";
+		var ad4 = ( OS == "pc" ? "//AD4/" : "/Volumes/" ) + "Customization/";
+		var drsv = ( OS == "pc" ? "O:/" : "/Volumes/CustomizationDR/" );
+		var ad4UtilsPath = ad4 + "Library/Scripts/Script_Resources/Data/";
+		var drsvUtilsPath = drsv + "Library/Scripts/Script_Resources/Data/";
+
+
+		var result = [];
+		for ( var u = 0, util; u < utilNames.length; u++ )
+		{
+			util = utilNames[ u ];
+			var ad4UtilPath = ad4UtilsPath + util + ".jsxbin";
+			var ad4UtilFile = File( ad4UtilsPath );
+			var drsvUtilPath = drsvUtilsPath + util + ".jsxbin"
+			var drsvUtilFile = File( drsvUtilPath );
+			if ( drsvUtilFile.exists )
 			{
-				utilPath = "~/Desktop/automation/utilities/";
-				ext = ".js";
+				result.push( drsvUtilPath );
+			}
+			else if ( ad4UtilFile.exists )
+			{
+				result.push( ad4UtilPath );
+			}
+			else
+			{
+				alert( "Could not find " + util + ".jsxbin\nPlease ensure you're connected to the appropriate Customization drive." );
+				alert( "Using util path: " + drsvUtilsPath )
+				valid = false;
 			}
 		}
 
-		if ( $.os.match( "Windows" ) )
-		{
-			utilPath = utilPath.replace( "/Volumes/", "//AD4/" );
-		}
-
-		result.push( utilPath + "Utilities_Container" + ext );
-		// result.push(utilPath + "Batch_Framework" + ext);
-
-		if ( !result.length )
-		{
-			valid = false;
-			alert( "Failed to find the utilities." );
-		}
 		return result;
 
 	}
 
+
+
 	var utilities = getUtilities();
-	for ( var u = 0, len = utilities.length; u < len; u++ )
+
+
+
+
+	for ( var u = 0, len = utilities.length; u < len && valid; u++ )
 	{
 		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
+
+	log.l( "Using Utilities: " + utilities );
+
 
 	if ( !valid ) return;
 
@@ -101,6 +114,8 @@ function container ()
 	/*****************************************************************************/
 	//==============================  Components  ===============================//
 
+
+
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
@@ -113,7 +128,7 @@ function container ()
 		{
 			curComponent = compFiles[ cf ].fullName;
 			eval( "#include \"" + curComponent + "\"" );
-			log.l( "included: " + compFiles[ cf ].name );
+			log.l( "included: " + compFiles[ cf ].fullName );
 		}
 	}
 	else
@@ -131,15 +146,15 @@ function container ()
 
 
 	//if dev mode, use predefined test data instead of querying netsuite
-	if ( $.fileName.match( /dev/i ) )
-	{
-		devMode = true;
-		orderNum = "1234567";
-		var devDataFile = File( documentsPath + "build_prod_file_data/dev_order_data.json" );
-		devDataFile.open( "r" );
-		curOrderData = JSON.parse( devDataFile.read() );
-		devDataFile.close();
-	}
+	// if ( $.fileName.match( /dev/i ) )
+	// {
+	// 	devMode = true;
+	// 	orderNum = "1234567";
+	// 	var devDataFile = File( documentsPath + "build_prod_file_data/dev_order_data.json" );
+	// 	devDataFile.open( "r" );
+	// 	curOrderData = JSON.parse( devDataFile.read() );
+	// 	devDataFile.close();
+	// }
 
 
 	/*****************************************************************************/
@@ -156,8 +171,6 @@ function container ()
 	{
 		valid = masterLoop();
 	}
-
-	// buildStats.buildScriptExecutionTime = timer.calculate();
 
 
 	//=================================  /Procedure  =================================//

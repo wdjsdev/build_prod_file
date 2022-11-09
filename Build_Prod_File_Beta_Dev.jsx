@@ -190,6 +190,7 @@ function container ()
 	}
 
 	bpfTimer.logEnd();
+	log.l( "Buid Prod File Script took: " + bpfTimer.calculate() / 1000 + " seconds." );
 
 	printLog();
 

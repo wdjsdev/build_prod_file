@@ -12,67 +12,81 @@
 
 */
 
-function initBuildProd()
+function initBuildProd ()
 {
+	bpfTimer.beginTask( "initBuildProd" );
+
 	//check to make sure the active document is a proper converted template
-	if (valid && !isTemplate(docRef))
+	if ( valid && !isTemplate( docRef ) )
 	{
 		valid = false;
-		errorList.push("Sorry, This script only works on converted template mockup files.");
-		errorList.push("Make sure you have a prepress file open.")
-		log.e("Not a converted template..::Exiting Script.");
+		errorList.push( "Sorry, This script only works on converted template mockup files." );
+		errorList.push( "Make sure you have a prepress file open." )
+		log.e( "Not a converted template..::Exiting Script." );
 	}
 
-	if (valid)
+	if ( valid )
 	{
+		bpfTimer.beginTask( "getOrderNumber" );
 		orderNum = orderNum || getOrderNumber();
-		if (!orderNum || noOrderNumber)
+		if ( !orderNum || noOrderNumber )
 		{
 			valid = false;
 		}
+		bpfTimer.endTask( "getOrderNumber" );
 	}
 
-	if(valid)
+	if ( valid )
 	{
+		bpfTimer.beginTask( "getSaveLocation" );
 		getSaveLocation();
+		bpfTimer.endTask( "getSaveLocation" );
 	}
 
-	if (valid)
+	if ( valid )
 	{
-		curOrderData = curOrderData || curlData(NOD, orderNum)
+		bpfTimer.beginTask( "curlingOrderData" );
+		curOrderData = curOrderData || curlData( NOD, orderNum )
+		bpfTimer.endTask( "curlingOrderData" );
 
-		if (!curOrderData)
+		if ( !curOrderData )
 		{
 			valid = false;
 		}
 
 	}
 
-	if (valid)
+	if ( valid )
 	{
+		bpfTimer.beginTask( "getOrderData" );
 		valid = splitDataByGarment();
+		bpfTimer.endTask( "getOrderData" );
 	}
 
-	if (noOrderNumber)
+	if ( noOrderNumber )
 	{
 		valid = true;
 		manuallyPopulateOrderData();
 	}
 
-	if (valid)
+	if ( valid )
 	{
-		if (!garmentsNeeded.length)
+		if ( !garmentsNeeded.length )
 		{
-			errorList.push("Failed to find any garments to process.");
-			log.e("Failed to find any garments to process." +
+			errorList.push( "Failed to find any garments to process." );
+			log.e( "Failed to find any garments to process." +
 				"::garmentsNeeded.length = " + garmentsNeeded.length +
-				"::garmentLayers.length = " + garmentLayers.length);
+				"::garmentLayers.length = " + garmentLayers.length );
 		}
 	}
 
-	if (valid && !noOrderNumber)
+	if ( valid && !noOrderNumber )
 	{
+		bpfTimer.beginTask( "assignGarments" );
 		garmentLayers = findGarmentLayers();
-		assignGarmentsToLayers();	
+		assignGarmentsToLayers();
+		bpfTimer.endTask( "assignGarments" );
 	}
+
+	bpfTimer.endTask( "initBuildProd" );
 }

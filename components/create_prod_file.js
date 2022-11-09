@@ -15,6 +15,7 @@
 
 function createProdFile ( curGarment )
 {
+	bpfTimer.beginTask( "createProdFile" );
 	var result = true;
 
 	if ( !orderNum )
@@ -28,50 +29,40 @@ function createProdFile ( curGarment )
 		return result;
 	}
 
-	try
-	{
-		log.h( "Beginning execution of createProdFile() function." );
+	log.h( "Beginning execution of createProdFile() function." );
 
-		//this variable will hold the string with
-		//which to concatenate with the order number
-		//check whether an appendage is needed
-		var appendage = garmentsNeeded.length > 1 ? "_" + curGarment.garmentsNeededIndex : "";
+	//this variable will hold the string with
+	//which to concatenate with the order number
+	//check whether an appendage is needed
+	var appendage = garmentsNeeded.length > 1 ? "_" + curGarment.garmentsNeededIndex : "";
 
-		saveFolder = Folder( prodFileSaveLocation );
-		saveFileName = orderNum + appendage + ".ai";
+	saveFolder = Folder( prodFileSaveLocation );
+	saveFileName = orderNum + appendage + ".ai";
 
-		log.l( "saving prod file as: " + saveFileName );
+	log.l( "saving prod file as: " + saveFileName );
 
-		var overwriteMsg = "A production file already exists for " + saveFileName;
-		if ( File( prodFileSaveLocation + "/" + saveFileName ).exists && !getOverwritePreference( overwriteMsg ) )
-		{
-			result = false;
-			log.l( saveFileName + " existed already and user chose not to overwrite." );
-		}
-		else
-		{
-			log.l( "creating a new production file called " + orderNum + appendage )
-			// curGarment.doc = app.documents.add();
-			var prodFileTemplate = File( resourcePath + "Files/prod_file_template.ait" );
-			if ( prodFileTemplate.exists )
-			{
-				curGarment.doc = app.open( prodFileTemplate );
-			}
-			else
-			{
-				curGarment.doc = app.documents.add();
-			}
-			curGarment.name = orderNum + appendage;
-			artworkLayer = app.activeDocument.layers[ 0 ];
-			artworkLayer.name = "Artwork";
-			saveFile( curGarment.doc, saveFileName, saveFolder );
-		}
-	}
-	catch ( e )
+	var overwriteMsg = "A production file already exists for " + saveFileName;
+	if ( File( prodFileSaveLocation + "/" + saveFileName ).exists && !getOverwritePreference( overwriteMsg ) )
 	{
 		result = false;
-		errorList.push( "Failed to create the production file for " + curGarment.code + "_" + curGarment.styleNum );
-		log.e( "Failed while creating production file for " + curGarment.code + "_" + curGarment.styleNum + ".::system error message was : " + e + ", on line: " + e.line );
+		log.l( saveFileName + " existed already and user chose not to overwrite." );
 	}
+	else
+	{
+		log.l( "creating a new production file called " + orderNum + appendage )
+		curGarment.doc = app.documents.add();
+		createAction( "cleanup_swatches", CLEANUP_SWATCHES_ACTION_STRING );
+		app.doScript( "cleanup_swatches", "cleanup_swatches" );
+		removeAction( "cleanup_swatches" );
+		curGarment.name = orderNum + appendage;
+		artworkLayer = app.activeDocument.layers[ 0 ];
+		artworkLayer.name = "Artwork";
+		bpfTimer.beginTask( "initialSaveProdFile" );
+		saveFile( curGarment.doc, saveFileName, saveFolder );
+		bpfTimer.endTask( "initialSaveProdFile" );
+	}
+
+
+	bpfTimer.endTask( "createProdFile" );
 	return result;
 }

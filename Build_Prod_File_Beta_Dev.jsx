@@ -98,6 +98,8 @@ function container ()
 	logDest.push( getLogDest() );
 
 
+	var bpfTimer = new Stopwatch();
+	bpfTimer.logStart();
 
 
 	/*****************************************************************************/
@@ -115,7 +117,7 @@ function container ()
 	//==============================  Components  ===============================//
 
 
-
+	bpfTimer.beginTask( "getComponents" );
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
@@ -139,6 +141,7 @@ function container ()
 		return valid;
 	}
 
+	bpfTimer.endTask( "getComponents" );
 
 
 	//=============================  /Components  ===============================//
@@ -146,15 +149,15 @@ function container ()
 
 
 	//if dev mode, use predefined test data instead of querying netsuite
-	// if ( $.fileName.match( /dev/i ) )
-	// {
-	// 	devMode = true;
-	// 	orderNum = "1234567";
-	// 	var devDataFile = File( documentsPath + "build_prod_file_data/dev_order_data.json" );
-	// 	devDataFile.open( "r" );
-	// 	curOrderData = JSON.parse( devDataFile.read() );
-	// 	devDataFile.close();
-	// }
+	if ( $.fileName.match( /dev/i ) && confirm( "Use Dev Data?" ) )
+	{
+		devMode = true;
+		orderNum = "1234567";
+		var devDataFile = File( documentsPath + "build_prod_file_data/dev_order_data.json" );
+		devDataFile.open( "r" );
+		curOrderData = JSON.parse( devDataFile.read() );
+		devDataFile.close();
+	}
 
 
 	/*****************************************************************************/
@@ -185,6 +188,8 @@ function container ()
 	{
 		sendScriptMessages( messageList );
 	}
+
+	bpfTimer.logEnd();
 
 	printLog();
 

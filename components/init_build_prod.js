@@ -27,13 +27,11 @@ function initBuildProd ()
 
 	if ( valid )
 	{
-		bpfTimer.beginTask( "getOrderNumber" );
 		orderNum = orderNum || getOrderNumber();
 		if ( !orderNum || noOrderNumber )
 		{
 			valid = false;
 		}
-		bpfTimer.endTask( "getOrderNumber" );
 	}
 
 	if ( valid )

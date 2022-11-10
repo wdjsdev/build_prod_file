@@ -15,9 +15,10 @@
 
 */
 
-function duplicatePiecesToProdFile(curData,srcLayer)
+function duplicatePiecesToProdFile ( curData, srcLayer )
 {
-	log.h("Beginning execution of duplicatePiecesToProdFile() function.");
+	bpfTimer.beginTask( "duplicatePiecesToProdFile" );
+	log.h( "Beginning execution of duplicatePiecesToProdFile() function." );
 	var result = true;
 	var sizeType = "";
 	var curSizeLayer, curItem;
@@ -37,124 +38,129 @@ function duplicatePiecesToProdFile(curData,srcLayer)
 	//var = variable inseam, for example 30Ix32W or 36Ix34W
 	//wxh = fixed inseam/waist relationship. sizing is measured in inseam/waist but relationships are not variable
 	//std = standard sizing structure. S M L XL etc
-	var ppLay = getPPLay(srcLayer);
-	firstPrepressLayer = ppLay.layers[0];
-	if(variableInseamPat.test(firstPrepressLayer))
+	var ppLay = getPPLay( srcLayer );
+	firstPrepressLayer = ppLay.layers[ 0 ];
+	if ( variableInseamPat.test( firstPrepressLayer ) )
 	{
-		log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam.");
+		log.l( "firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam." );
 		sizeType = "var"
 	}
-	else if(wxhPat.test(firstPrepressLayer))
+	else if ( wxhPat.test( firstPrepressLayer ) )
 	{
-		log.l(ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height.");
+		log.l( ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height." );
 		sizeType = "wxh"
 	}
 	else
 	{
-		log.l("firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing.");
+		log.l( "firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing." );
 		sizeType = "std";
 	}
 	ppLay.visible = true;
-	log.l("set ppLay to " + ppLay);
+	log.l( "set ppLay to " + ppLay );
 
 
 	//if this garment is built with "women's sizing"
 	//for example, "WM", "WL", "WXL"
 	//then strip out the W
-	fixImproperWomensSizing(ppLay);
+	fixImproperWomensSizing( ppLay );
 
 	app.selection = null;
 
-	for(var curSize in curData.roster)
+	bpfTimer.beginTask( "makePieceGroup" );
+	for ( var curSize in curData.roster )
 	{
-		if(sizeType === "var")
+		if ( sizeType === "var" )
 		{
-			curSizeLayer = getSizeLayer(curSize + "I");
+			curSizeLayer = getSizeLayer( curSize + "I" );
 			//loop each item in the curSizeLayer and find pieces
 			//which match the waist and inseam of the current garment
 			//and select each one.
-			for(var curWaistSize in curData.roster[curSize])
+			for ( var curWaistSize in curData.roster[ curSize ] )
 			{
-				for(var pp=0,len = curSizeLayer.groupItems.length;pp<len;pp++)
+				for ( var pp = 0, len = curSizeLayer.groupItems.length; pp < len; pp++ )
 				{
-					curItem = curSizeLayer.pageItems[pp];
+					curItem = curSizeLayer.pageItems[ pp ];
 					varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
-					if(curItem.name.toLowerCase().indexOf(varSizeString)>-1)
+					if ( curItem.name.toLowerCase().indexOf( varSizeString ) > -1 )
 					{
-						curItem.duplicate(tmpGroup);
+						curItem.duplicate( tmpGroup );
 					}
 				}
-				
+
 			}
 		}
 		else
 		{
-			curSizeLayer = getSizeLayer(curSize);
-			for(var x=curSizeLayer.pageItems.length -1;x>=0;x--)
+			curSizeLayer = getSizeLayer( curSize );
+			for ( var x = curSizeLayer.pageItems.length - 1; x >= 0; x-- )
 			{
-				curItem = curSizeLayer.pageItems[x];
-				if(curItem.typename === "GroupItem")
-					curItem.duplicate(tmpGroup);
+				curItem = curSizeLayer.pageItems[ x ];
+				if ( curItem.typename === "GroupItem" )
+					curItem.duplicate( tmpGroup );
 			}
 		}
 
-		
-	} 
 
-	if(result)
+	}
+	bpfTimer.endTask( "makePieceGroup" );
+
+	bpfTimer.beginTask( "movePiecesToProdFile" );
+	if ( result )
 	{
 		//duplicate the temp group to the production file
-		var tmpGroupCopy = tmpGroup.duplicate(curData.doc);
+		var tmpGroupCopy = tmpGroup.duplicate( curData.doc );
 		tmpLay.remove();
 
 		curData.doc.activate();
 
-		curData.doc.fitArtboardToSelectedArt(0);
-		ungroupDoc(curData.doc);
+		curData.doc.fitArtboardToSelectedArt( 0 );
+		ungroupDoc( curData.doc );
 
 	}
-	
-	log.l("End of duplicatePiecesToProdFile function. returning: " + result);
+
+	bpfTimer.endTask( "duplicatePiecesToProdFile" );
+	log.l( "End of duplicatePiecesToProdFile function. returning: " + result );
+
 	return result;
 
 
-	function getSizeLayer(curSize)
+	function getSizeLayer ( curSize )
 	{
 		var len = ppLay.layers.length;;
 		var curLay;
-		for(var x=0;x<len;x++)
+		for ( var x = 0; x < len; x++ )
 		{
-			curLay = ppLay.layers[x];
-			if(sizeType === "std" && curLay.name === curSize)
+			curLay = ppLay.layers[ x ];
+			if ( sizeType === "std" && curLay.name === curSize )
 			{
-				log.l("curSize layer = " + curLay);
+				log.l( "curSize layer = " + curLay );
 				return curLay;
 			}
 			// else if(sizeType === "var" && curLay.name === curSize + "I")
-			else if(sizeType === "var" && curLay.name === curSize)
+			else if ( sizeType === "var" && curLay.name === curSize )
 			{
-				log.l("curSize layer = " + curLay);
+				log.l( "curSize layer = " + curLay );
 				return curLay;
 			}
-			else if(sizeType === "wxh" && curLay.name.indexOf(curSize) === 0)
+			else if ( sizeType === "wxh" && curLay.name.indexOf( curSize ) === 0 )
 			{
-				log.l("curSize layer = " + curLay);
+				log.l( "curSize layer = " + curLay );
 				return curLay;
 			}
 		}
-		log.e("Failed to find a prepress size layer for " + curSize);
-		errorList.push("Failed to find a prepress size layer for " + curSize);
+		log.e( "Failed to find a prepress size layer for " + curSize );
+		errorList.push( "Failed to find a prepress size layer for " + curSize );
 		return undefined;
 	}
 
-	function selectArtworkFromSizeLayer(layer)
+	function selectArtworkFromSizeLayer ( layer )
 	{
 		layer.locked = false;
 		layer.visible = true;
 		// layer.hasSelectedArtwork = true;
-		for(var x=0,len=layer.groupItems.length;x<len;x++)
+		for ( var x = 0, len = layer.groupItems.length; x < len; x++ )
 		{
-			layer.groupItems[x].selected = true;
+			layer.groupItems[ x ].selected = true;
 		}
 	}
 }

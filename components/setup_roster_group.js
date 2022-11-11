@@ -22,16 +22,69 @@
 function setupRosterGroup ( item )
 {
 	var result = false;
-	var curItem, frame, liveTextGroup, rosterGroup, lowercaseName;
+	// var curItem, frame, liveTextGroup, rosterGroup, lowercaseName;
+	// try
+	// {
+	// 	//move all existing textFrames into liveTextGroup
+	// 	var subItems = [];
+	// 	var len = item.pageItems.length;
+	// 	for ( var x = 0; x < len; x++ )
+	// 	{
+	// 		subItems.push( item.pageItems[ x ] );
+	// 	}
+	// 	for ( var x = len - 1; x >= 0; x-- )		
+	// 	{
+	// 		curItem = subItems[ x ];
+	// 		frame = findTextFrame( curItem );
 
+	// 		if ( frame )
+	// 		{
+	// 			lowercaseName = frame.name.toLowerCase();
+	// 			if ( !rosterGroup )
+	// 			{
+	// 				item.note = "hasRoster";
+	// 				liveTextGroup = item.groupItems.add();
+	// 				rosterGroup = item.groupItems.add();
+	// 				liveTextGroup.name = "Live Text";
+	// 				rosterGroup.name = "Roster";
+	// 			}
+	// 			if ( lowercaseName.indexOf( "grad" ) > -1 )
+	// 			{
+	// 				frame.name = "Grad";
+	// 			}
+	// 			else
+	// 			{
+	// 				frame.name = ( frame.contents.match( /^[a-z]*$|player/i ) || frame.name.match( /name/i ) ) ? "Name" : "Number";
+	// 				// frame.name = lowercaseName.indexOf("name")>-1 ? "Name" : "Number";
+	// 			}
+	// 			frame.moveToBeginning( liveTextGroup );
+	// 			result = true;
+	// 		}
+	// 	}
+
+	// }
+	// catch ( e )
+	// {
+	// 	log.e( "Failed while setting up roster group for item: " + item.name + "::system error message = " + e + ", on line: " + e.line );
+	// 	result = false;
+	// }
+
+	var liveTextGroup, rosterGroup;
 	var itemFrames = findTextFrames( item );
 
 	itemFrames.forEach( function ( frame )
 	{
 		var frameType = frame.contents.match( /\d{4}/ ) ? "grad" : ( frame.contents.match( /^\d*$/i ) ? "number" : "name" );
+		frame.name = frameType.toTitleCase();
+		item.note = "hasRoster";
+		rosterGroup = rosterGroup || item.groupItems.add();
+		rosterGroup.name = "Roster";
+		liveTextGroup = liveTextGroup || item.groupItems.add();
+		liveTextGroup.name = "Live Text";
+		frame.moveToEnd( liveTextGroup );
+
 	} );
-
-
 
 	return result;
 }
+

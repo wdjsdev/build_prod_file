@@ -64,7 +64,6 @@ function container ()
 			else
 			{
 				alert( "Could not find " + util + ".jsxbin\nPlease ensure you're connected to the appropriate Customization drive." );
-				alert( "Using util path: " + drsvUtilsPath )
 				valid = false;
 			}
 		}

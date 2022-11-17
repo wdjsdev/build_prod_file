@@ -28,64 +28,99 @@ Description: create a series of dialog boxes to allow
 	
 */
 #target Illustrator
-function container() {
+function container ()
+{
 
 	var valid = true;
 	var scriptName = "adjust_prod_file";
 
 
-	function getUtilities() {
+	function getUtilities ()
+	{
+		//check for dev mode
+		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
+		var devUtilPath = "~/Desktop/automation/utilities/";
+		var devUtils = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
+		if ( readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
+		{
+			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
+			return devUtils;
+		}
+
+
+
+
+
+
+		var utilNames = [ "Utilities_Container" ];
+
+		//not dev mode, use network utilities
+		var OS = $.os.match( "Windows" ) ? "pc" : "mac";
+		var ad4 = ( OS == "pc" ? "//AD4/" : "/Volumes/" ) + "Customization/";
+		var drsv = ( OS == "pc" ? "O:/" : "/Volumes/CustomizationDR/" );
+		var ad4UtilsPath = ad4 + "Library/Scripts/Script_Resources/Data/";
+		var drsvUtilsPath = drsv + "Library/Scripts/Script_Resources/Data/";
+
+
 		var result = [];
-		var utilPath = "/Volumes/Customization/Library/Scripts/Script_Resources/Data/";
-		var ext = ".jsxbin"
-
-		//check for dev utilities preference file
-		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
-
-		if (devUtilitiesPreferenceFile.exists) {
-			devUtilitiesPreferenceFile.open("r");
-			var prefContents = devUtilitiesPreferenceFile.read();
-			devUtilitiesPreferenceFile.close();
-			if (prefContents.match(/true/i)) {
-				utilPath = "~/Desktop/automation/utilities/";
-				ext = ".js";
+		for ( var u = 0, util; u < utilNames.length; u++ )
+		{
+			util = utilNames[ u ];
+			var ad4UtilPath = ad4UtilsPath + util + ".jsxbin";
+			var ad4UtilFile = File( ad4UtilsPath );
+			var drsvUtilPath = drsvUtilsPath + util + ".jsxbin"
+			var drsvUtilFile = File( drsvUtilPath );
+			if ( drsvUtilFile.exists )
+			{
+				result.push( drsvUtilPath );
+			}
+			else if ( ad4UtilFile.exists )
+			{
+				result.push( ad4UtilPath );
+			}
+			else
+			{
+				alert( "Could not find " + util + ".jsxbin\nPlease ensure you're connected to the appropriate Customization drive." );
+				valid = false;
 			}
 		}
 
-		if ($.os.match("Windows")) {
-			utilPath = utilPath.replace("/Volumes/", "//AD4/");
-		}
-
-		result.push(utilPath + "Utilities_Container" + ext);
-		result.push(utilPath + "Batch_Framework" + ext);
-
-		if (!result.length) {
-			valid = false;
-			alert("Failed to find the utilities.");
-		}
 		return result;
 
 	}
 
+
+
 	var utilities = getUtilities();
-	for (var u = 0, len = utilities.length; u < len; u++) {
-		eval("#include \"" + utilities[u] + "\"");
+
+
+
+
+	for ( var u = 0, len = utilities.length; u < len && valid; u++ )
+	{
+		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	if (!valid) return;
+	log.l( "Using Utilities: " + utilities );
 
+	if ( !valid ) return;
+
+	var bpfTimer = new Stopwatch();
+	bpfTimer.logStart();
 
 
 	//verify the existence of a document
-	if (app.documents.length === 0) {
-		errorList.push("You must have a document open.");
-		sendErrors(errorList);
+	if ( app.documents.length === 0 )
+	{
+		errorList.push( "You must have a document open." );
+		sendErrors( errorList );
 		return false;
 	}
 
 	DEV_LOGGING = true;
 
-	logDest.push(getLogDest());
+	logDest.push( getLogDest() );
 
 	/*****************************************************************************/
 	//==============================  Components  ===============================//
@@ -93,18 +128,21 @@ function container() {
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "build_prod_file_beta"
 
-	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev") > -1 ? devComponents : prodComponents);
-	if (compFiles && compFiles.length) {
+	var compFiles = getComponents( $.fileName.toLowerCase().indexOf( "dev" ) > -1 ? devComponents : prodComponents );
+	if ( compFiles && compFiles.length )
+	{
 		var curComponent;
-		for (var cf = 0, len = compFiles.length; cf < len; cf++) {
-			curComponent = compFiles[cf].fullName;
-			eval("#include \"" + curComponent + "\"");
-			log.l("included: " + compFiles[cf].name);
+		for ( var cf = 0, len = compFiles.length; cf < len; cf++ )
+		{
+			curComponent = compFiles[ cf ].fullName;
+			eval( "#include \"" + curComponent + "\"" );
+			log.l( "included: " + compFiles[ cf ].name );
 		}
 	}
-	else {
-		errorList.push("Failed to find the necessary components.");
-		log.e("No components were found.");
+	else
+	{
+		errorList.push( "Failed to find the necessary components." );
+		log.e( "No components were found." );
 		valid = false;
 		return valid;
 	}
@@ -130,11 +168,13 @@ function container() {
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 
-	if (valid) {
+	if ( valid )
+	{
 		valid = initAdjustProdFile();
 	}
 
-	if (valid) {
+	if ( valid )
+	{
 		createAdjustmentDialog();
 	}
 
@@ -142,9 +182,13 @@ function container() {
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if (errorList.length > 0) {
-		sendErrors(errorList);
+	if ( errorList.length > 0 )
+	{
+		sendErrors( errorList );
 	}
+
+	bpfTimer.logEnd();
+	log.l( "Adjust prod file took " + ( bpfTimer.calculate() / 1000 ) + " seconds." );
 
 	printLog();
 

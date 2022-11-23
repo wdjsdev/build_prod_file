@@ -15,7 +15,7 @@
 
 function createProdFile ( curGarment )
 {
-	bpfTimer.beginTask( "createProdFile" );
+	scriptTimer.beginTask( "createProdFile" );
 	var result = true;
 
 	if ( !orderNum )
@@ -57,12 +57,12 @@ function createProdFile ( curGarment )
 		curGarment.name = orderNum + appendage;
 		artworkLayer = app.activeDocument.layers[ 0 ];
 		artworkLayer.name = "Artwork";
-		bpfTimer.beginTask( "initialSaveProdFile" );
+		scriptTimer.beginTask( "initialSaveProdFile" );
 		saveFile( curGarment.doc, saveFileName, saveFolder );
-		bpfTimer.endTask( "initialSaveProdFile" );
+		scriptTimer.endTask( "initialSaveProdFile" );
 	}
 
 
-	bpfTimer.endTask( "createProdFile" );
+	scriptTimer.endTask( "createProdFile" );
 	return result;
 }

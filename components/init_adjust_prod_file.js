@@ -16,7 +16,7 @@
 
 function initAdjustProdFile ()
 {
-	bpfTimer.beginTask( "initAdjustProdFile" );
+	scriptTimer.beginTask( "initAdjustProdFile" );
 	log.h( "Beginning execution of initAdjustProdFile();" );
 
 	var result = true;
@@ -113,7 +113,7 @@ function initAdjustProdFile ()
 
 	getSaveLocation();
 
-	bpfTimer.endTask( "initAdjustProdFile" );
+	scriptTimer.endTask( "initAdjustProdFile" );
 	return result;
 
 

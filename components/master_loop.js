@@ -18,19 +18,19 @@
 
 function masterLoop ()
 {
-	bpfTimer.beginTask( "masterLoop" );
+	scriptTimer.beginTask( "masterLoop" );
 	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
 
 
-	bpfTimer.beginTask( "getRelevantGarments" );
+	scriptTimer.beginTask( "getRelevantGarments" );
 	//filter garmentsNeeded to remove any that don't have a parent layer
 	relevantGarments = garmentsNeeded.filter( function ( curGarment )
 	{
 		return curGarment.parentLayer;
 	} );
 
-	bpfTimer.endTask( "getRelevantGarments" );
+	scriptTimer.endTask( "getRelevantGarments" );
 
 	if ( !relevantGarments.length )
 	{
@@ -42,7 +42,7 @@ function masterLoop ()
 
 	relevantGarments.forEach( function ( curGarment )
 	{
-		bpfTimer.beginTask( curGarment.code + "_" + curGarment.styleNum );
+		scriptTimer.beginTask( curGarment.code + "_" + curGarment.styleNum );
 		log.l( "Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum );
 		var curGarmentLayer = curGarment.parentLayer;
 		//check mid value against list of garments that should get a 50% thrucut opacity
@@ -78,9 +78,9 @@ function masterLoop ()
 		{
 			result = duplicatePiecesToProdFile( curGarment, curGarmentLayer );
 
-			bpfTimer.beginTask( "saveProdFileWithArt" );
+			scriptTimer.beginTask( "saveProdFileWithArt" );
 			saveFile( curGarment.doc, saveFileName, saveFolder );
-			bpfTimer.endTask( "saveProdFileWithArt" );
+			scriptTimer.endTask( "saveProdFileWithArt" );
 		}
 
 
@@ -122,11 +122,11 @@ function masterLoop ()
 		maxPlayerNameWidth = undefined;
 		textExpandSteps = [];
 
-		bpfTimer.endTask( curGarment.code + "_" + curGarment.styleNum );
+		scriptTimer.endTask( curGarment.code + "_" + curGarment.styleNum );
 	} );
 
 	log.l( "End of masterLoop function. returning: " + result );
 
-	bpfTimer.endTask( "masterLoop" );
+	scriptTimer.endTask( "masterLoop" );
 	return result;
 }

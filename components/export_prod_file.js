@@ -21,7 +21,7 @@
 
 function exportProdFile ( pdfFolderName, destFolderPath )
 {
-	bpfTimer.beginTask( "exportProdFile" );
+	scriptTimer.beginTask( "exportProdFile" );
 	log.h( "exportProdFile(" + pdfFolderName + "," + destFolderPath + ")" );
 	var result = true;
 	var doc = app.activeDocument;
@@ -78,14 +78,14 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 
 	unloadExpandAction();
 
-	bpfTimer.endTask( "exportProdFile" );
+	scriptTimer.endTask( "exportProdFile" );
 	return result;
 
 
 
 	function exportPiece ( piece )
 	{
-		bpfTimer.beginTask( "exportPiece_" + piece.name );
+		scriptTimer.beginTask( "exportPiece_" + piece.name );
 		doc.selection = null;
 		var rosterGroup, liveTextGroup, curRosterChild, pdfFileName;
 		var curNameFrame, curNumFrame, duplicateName, duplicateNumber, duplicateGrad;
@@ -216,7 +216,7 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		}
 
 		log.l( "Successfully exported " + pdfFileName )
-		bpfTimer.endTask( "exportPiece_" + piece.name );
+		scriptTimer.endTask( "exportPiece_" + piece.name );
 
 	}
 }

@@ -17,7 +17,7 @@
 function getOrderNumber ()
 {
 	log.h( "Beginning execution of getOrderNumber() function" );
-	bpfTimer.beginTask( "getOrderNumber" );
+	scriptTimer.beginTask( "getOrderNumber" );
 
 	var result = "";
 
@@ -104,6 +104,6 @@ function getOrderNumber ()
 
 
 	log.l( "getOrderNumber() function returning " + result );
-	bpfTimer.endTask( "getOrderNumber" );
+	scriptTimer.endTask( "getOrderNumber" );
 	return result;
 }

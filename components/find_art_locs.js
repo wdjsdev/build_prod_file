@@ -16,7 +16,7 @@
 
 function findArtLocs ()
 {
-	bpfTimer.beginTask( "findArtLocs" );
+	scriptTimer.beginTask( "findArtLocs" );
 	log.h( "Beginning execution of findArtLocs() function on the document: " + app.activeDocument.name );
 	var result = true;
 	var curDoc = app.activeDocument;
@@ -27,7 +27,7 @@ function findArtLocs ()
 		curTextFrame,
 		piecesWithRosterGroups = [];
 
-	bpfTimer.beginTask( "setupRosterGroups" );
+	scriptTimer.beginTask( "setupRosterGroups" );
 	for ( var x = 0, len = docItems.length; x < len; x++ )
 	{
 		curItem = docItems[ x ];
@@ -43,10 +43,10 @@ function findArtLocs ()
 			continue;
 		}
 	}
-	bpfTimer.endTask( "setupRosterGroups" );
+	scriptTimer.endTask( "setupRosterGroups" );
 	log.l( "Successfully set up roster groups on the following pieces: ::\t" + piecesWithRosterGroups.join( "\n\t" ) );
 
-	bpfTimer.endTask( "findArtLocs" );
+	scriptTimer.endTask( "findArtLocs" );
 
 	return result;
 }

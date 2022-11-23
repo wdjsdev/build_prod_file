@@ -15,7 +15,7 @@
 
 function inputRosterData ( roster )
 {
-	bpfTimer.beginTask( "inputRosterData" );
+	scriptTimer.beginTask( "inputRosterData" );
 	log.h( "Beginning execution of inputRosterData() function." );
 	var result = true;
 	var doc = app.activeDocument;
@@ -119,7 +119,7 @@ function inputRosterData ( roster )
 		log.l( "Successfully input the roster data." )
 	}
 
-	bpfTimer.endTask( "inputRosterData" );
+	scriptTimer.endTask( "inputRosterData" );
 
 	return result;
 }

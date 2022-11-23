@@ -14,7 +14,7 @@
 
 function initBuildProd ()
 {
-	bpfTimer.beginTask( "initBuildProd" );
+	scriptTimer.beginTask( "initBuildProd" );
 
 	//check to make sure the active document is a proper converted template
 	if ( valid && !isTemplate( docRef ) )
@@ -36,16 +36,16 @@ function initBuildProd ()
 
 	if ( valid )
 	{
-		bpfTimer.beginTask( "getSaveLocation" );
+		scriptTimer.beginTask( "getSaveLocation" );
 		getSaveLocation();
-		bpfTimer.endTask( "getSaveLocation" );
+		scriptTimer.endTask( "getSaveLocation" );
 	}
 
 	if ( valid )
 	{
-		bpfTimer.beginTask( "curlingOrderData" );
+		scriptTimer.beginTask( "curlingOrderData" );
 		curOrderData = curOrderData || curlData( NOD, orderNum )
-		bpfTimer.endTask( "curlingOrderData" );
+		scriptTimer.endTask( "curlingOrderData" );
 
 		if ( !curOrderData )
 		{
@@ -56,9 +56,9 @@ function initBuildProd ()
 
 	if ( valid )
 	{
-		bpfTimer.beginTask( "getOrderData" );
+		scriptTimer.beginTask( "getOrderData" );
 		valid = splitDataByGarment();
-		bpfTimer.endTask( "getOrderData" );
+		scriptTimer.endTask( "getOrderData" );
 	}
 
 	if ( noOrderNumber )
@@ -80,11 +80,11 @@ function initBuildProd ()
 
 	if ( valid && !noOrderNumber )
 	{
-		bpfTimer.beginTask( "assignGarments" );
+		scriptTimer.beginTask( "assignGarments" );
 		garmentLayers = findGarmentLayers();
 		assignGarmentsToLayers();
-		bpfTimer.endTask( "assignGarments" );
+		scriptTimer.endTask( "assignGarments" );
 	}
 
-	bpfTimer.endTask( "initBuildProd" );
+	scriptTimer.endTask( "initBuildProd" );
 }

@@ -17,7 +17,7 @@
 
 function duplicatePiecesToProdFile ( curData, srcLayer )
 {
-	bpfTimer.beginTask( "duplicatePiecesToProdFile" );
+	scriptTimer.beginTask( "duplicatePiecesToProdFile" );
 	log.h( "Beginning execution of duplicatePiecesToProdFile() function." );
 	var result = true;
 	var sizeType = "";
@@ -66,7 +66,7 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 
 	app.selection = null;
 
-	bpfTimer.beginTask( "makePieceGroup" );
+	scriptTimer.beginTask( "makePieceGroup" );
 	for ( var curSize in curData.roster )
 	{
 		if ( sizeType === "var" )
@@ -102,9 +102,9 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 
 
 	}
-	bpfTimer.endTask( "makePieceGroup" );
+	scriptTimer.endTask( "makePieceGroup" );
 
-	bpfTimer.beginTask( "movePiecesToProdFile" );
+	scriptTimer.beginTask( "movePiecesToProdFile" );
 	if ( result )
 	{
 		//duplicate the temp group to the production file
@@ -118,7 +118,7 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 
 	}
 
-	bpfTimer.endTask( "duplicatePiecesToProdFile" );
+	scriptTimer.endTask( "duplicatePiecesToProdFile" );
 	log.l( "End of duplicatePiecesToProdFile function. returning: " + result );
 
 	return result;

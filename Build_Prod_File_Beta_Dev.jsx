@@ -97,8 +97,8 @@ function container ()
 	logDest.push( getLogDest() );
 
 
-	var bpfTimer = new Stopwatch();
-	bpfTimer.logStart();
+	var scriptTimer = new Stopwatch();
+	scriptTimer.logStart();
 
 
 	/*****************************************************************************/
@@ -116,7 +116,7 @@ function container ()
 	//==============================  Components  ===============================//
 
 
-	bpfTimer.beginTask( "getComponents" );
+	scriptTimer.beginTask( "getComponents" );
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
@@ -140,7 +140,7 @@ function container ()
 		return valid;
 	}
 
-	bpfTimer.endTask( "getComponents" );
+	scriptTimer.endTask( "getComponents" );
 
 
 	//=============================  /Components  ===============================//
@@ -188,8 +188,8 @@ function container ()
 		sendScriptMessages( messageList );
 	}
 
-	bpfTimer.logEnd();
-	log.l( "Buid Prod File Script took: " + bpfTimer.calculate() / 1000 + " seconds." );
+	scriptTimer.logEnd();
+	log.l( "Buid Prod File Script took: " + scriptTimer.calculate() / 1000 + " seconds." );
 
 	printLog();
 

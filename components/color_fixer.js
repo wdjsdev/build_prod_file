@@ -17,7 +17,7 @@
 
 function colorFixer ()
 {
-	bpfTimer.beginTask( "colorFixer" );
+	scriptTimer.beginTask( "colorFixer" );
 	log.h( "Beginning execution of colorFixer();" );
 	var result = true;
 	var doc = app.activeDocument;
@@ -31,7 +31,7 @@ function colorFixer ()
 	handleSewLines();
 	setThruCutOpacity();
 
-	bpfTimer.endTask( "colorFixer" );
+	scriptTimer.endTask( "colorFixer" );
 	return result;
 
 

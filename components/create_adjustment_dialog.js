@@ -14,7 +14,7 @@
 
 function createAdjustmentDialog ()
 {
-	bpfTimer.beginTask( "createAdjustmentDialog" );
+	scriptTimer.beginTask( "createAdjustmentDialog" );
 	log.h( "Beginning execution of createAdjustmentDialog();" );
 	var result = true;
 	var doc = app.activeDocument;
@@ -164,7 +164,7 @@ function createAdjustmentDialog ()
 
 
 	log.l( "End of adjustment dialog. Returning: " + result );
-	bpfTimer.endTask( "createAdjustmentDialog" );
+	scriptTimer.endTask( "createAdjustmentDialog" );
 	return result;
 
 

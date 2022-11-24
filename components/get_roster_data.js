@@ -31,7 +31,10 @@ function getRosterData ( roster )
 	//an example is a string like this:
 	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
 	var numOnlyRegex = /^[\d]*$/;
-	var blankJerseyRegex = /\(blank\)|(no \#)/i;
+	var nameOnlyRegex = /^[a-z]*$/i;
+	var blankJerseyRegex = /\(\s*blank\s*\)/i;
+	var noNameRegex = /\(?[ ]*no[ ]*name[ ]*\)?/i;
+	var noNumberRegex = /\(?[ ]*no[ ]*number[ ]*\)?/i
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
 	var multipleInsideSpacesRegex = /\s{2,}/g;
 	var qtyIndicatorRegex = /\*\s*qty/i;
@@ -50,6 +53,25 @@ function getRosterData ( roster )
 			log.l( "curEntry was an empty string. continuing loop." );
 			continue;
 		}
+		//check for a "*Qty is 8*" line item
+		//don't make a roster entry if the line
+		//matches the above format.
+		if ( qtyIndicatorRegex.test( curEntry ) )
+		{
+			log.l( "curEntry matches the qty indicator regex. continuing loop." )
+			continue;
+		}
+
+		//check for a "(Blank)" jersey
+		if ( blankJerseyRegex.test( curEntry ) || ( curEntry.match( noNameRegex ) && curEntry.match( noNumberRegex ) ) )
+		{
+			curPlayer.number = "";
+			curPlayer.name = "";
+			log.l( "curEntry matches the blank jersey regex." )
+			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
+			result.push( curPlayer );
+			continue;
+		}
 
 		//check for a number only format
 		if ( numOnlyRegex.test( curEntry ) )
@@ -62,25 +84,22 @@ function getRosterData ( roster )
 			continue;
 		}
 
-		//check for a "*Qty is 8*" line item
-		//don't make a roster entry if the line
-		//matches the above format.
-		if ( qtyIndicatorRegex.test( curEntry ) )
+		//check for a name only format
+		if ( nameOnlyRegex.test( curEntry ) )
 		{
-			log.l( "curEntry matches the qty indicator regex. continuing loop." )
-			continue;
-		}
-
-		//check for a "(Blank)" or "(No #)" jersey
-		if ( blankJerseyRegex.test( curEntry ) )
-		{
-			curPlayer.number = "";
+			curPlayer.name = curEntry;
 			curPlayer.name = "";
-			log.l( "curEntry matches the blank jersey regex." )
+			log.l( "curEntry matches name only regex." );
 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
 			result.push( curPlayer );
 			continue;
 		}
+
+		//curEntry is not a name only or number only
+		//so it has both and possibly a grad year
+
+
+
 
 		//get the number
 		if ( curEntry.toLowerCase().indexOf( "(no number)" ) > -1 )

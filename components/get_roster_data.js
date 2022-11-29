@@ -33,8 +33,10 @@ function getRosterData ( roster )
 	var numOnlyRegex = /^[\d]*$/;
 	var nameOnlyRegex = /^[a-z]*$/i;
 	var blankJerseyRegex = /\(\s*blank\s*\)/i;
-	var noNameRegex = /\(?[ ]*no[ ]*name[ ]*\)?/i;
-	var noNumberRegex = /\(?[ ]*no[ ]*number[ ]*\)?/i
+	// var noNameRegex = /\(?[ ]*no[ ]*name[ ]*\)?/i;
+	// var noNumberRegex = /\(?[ ]*no[ ]*number[ ]*\)?/i
+	var noNameRegex = /no.*name/i;
+	var noNumberRegex = /no.*number/i;
 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
 	var multipleInsideSpacesRegex = /\s{2,}/g;
 	var qtyIndicatorRegex = /\*\s*qty/i;
@@ -88,7 +90,7 @@ function getRosterData ( roster )
 		if ( nameOnlyRegex.test( curEntry ) )
 		{
 			curPlayer.name = curEntry;
-			curPlayer.name = "";
+			curPlayer.number = "";
 			log.l( "curEntry matches name only regex." );
 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
 			result.push( curPlayer );

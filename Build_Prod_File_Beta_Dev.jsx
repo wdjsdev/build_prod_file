@@ -152,7 +152,7 @@ function container ()
 	{
 		devMode = true;
 		orderNum = "1234567";
-		var devDataFile = File( documentsPath + "build_prod_file_data/dev_order_data.json" );
+		var devDataFile = File( documentsPath + "script_data/dev_prod_data.json" );
 		devDataFile.open( "r" );
 		curOrderData = JSON.parse( devDataFile.read() );
 		devDataFile.close();

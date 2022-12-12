@@ -49,12 +49,20 @@ function getRosterData ( roster )
 		curEntry = splitRoster[ x ].replace( trimSpacesRegex, "" );
 		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
 
+		//get rid of any instructions that may have been written by the cs rep
+		//anything in parentheses that not a grad year should be removed
+		curEntry = curEntry.replace(/\([^\d][^\)]*\)/ig, "");
+		if(curEntry.match(/\([^\d]{2,4}\)/ig))
+
 		log.l( "after removing spaces, curEntry = " + curEntry );
 		if ( curEntry === "" )
 		{
 			log.l( "curEntry was an empty string. continuing loop." );
 			continue;
 		}
+
+
+
 		//check for a "*Qty is 8*" line item
 		//don't make a roster entry if the line
 		//matches the above format.

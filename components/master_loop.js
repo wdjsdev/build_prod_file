@@ -94,7 +94,7 @@ function masterLoop ()
 		//input the actual roster data into the roster groups
 		if ( result )
 		{
-			result = inputRosterData( curGarment.roster );
+			result = inputRosterData( curGarment );
 		}
 
 		//fix up the colors.

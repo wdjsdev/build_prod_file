@@ -13,7 +13,7 @@
 
 */
 
-function inputRosterData ( roster )
+function inputRosterData ( curGarment )
 {
 	scriptTimer.beginTask( "inputRosterData" );
 	log.h( "Beginning execution of inputRosterData() function." );
@@ -24,6 +24,8 @@ function inputRosterData ( roster )
 	var rosterInconsistencies = [];
 	var curSizePieces = [];
 	var curQty, playerLen;
+
+	var roster = curGarment.roster;
 
 
 	for ( var curSize in roster )

@@ -46,10 +46,15 @@ function colorFixer ()
 		for ( var ds = swatches.length - 1; ds > -1; ds-- )
 		{
 			curSwatch = swatches[ ds ];
-			if ( defaultSwatches.indexOf( curSwatch.name ) > -1 )
+			try
 			{
-				curSwatch.remove();
+				if ( defaultSwatches.indexOf( curSwatch.name ) > -1 )
+				{
+					curSwatch.remove();
+				}
 			}
+			catch(e){};
+			
 		}
 
 		//remove default swatch foldersw
@@ -57,10 +62,15 @@ function colorFixer ()
 		for ( var sg = doc.swatchGroups.length - 1; sg >= 0; sg-- )
 		{
 			curSwatchGroup = doc.swatchGroups[ sg ];
-			if ( defaultSwatchGroups.indexOf( curSwatchGroup.name ) > -1 )
+			try
 			{
-				doc.swatchGroups[ sg ].remove();
+				if ( defaultSwatchGroups.indexOf( curSwatchGroup.name ) > -1 )
+				{
+					doc.swatchGroups[ sg ].remove();
+				}
 			}
+			catch(e){};
+			
 		}
 		log.l( "Sucessfully eliminated default colors." );
 

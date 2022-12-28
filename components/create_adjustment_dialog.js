@@ -367,64 +367,39 @@ function createAdjustmentDialog ()
 
 	function updateEditRosterEntryGroup ( parent )
 	{
-		// var splitName = curRosterGroup.name.split(" ");
+		var crn = curRosterGroup.name;
 
-		//split the curRosterGroup.name by space unless the space is inside paranthasis
-		// debugger;
-		var nameStr = curRosterGroup.name;
-		var splitName = [];
-
-		if ( nameStr.indexOf( "(no name)" ) > -1 )
+		var nameStr = numStr = gradStr = "";
+		if(crn.match(/\(?no name\)?/i))
 		{
-			splitName[ 0 ] = "(no name)";
+			crn = crn.replace(/\(?no name\)?\s*/i,"")
 		}
-		else
+		if(crn.match(/\(?no number\)?/i))
 		{
-			splitName[ 0 ] = nameStr.split( " " )[ 0 ];
-		}
-		nameStr = nameStr.substr( splitName[ 0 ].length + 1, nameStr.length );
-
-		if ( nameStr.indexOf( "(no number)" ) > -1 )
-		{
-			splitName[ 1 ] = "(no number)";
-		}
-		else
-		{
-			splitName[ 1 ] = nameStr.split( " " )[ 0 ];
-		}
-		nameStr = nameStr.substr( splitName[ 1 ].length + 1, nameStr.length );
-
-		if ( nameStr.length )
-		{
-			splitName[ 2 ] = trimSpaces( nameStr );
+			crn = crn.replace(/\(?no number\)?\s*/i,"")
 		}
 
-		parent.nameInput.text = splitName[ 0 ];
-		parent.numInput.text = splitName[ 1 ];
-		if ( splitName.length > 2 )
+		var split = crn.split(" ");
+
+		split.forEach(function(str)
 		{
-			parent.gradInput.text = splitName[ 2 ];
-		}
-		// if(curRosterName)
-		// {
-		// 	parent.nameInput.text = curRosterName.contents;
-		// }
-		// else
-		// {
-		// 	parent.nameInput.text = "";
-		// }
-		// if(curRosterNumber)
-		// {
-		// 	parent.numInput.text = curRosterNumber.contents;
-		// }
-		// else
-		// {
-		// 	parent.numInput.text = "";
-		// }
-		// if(curRosterGrad)
-		// {
-		// 	parent.gradInput.text = curRosterGrad.contents;
-		// }
+			if(str.match(/^[a-z]/i))
+			{
+				nameStr += str + " ";
+			}
+			if(str.match(/^\d{1,3}$/))
+			{
+				numStr = str;
+			}
+			if(str.match(/^\d{4}$/))
+			{
+				gradStr = str;
+			}
+		});
+
+		parent.nameInput.text = trimSpaces(nameStr);
+		parent.numInput.text = trimSpaces(numStr);
+		parent.gradInput.text = trimSpaces(gradStr);
 	}
 
 	function updateCurRoster ( name, num, grad )

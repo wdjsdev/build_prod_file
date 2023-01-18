@@ -204,7 +204,9 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 				}
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
-				pdfFileName = pdfFileName.replace( /\s/g, "_" );
+
+				// pdfFileName = pdfFileName.replace( /\s/g, "_" );
+				pdfFileName = pdfFileName.replace(/\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g,"_")
 				log.l( "pdfFileName: " + pdfFileName );
 				saveFile( doc, pdfFileName, pdfFolder );
 				removeExpandedRosterGroup( tmpNameLay );

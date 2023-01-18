@@ -19,56 +19,60 @@ function container ()
 
 	function getUtilities ()
 	{
+		var utilFiles = []; //array of util files to include
 		//check for dev mode
 		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
-		var devUtilPath = "~/Desktop/automation/utilities/";
-		var devUtils = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
 		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
-		if ( readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
+		if ( devUtilitiesPreferenceFile.exists && readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
 		{
 			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
-			return devUtils;
+			var devUtilPath = "~/Desktop/automation/utilities/";
+			utilFiles =[ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			return utilFiles;
 		}
-
-
-
-
-
-
-		var utilNames = [ "Utilities_Container" ];
 
 		//not dev mode, use network utilities
 		var OS = $.os.match( "Windows" ) ? "pc" : "mac";
-		var ad4 = ( OS == "pc" ? "//AD4/" : "/Volumes/" ) + "Customization/";
-		var drsv = ( OS == "pc" ? "O:/" : "/Volumes/CustomizationDR/" );
-		var ad4UtilsPath = ad4 + "Library/Scripts/Script_Resources/Data/";
-		var drsvUtilsPath = drsv + "Library/Scripts/Script_Resources/Data/";
 
+		var sharesPath = OS == "pc" ? "//boombah.local/shares/Customization/" : "/Volumes/shares/Customization/"
+		var ad4Path = ( OS == "pc" ? "//AD4/" : "/Volumes/" ) + "Customization/";
+		var drsvPath = ( OS == "pc" ? "O:/" : "/Volumes/CustomizationDR/" );
 
-		var result = [];
-		for ( var u = 0, util; u < utilNames.length; u++ )
+		var utilNames = [ "Utilities_Container" ];
+		var possiblePaths = [sharesPath,drsvPath,ad4Path];
+		var utilPath = "Library/Scripts/Script_Resources/Data/";
+		
+
+		for(var pp = 0, path,file; pp < possiblePaths.length && !utilFiles.length; pp++)
 		{
-			util = utilNames[ u ];
-			var ad4UtilPath = ad4UtilsPath + util + ".jsxbin";
-			var ad4UtilFile = File( ad4UtilsPath );
-			var drsvUtilPath = drsvUtilsPath + util + ".jsxbin"
-			var drsvUtilFile = File( drsvUtilPath );
-			if ( drsvUtilFile.exists )
+			for(var un = 0, util; un < utilNames.length; un++)
 			{
-				result.push( drsvUtilPath );
-			}
-			else if ( ad4UtilFile.exists )
-			{
-				result.push( ad4UtilPath );
-			}
-			else
-			{
-				alert( "Could not find " + util + ".jsxbin\nPlease ensure you're connected to the appropriate Customization drive." );
-				valid = false;
+				util = utilNames[un];
+				path = possiblePaths[pp] + utilPath + util + ".jsxbin";
+                logTxt += "path = " + path + "\n";
+				file = File(path);
+				if(file.exists)
+				{
+                    logTxt += "file exists\n";
+					utilFiles.push(path);
+				}
+                else
+                {
+                    logTxt += "no file exists at " + path + "\n";
+                }
 			}
 		}
 
-		return result;
+        logTxt += "end of getUtilities()\n";
+        logTxt += "utilFiles = " + utilFiles.join(", ") + "\n";
+
+		if(!utilFiles.length)
+		{
+			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
+			return [];
+		}
+		
+		return utilFiles;
 
 	}
 

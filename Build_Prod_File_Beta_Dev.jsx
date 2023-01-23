@@ -19,7 +19,8 @@ function container ()
 
 	function getUtilities ()
 	{
-		var utilFiles = []; //array of util files to include
+		var utilNames = [ "Utilities_Container" ]; //array of util names
+		var utilFiles = []; //array of util files
 		//check for dev mode
 		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
 		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
@@ -31,67 +32,36 @@ function container ()
 			return utilFiles;
 		}
 
-		//not dev mode, use network utilities
-		var OS = $.os.match( "Windows" ) ? "pc" : "mac";
-
-		var sharesPath = OS == "pc" ? "//boombah.local/shares/Customization/" : "/Volumes/shares/Customization/"
-		var ad4Path = ( OS == "pc" ? "//AD4/" : "/Volumes/" ) + "Customization/";
-		var drsvPath = ( OS == "pc" ? "O:/" : "/Volumes/CustomizationDR/" );
-
-		var utilNames = [ "Utilities_Container" ];
-		var possiblePaths = [sharesPath,drsvPath,ad4Path];
-		var utilPath = "Library/Scripts/Script_Resources/Data/";
+		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
 		
-
-		for(var pp = 0, path,file; pp < possiblePaths.length && !utilFiles.length; pp++)
+		for(var u=0;u<utilNames.length;u++)
 		{
-			for(var un = 0, util; un < utilNames.length; un++)
+			var utilFile = new File(dataResourcePath + utilNames[u] + ".jsxbin");
+			if(utilFile.exists)
 			{
-				util = utilNames[un];
-				path = possiblePaths[pp] + utilPath + util + ".jsxbin";
-                logTxt += "path = " + path + "\n";
-				file = File(path);
-				if(file.exists)
-				{
-                    logTxt += "file exists\n";
-					utilFiles.push(path);
-				}
-                else
-                {
-                    logTxt += "no file exists at " + path + "\n";
-                }
+				utilFiles.push(utilFile);	
 			}
+			
 		}
-
-        logTxt += "end of getUtilities()\n";
-        logTxt += "utilFiles = " + utilFiles.join(", ") + "\n";
 
 		if(!utilFiles.length)
 		{
 			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
 			return [];
 		}
+
 		
 		return utilFiles;
 
 	}
-
-
-
 	var utilities = getUtilities();
-
-
-
 
 	for ( var u = 0, len = utilities.length; u < len && valid; u++ )
 	{
 		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	log.l( "Using Utilities: " + utilities );
-
-
-	if ( !valid ) return;
+	if ( !valid || !utilities.length) return;
 
 	if ( user === "will.dowling" )
 	{

@@ -15,57 +15,55 @@
 
 */
 
-function assignGarmentsToLayers()
+function assignGarmentsToLayers ()
 {
-	var	curGarment,
-		matchedGarments = [],
-		success = false;
+	var orphanedGarments = [];
 
-	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
+	var docDesignNumber = docRef.name.match( /\da-z]{12}/i );
+	if ( docDesignNumber ) docDesignNumber = docDesignNumber[ 0 ];
 
-	var curGarmentCode;
-
-
-	var curGarmentLayer,cglName;
-	for(var g=0;g<garmentLayers.length;g++)
+	garmentsNeeded.forEach( function ( curGarment )
 	{
-		curGarmentLayer = garmentLayers[g];
-
-		cglName = curGarmentLayer.name.replace(/-/g, "_").replace("_","-");
-		
-		if(threeDigitStyleNumPat.test(cglName))
+		if ( docDesignNumber && curGarment.designNumber && !docRef.name.match( curGarment.designNumber ) )
 		{
-			cglName = cglName.replace("_0","_10");
-			curGarmentLayer.name = cglName;
+			return;
 		}
-
-		for(var x=0;x<garmentsNeeded.length;x++)
+		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+		var curGarmentDesignNumber = curGarment.designNumber || null;
+		curGarment.layerMatches = [];
+		garmentLayers.forEach( function ( curGarmentLayer )
 		{
-			curGarment = garmentsNeeded[x];
-			curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
-			if(docRef.name.match(curGarment.designNumber) && cglName.match(curGarmentCode))
+			var cglName = curGarmentLayer.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" );
+			if ( !cglName.match( curGarmentCode ) )
+			{
+				log.l( "Garment layer " + cglName + " does not match garment code " + curGarmentCode );
+				return;
+			}
+			curGarment.layerMatches.push( curGarmentLayer );
+
+			if ( docDesignNumber && curGarmentDesignNumber && docRef.name.match( curGarmentDesignNumber ) )
 			{
 				curGarment.parentLayer = curGarmentLayer;
-				success = true;
+				return;
 			}
-			else if(cglName.match(curGarment.mid + "_" + curGarment.styleNum))
-			{
-				matchedGarments.push(curGarment);
-			}
-			
-		}
-		if(!success && matchedGarments.length && matchedGarments.length == 1)
+		} );
+
+		if ( curGarment.parentLayer || !curGarment.layerMatches.length ) return;
+
+		if ( curGarment.layerMatches.length === 1 )
 		{
-			matchedGarments[0].parentLayer = curGarmentLayer;
-			success = true;
-			matchedGarments = [];
+			curGarment.parentLayer = curGarment.layerMatches[ 0 ];
 		}
-	}
+		else
+		{
+			orphanedGarments.push( curGarment );
+		}
+	} );
 
-
-	if(!success)
+	if ( orphanedGarments.length > 0 )
 	{
-		assignGarmentsToLayersDialog(matchedGarments.length ? matchedGarments : garmentsNeeded);
+		assignGarmentsToLayers( orphanedGarments );
 	}
-		
+
+
 }

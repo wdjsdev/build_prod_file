@@ -30,6 +30,8 @@ function splitDataByGarment ()
 	{
 		"FD-500": "FD-500W",
 		"FD-400": "FD-400W",
+		"FD-400Y": "FD-400G",
+		"FD-170Y": "FD-170G",
 		"PS-2035G": "PS-2035Y",
 		"PS-4070G": "PS-4070Y"
 	}
@@ -89,7 +91,10 @@ function splitDataByGarment ()
 					//so we just have to brute force overwrite the problem
 					//garments here.
 
+					log.h( "attn:" )
+					log.l( "curMid = " + curMid );
 					curMid = garmentCodeConverter[ curMid ] || curMid;
+					log.l( "afterconversion curMid = " + curMid );
 
 
 

@@ -51,7 +51,7 @@ function getRosterData ( roster )
 
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace(/\s*\(.*[^\d][^\)]*\s*\)/ig, "");
+		curEntry = curEntry.replace( /\s*\(.*[^\d][^\)]*\s*\)/ig, "" );
 
 		log.l( "after removing spaces, curEntry = " + curEntry );
 		if ( curEntry === "" )
@@ -62,12 +62,12 @@ function getRosterData ( roster )
 
 
 
-		//check for a "*Qty is 8*" line item
+		//check for a "*Qty is 8*" or "**Disregard**" line item
 		//don't make a roster entry if the line
 		//matches the above format.
-		if ( qtyIndicatorRegex.test( curEntry ) )
+		if ( curEntry.match( /^\*.*\*$/ ) )
 		{
-			log.l( "curEntry matches the qty indicator regex. continuing loop." )
+			log.l( "curEntry matches the qty indicator or disregard regex. continuing loop." )
 			continue;
 		}
 

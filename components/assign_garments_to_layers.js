@@ -19,11 +19,12 @@ function assignGarmentsToLayers ()
 {
 	var orphanedGarments = [];
 
-	var docDesignNumber = docRef.name.match( /\da-z]{12}/i );
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/i );
 	if ( docDesignNumber ) docDesignNumber = docDesignNumber[ 0 ];
 
 	garmentsNeeded.forEach( function ( curGarment )
 	{
+
 		if ( docDesignNumber && curGarment.designNumber && !docRef.name.match( curGarment.designNumber ) )
 		{
 			return;

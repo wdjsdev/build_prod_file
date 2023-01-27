@@ -94,6 +94,7 @@ function splitDataByGarment ()
 					log.h( "attn:" )
 					log.l( "curMid = " + curMid );
 					curMid = garmentCodeConverter[ curMid ] || curMid;
+					curMid = curMid.replace( /wy/i, "G" );
 					log.l( "afterconversion curMid = " + curMid );
 
 
@@ -230,6 +231,7 @@ function splitDataByGarment ()
 
 	for ( var x = 0, len = garmentsNeeded.length; x < len; x++ )
 	{
+
 		log.l( "garmentsNeeded[" + x + "] = ::" + JSON.stringify( garmentsNeeded[ x ] ) );
 		$.sleep( 200 );
 	}

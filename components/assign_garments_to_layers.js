@@ -49,21 +49,24 @@ function assignGarmentsToLayers ()
 			}
 		} );
 
-		if ( curGarment.parentLayer || !curGarment.layerMatches.length ) return;
-
 		if ( curGarment.layerMatches.length === 1 )
 		{
 			curGarment.parentLayer = curGarment.layerMatches[ 0 ];
 		}
-		else
+
+		if ( curGarment.parentLayer ) 
 		{
-			orphanedGarments.push( curGarment );
+			log.l( "Found the parent layer for garment " + curGarmentCode + " : " + curGarment.parentLayer.name );
+			return;
 		}
+
+		orphanedGarments.push( curGarment );
 	} );
 
 	if ( orphanedGarments.length > 0 )
 	{
-		assignGarmentsToLayers( orphanedGarments );
+		log.l( "The following garments don't have a parent layer: " + orphanedGarments.map( function ( curGarment ) { return curGarment.mid + "_" + curGarment.styleNum; } ).join( ", " ) );
+		assignGarmentsToLayersDialog( orphanedGarments );
 	}
 
 

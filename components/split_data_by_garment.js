@@ -233,7 +233,7 @@ function splitDataByGarment ()
 	{
 
 		log.l( "garmentsNeeded[" + x + "] = ::" + JSON.stringify( garmentsNeeded[ x ] ) );
-		$.sleep( 200 );
+		$.sleep( 100 );
 	}
 	return result;
 

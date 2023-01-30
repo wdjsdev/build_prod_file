@@ -15,57 +15,83 @@
 
 */
 
-function assignGarmentsToLayers()
+function assignGarmentsToLayers ()
 {
-	var	curGarment,
-		matchedGarments = [],
-		success = false;
+	var orphanedLayers = [];
 
 	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
 
 	var curGarmentCode;
 
 
-	var curGarmentLayer,cglName;
-	for(var g=0;g<garmentLayers.length;g++)
+	garmentLayers.forEach( function ( cgl )
 	{
-		curGarmentLayer = garmentLayers[g];
-
-		cglName = curGarmentLayer.name.replace(/-/g, "_").replace("_","-");
-		
-		if(threeDigitStyleNumPat.test(cglName))
+		var layerSuccess = false;
+		var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]+)/i, "" );
+		garmentsNeeded.forEach( function ( curGarment )
 		{
-			cglName = cglName.replace("_0","_10");
-			curGarmentLayer.name = cglName;
-		}
+			if ( layerSuccess )
+			{
+				return;
+			}
 
-		for(var x=0;x<garmentsNeeded.length;x++)
-		{
-			curGarment = garmentsNeeded[x];
 			curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
-			if(docRef.name.match(curGarment.designNumber) && cglName.match(curGarmentCode))
+
+			if ( cglName.match( curGarmentCode ) )
 			{
-				curGarment.parentLayer = curGarmentLayer;
-				success = true;
+				if ( curGarment.designNumber && docRef.name.match( curGarment.designNumber ) )
+				{
+					curGarment.parentLayer = cgl;
+					layerSuccess = true;
+				}
 			}
-			else if(cglName.match(curGarment.mid + "_" + curGarment.styleNum))
-			{
-				matchedGarments.push(curGarment);
-			}
-			
-		}
-		if(!success && matchedGarments.length && matchedGarments.length == 1)
+		} );
+		if ( !layerSuccess )
 		{
-			matchedGarments[0].parentLayer = curGarmentLayer;
-			success = true;
-			matchedGarments = [];
+			orphanedLayers.push( cgl );
 		}
-	}
+	} );
+
+	// var curGarmentLayer, cglName;
+	// for ( var g = 0; g < garmentLayers.length; g++ )
+	// {
+	// 	curGarmentLayer = garmentLayers[ g ];
+
+	// 	cglName = curGarmentLayer.name.replace( /-/g, "_" ).replace( "_", "-" );
+
+	// 	if ( threeDigitStyleNumPat.test( cglName ) )
+	// 	{
+	// 		cglName = cglName.replace( "_0", "_10" );
+	// 		curGarmentLayer.name = cglName;
+	// 	}
+
+	// 	for ( var x = 0; x < garmentsNeeded.length; x++ )
+	// 	{
+	// 		curGarment = garmentsNeeded[ x ];
+	// 		curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+	// 		if ( docRef.name.match( curGarment.designNumber ) && cglName.match( curGarmentCode ) )
+	// 		{
+	// 			curGarment.parentLayer = curGarmentLayer;
+	// 			success = true;
+	// 		}
+	// 		else if ( cglName.match( curGarment.mid + "_" + curGarment.styleNum ) )
+	// 		{
+	// 			matchedGarments.push( curGarment );
+	// 		}
+
+	// 	}
+	// 	if ( !success && matchedGarments.length && matchedGarments.length == 1 )
+	// 	{
+	// 		matchedGarments[ 0 ].parentLayer = curGarmentLayer;
+	// 		success = true;
+	// 		matchedGarments = [];
+	// 	}
+	// }
 
 
-	if(!success)
+	if ( orphanedLayers.length )
 	{
-		assignGarmentsToLayersDialog(matchedGarments.length ? matchedGarments : garmentsNeeded);
+		assignGarmentsToLayersDialog( garmentsNeeded );
 	}
-		
+
 }

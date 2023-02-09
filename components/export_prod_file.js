@@ -26,15 +26,24 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var tmpNumLay = doc.layers.add();
-	tmpNumLay.name = "tmpnum";
-	var tmpNameLay = doc.layers.add();
-	tmpNameLay.name = "tmpname";
-	var tmpGradLay = doc.layers.add();
-	tmpGradLay.name = "tmpgrad";
+	// var tmpNumLay = doc.layers.add();
+	// tmpNumLay.name = "tmpnum";
+	// var tmpNameLay = doc.layers.add();
+	// tmpNameLay.name = "tmpname";
+	// var tmpGradLay = doc.layers.add();
+	// tmpGradLay.name = "tmpgrad";
+
+	saveFile( doc, docName, Folder( destFolderPath ) );
+	log.l( "Successfully saved " + docName );
+
+	//expand all textFrames
+	afc( doc, "textFrames" ).forEach( function ( tf )
+	{
+		tf.createOutline();
+	} );
 
 
-	loadExpandAction();
+	// loadExpandAction();
 
 	pdfFolderName = pdfFolderName.replace( ".ai", "" );
 	var pdfFolder = Folder( destFolderPath + "/" + pdfFolderName + "_PDFs" );
@@ -69,14 +78,17 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		}
 	}
 
-	tmpNameLay.remove();
-	tmpNumLay.remove();
-	tmpGradLay.remove();
+	// tmpNameLay.remove();
+	// tmpNumLay.remove();
+	// tmpGradLay.remove();
 
-	saveFile( doc, docName, Folder( destFolderPath ) );
-	log.l( "Successfully saved " + docName );
+	// saveFile( doc, docName, Folder( destFolderPath ) );
+	// log.l( "Successfully saved " + docName );
 
-	unloadExpandAction();
+	// unloadExpandAction();
+
+	doc.close( SaveOptions.DONOTSAVECHANGES );
+	app.open( File( destFolderPath + "/" + docName ) );
 
 	scriptTimer.endTask( "exportProdFile" );
 	return result;
@@ -158,60 +170,63 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 
 				//loop each textFrame on the curRosterChild group
 				//so they can be expanded separately
-				for ( var y = 0, yLen = curRosterChild.pageItems.length; y < yLen; y++ )
-				{
-					if ( curRosterChild.pageItems[ y ].contents === "" )
-					{
-						//empty string. just move on
-						continue;
-					}
+				// for ( var y = 0, yLen = curRosterChild.pageItems.length; y < yLen; y++ )
+				// {
+				// 	if ( curRosterChild.pageItems[ y ].contents === "" )
+				// 	{
+				// 		//empty string. just move on
+				// 		continue;
+				// 	}
 
 
-					if ( curRosterChild.pageItems[ y ].name.indexOf( "Name" ) > -1 )
-					{
-						duplicateName = curRosterChild.pageItems[ y ].duplicate( tmpNameLay );
-						duplicateName.hidden = false;
-						try
-						{
-							var myTextPath = duplicateName.textPath;
-							resizeLiveText( duplicateName );
-							duplicateName = expand( duplicateName );
-						}
-						catch ( e )
-						{
-							duplicateName = expand( duplicateName );
+				// 	if ( curRosterChild.pageItems[ y ].name.indexOf( "Name" ) > -1 )
+				// 	{
+				// 		duplicateName = curRosterChild.pageItems[ y ].duplicate( tmpNameLay );
+				// 		duplicateName.hidden = false;
+				// 		try
+				// 		{
+				// 			var myTextPath = duplicateName.textPath;
+				// 			resizeLiveText( duplicateName );
+				// 			duplicateName = expand( duplicateName );
+				// 		}
+				// 		catch ( e )
+				// 		{
+				// 			duplicateName = expand( duplicateName );
 
-							if ( maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth )
-							{
-								playerNameCenterPoint = duplicateName.left + duplicateName.width / 2;
-								duplicateName.width = maxPlayerNameWidth;
-								duplicateName.left = playerNameCenterPoint - duplicateName.width / 2;
-							}
-						}
-					}
-					else if ( curRosterChild.pageItems[ y ].name.indexOf( "Number" ) > -1 )
-					{
+				// 			if ( maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth )
+				// 			{
+				// 				playerNameCenterPoint = duplicateName.left + duplicateName.width / 2;
+				// 				duplicateName.width = maxPlayerNameWidth;
+				// 				duplicateName.left = playerNameCenterPoint - duplicateName.width / 2;
+				// 			}
+				// 		}
+				// 	}
+				// 	else if ( curRosterChild.pageItems[ y ].name.indexOf( "Number" ) > -1 )
+				// 	{
 
-						duplicateNumber = curRosterChild.pageItems[ y ].duplicate( tmpNumLay );
-						duplicateNumber = expand( duplicateNumber );
-					}
-					else if ( curRosterChild.pageItems[ y ].name.toLowerCase().indexOf( "grad" ) > -1 )
-					{
-						curRosterChild.name += "_" + curRosterChild.pageItems[ y ].contents;
-						duplicateGrad = curRosterChild.pageItems[ y ].duplicate( tmpGradLay );
-						duplicateGrad = expand( duplicateGrad );
-					}
-				}
+				// 		duplicateNumber = curRosterChild.pageItems[ y ].duplicate( tmpNumLay );
+				// 		duplicateNumber = expand( duplicateNumber );
+				// 	}
+				// 	else if ( curRosterChild.pageItems[ y ].name.toLowerCase().indexOf( "grad" ) > -1 )
+				// 	{
+				// 		curRosterChild.name += "_" + curRosterChild.pageItems[ y ].contents;
+				// 		duplicateGrad = curRosterChild.pageItems[ y ].duplicate( tmpGradLay );
+				// 		duplicateGrad = expand( duplicateGrad );
+				// 	}
+				// }
+
+				curRosterChild.hidden = false;
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 
 				// pdfFileName = pdfFileName.replace( /\s/g, "_" );
-				pdfFileName = pdfFileName.replace(/\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g,"_")
+				pdfFileName = pdfFileName.replace( /\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g, "_" )
 				log.l( "pdfFileName: " + pdfFileName );
 				saveFile( doc, pdfFileName, pdfFolder );
-				removeExpandedRosterGroup( tmpNameLay );
-				removeExpandedRosterGroup( tmpNumLay );
-				removeExpandedRosterGroup( tmpGradLay );
+				// removeExpandedRosterGroup( tmpNameLay );
+				// removeExpandedRosterGroup( tmpNumLay );
+				// removeExpandedRosterGroup( tmpGradLay );
+				curRosterChild.hidden = true;
 			}
 
 			liveTextGroup.hidden = false;

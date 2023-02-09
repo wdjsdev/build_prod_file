@@ -33,7 +33,8 @@ function splitDataByGarment ()
 		"FD-400Y": "FD-400G",
 		"FD-170Y": "FD-170G",
 		"PS-2035G": "PS-2035Y",
-		"PS-4070G": "PS-4070Y"
+		"PS-4070G": "PS-4070Y",
+		"PS-2036Y": "PS-2036G",
 	}
 
 

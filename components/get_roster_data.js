@@ -54,7 +54,7 @@ function getRosterData ( roster )
 
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace( /\s*\(.*[^\d][^\)]*\s*\)?/ig, "" );
+		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
 		log.l( "after removing instructions, curEntry = " + curEntry );
 
 		if ( curEntry === "" )

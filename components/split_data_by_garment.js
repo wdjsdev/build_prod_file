@@ -252,7 +252,16 @@ function splitDataByGarment ()
 		curGarment.roster = {};
 		curGarment.garmentCount = 0;
 		curGarment.designNumber = curDesignNumber;
-		curGarment.garmentsNeededIndex = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + curGarmentIndex );
+
+		//set curGarment.garmentsNeededIndex to the next letter in the alphabet starting with "A"
+		//if garmentsNeededIndex > 0 && garmentsNeededIndex % 26 === 0
+		//prepend a letter to the index
+		// if ( curGarmentIndex > 0 && curGarmentIndex % 26 === 0 )
+		// {
+		// 	firstGarmentAppendage = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + 1 );
+		// }
+		// curGarment.garmentsNeededIndex = firstGarmentAppendage + String.fromCharCode( 65 + ( curGarmentIndex % 26 ) );
+		curGarment.garmentsNeededIndex = curGarmentIndex.toString();
 		curGarmentIndex++;
 
 	}

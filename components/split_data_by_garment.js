@@ -95,6 +95,10 @@ function splitDataByGarment ()
 					log.h( "attn:" )
 					log.l( "curMid = " + curMid );
 					curMid = garmentCodeConverter[ curMid ] || curMid;
+
+					//handle the case where the sales rep input "WY" in the garment code for some dumb fucking reason
+					//instead of "G". Example: FD-161WY instead of FD-161G
+					curMid = curMid.replace( /wy/i, "G" );
 					log.l( "afterconversion curMid = " + curMid );
 
 
@@ -150,7 +154,7 @@ function splitDataByGarment ()
 			{
 				initCurGarment();
 			}
-			else if ( curCode !== curGarment.code || curAge !== curGarment.age )
+			else if ( curMid + "_" + curStyle !== curGarment.mid + "_" + curGarment.styleNum || curAge !== curGarment.age )
 			{
 				log.l( "curCode or curAge do not match the current garment." );
 				sendCurGarment();

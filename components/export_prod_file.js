@@ -41,27 +41,11 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	{
 		if ( tf.name.match( /name/i ) )
 		{
-			while ( getExpandedWidth( tf ) > maxPlayerNameWidth )
-			{
-				tf.textRange.characterAttributes.horizontalScale -= 2;
-			}
-			// resizeLiveText( tf, maxPlayerNameWidth );
+			resizeLiveText( tf, maxPlayerNameWidth );
 		}
 		tf.createOutline();
 
 	} );
-
-	function getExpandedWidth ( frame )
-	{
-		var resultWidth;
-		var tmpLay = doc.layers.add();
-		var expFrame = frame.duplicate( tmpLay );
-		expFrame = expFrame.createOutline();
-		resultWidth = expFrame.width;
-		tmpLay.remove();
-		return resultWidth;
-
-	}
 
 
 	// loadExpandAction();

@@ -26,26 +26,35 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	// var tmpNumLay = doc.layers.add();
-	// tmpNumLay.name = "tmpnum";
-	// var tmpNameLay = doc.layers.add();
-	// tmpNameLay.name = "tmpname";
-	// var tmpGradLay = doc.layers.add();
-	// tmpGradLay.name = "tmpgrad";
+
 
 	saveFile( doc, docName, Folder( destFolderPath ) );
 	log.l( "Successfully saved " + docName );
 
 	//expand all textFrames
+	afc( artworkLayer, "groupItems" ).forEach( function ( g )
+	{
+		g.locked = g.hidden = false;
+		//delete any live text group
+		var ltg = findSpecificPageItem( g, "Live Text" );
+		if ( !ltg ) return;
+		ltg.remove();
+		var rg = findSpecificPageItem( g, "Roster" );
+		if ( !rg ) return;
+		afc( rg, "groupItems" ).forEach( function ( rosterGroup )
+		{
+			rosterGroup.locked = rosterGroup.hidden = false;
+			rosterGroup.selected = true;
+		} )
+	} );
+	app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
+	app.executeMenuCommand( "expandStyle" );
+
 	afc( doc, "textFrames" ).forEach( function ( tf )
 	{
-		if ( tf.name.match( /name/i ) )
-		{
-			resizeLiveText( tf, maxPlayerNameWidth );
-		}
 		tf.createOutline();
-
-	} );
+	} )
+	app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
 
 
 	// loadExpandAction();
@@ -160,7 +169,7 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		}
 		else
 		{
-			liveTextGroup.hidden = true;
+			// liveTextGroup.hidden = true;
 
 			//hide all rosterGroup children
 			for ( var x = 0, len = rosterGroup.groupItems.length; x < len; x++ )
@@ -173,68 +182,19 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 			{
 				curRosterChild = rosterGroup.groupItems[ x ];
 
-				//loop each textFrame on the curRosterChild group
-				//so they can be expanded separately
-				// for ( var y = 0, yLen = curRosterChild.pageItems.length; y < yLen; y++ )
-				// {
-				// 	if ( curRosterChild.pageItems[ y ].contents === "" )
-				// 	{
-				// 		//empty string. just move on
-				// 		continue;
-				// 	}
-
-
-				// 	if ( curRosterChild.pageItems[ y ].name.indexOf( "Name" ) > -1 )
-				// 	{
-				// 		duplicateName = curRosterChild.pageItems[ y ].duplicate( tmpNameLay );
-				// 		duplicateName.hidden = false;
-				// 		try
-				// 		{
-				// 			var myTextPath = duplicateName.textPath;
-				// 			resizeLiveText( duplicateName );
-				// 			duplicateName = expand( duplicateName );
-				// 		}
-				// 		catch ( e )
-				// 		{
-				// 			duplicateName = expand( duplicateName );
-
-				// 			if ( maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth )
-				// 			{
-				// 				playerNameCenterPoint = duplicateName.left + duplicateName.width / 2;
-				// 				duplicateName.width = maxPlayerNameWidth;
-				// 				duplicateName.left = playerNameCenterPoint - duplicateName.width / 2;
-				// 			}
-				// 		}
-				// 	}
-				// 	else if ( curRosterChild.pageItems[ y ].name.indexOf( "Number" ) > -1 )
-				// 	{
-
-				// 		duplicateNumber = curRosterChild.pageItems[ y ].duplicate( tmpNumLay );
-				// 		duplicateNumber = expand( duplicateNumber );
-				// 	}
-				// 	else if ( curRosterChild.pageItems[ y ].name.toLowerCase().indexOf( "grad" ) > -1 )
-				// 	{
-				// 		curRosterChild.name += "_" + curRosterChild.pageItems[ y ].contents;
-				// 		duplicateGrad = curRosterChild.pageItems[ y ].duplicate( tmpGradLay );
-				// 		duplicateGrad = expand( duplicateGrad );
-				// 	}
-				// }
-
 				curRosterChild.hidden = false;
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 
 				// pdfFileName = pdfFileName.replace( /\s/g, "_" );
+				//replace any special characters with underscores
 				pdfFileName = pdfFileName.replace( /\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g, "_" )
 				log.l( "pdfFileName: " + pdfFileName );
 				saveFile( doc, pdfFileName, pdfFolder );
-				// removeExpandedRosterGroup( tmpNameLay );
-				// removeExpandedRosterGroup( tmpNumLay );
-				// removeExpandedRosterGroup( tmpGradLay );
 				curRosterChild.hidden = true;
 			}
 
-			liveTextGroup.hidden = false;
+			// liveTextGroup.hidden = false;
 		}
 
 		log.l( "Successfully exported " + pdfFileName )

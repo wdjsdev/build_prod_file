@@ -261,7 +261,7 @@ function splitDataByGarment ()
 		// 	firstGarmentAppendage = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + 1 );
 		// }
 		// curGarment.garmentsNeededIndex = firstGarmentAppendage + String.fromCharCode( 65 + ( curGarmentIndex % 26 ) );
-		curGarment.garmentsNeededIndex = curGarmentIndex.toString();
+		curGarment.garmentsNeededIndex = ( curGarmentIndex + 1 ).toString();
 		curGarmentIndex++;
 
 	}

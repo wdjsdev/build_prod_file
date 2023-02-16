@@ -1,9 +1,29 @@
 function resizeLiveText ( frame, maxWidth )
 {
-	while ( isOverset( frame ) || getExpandedWidth( frame ) > maxWidth )
+	if ( !frame.contents ) { return };
+
+	while ( isOverset( frame ) )
 	{
-		frame.textRange.characterAttributes.horizontalScale -= 2;
+		frame.textRange.characterAttributes.horizontalScale -= 2
 	}
+
+
+	if ( getExpandedDimension( frame ) > maxWidth )
+	{
+		while ( getExpandedDimension( frame ) > maxWidth )
+		{
+			frame.textRange.characterAttributes.horizontalScale -= 2;
+		}
+	}
+	else
+	{
+		while ( frame.textRange.characterAttributes.horizontalScale < 100 && getExpandedDimension( frame ) < maxWidth )
+		{
+			frame.textRange.characterAttributes.horizontalScale += 2;
+		}
+	}
+
+
 
 
 	function isOverset ( frame )
@@ -27,15 +47,19 @@ function resizeLiveText ( frame, maxWidth )
 		return false;
 	};
 
-	function getExpandedWidth ( frame )
+	function getExpandedDimension ( frame )
 	{
 		var resultWidth;
+		var resultHeight;
 		var tmpLay = app.activeDocument.layers.add();
 		var expFrame = frame.duplicate( tmpLay );
 		expFrame = expFrame.createOutline();
 		resultWidth = expFrame.width;
+		resultHeight = expFrame.height;
 		tmpLay.remove();
-		return resultWidth;
+		var result = resultWidth > resultHeight ? resultWidth : resultHeight;
+		log.l( "debug: expanded dimension: " + result );
+		return result;
 
 
 	}

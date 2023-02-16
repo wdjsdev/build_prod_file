@@ -17,57 +17,33 @@
 
 function assignGarmentsToLayers ()
 {
-	var orphanedGarments = [];
 
-	var docDesignNumber = docRef.name.match( /[\da-z]{12}/i );
-	if ( docDesignNumber ) docDesignNumber = docDesignNumber[ 0 ];
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/i ) || null;
+
+	var assignedGarments = [];
 
 	garmentsNeeded.forEach( function ( curGarment )
 	{
-
-		if ( docDesignNumber && curGarment.designNumber && !docRef.name.match( curGarment.designNumber ) )
-		{
-			return;
-		}
+		curGarment.parentLayer = null;
 		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
-		var curGarmentDesignNumber = curGarment.designNumber || null;
-		curGarment.layerMatches = [];
-		garmentLayers.forEach( function ( curGarmentLayer )
+		var curDesignNumber = curGarment.designNumber || null;
+		garmentLayers.forEach( function ( cgl )
 		{
-			var cglName = curGarmentLayer.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" );
-			if ( !cglName.match( curGarmentCode ) )
+			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
+			if ( cglName.match( curGarmentCode ) )
 			{
-				log.l( "Garment layer " + cglName + " does not match garment code " + curGarmentCode );
-				return;
-			}
-			curGarment.layerMatches.push( curGarmentLayer );
-
-			if ( docDesignNumber && curGarmentDesignNumber && docRef.name.match( curGarmentDesignNumber ) )
-			{
-				curGarment.parentLayer = curGarmentLayer;
-				return;
+				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) )
+				{
+					curGarment.parentLayer = cgl;
+					assignedGarments.push( curGarment );
+				}
 			}
 		} );
-
-		if ( curGarment.layerMatches.length === 1 )
-		{
-			curGarment.parentLayer = curGarment.layerMatches[ 0 ];
-		}
-
-		if ( curGarment.parentLayer ) 
-		{
-			log.l( "Found the parent layer for garment " + curGarmentCode + " : " + curGarment.parentLayer.name );
-			return;
-		}
-
-		orphanedGarments.push( curGarment );
 	} );
 
-	if ( orphanedGarments.length > 0 )
+	if ( !assignedGarments.length )
 	{
-		log.l( "The following garments don't have a parent layer: " + orphanedGarments.map( function ( curGarment ) { return curGarment.mid + "_" + curGarment.styleNum; } ).join( ", " ) );
-		assignGarmentsToLayersDialog( orphanedGarments );
+		assignGarmentsToLayersDialog( garmentsNeeded );
 	}
-
 
 }

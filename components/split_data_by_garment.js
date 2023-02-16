@@ -33,7 +33,8 @@ function splitDataByGarment ()
 		"FD-400Y": "FD-400G",
 		"FD-170Y": "FD-170G",
 		"PS-2035G": "PS-2035Y",
-		"PS-4070G": "PS-4070Y"
+		"PS-4070G": "PS-4070Y",
+		"PS-2036Y": "PS-2036G",
 	}
 
 
@@ -94,6 +95,9 @@ function splitDataByGarment ()
 					log.h( "attn:" )
 					log.l( "curMid = " + curMid );
 					curMid = garmentCodeConverter[ curMid ] || curMid;
+
+					//handle the case where the sales rep input "WY" in the garment code for some dumb fucking reason
+					//instead of "G". Example: FD-161WY instead of FD-161G
 					curMid = curMid.replace( /wy/i, "G" );
 					log.l( "afterconversion curMid = " + curMid );
 
@@ -150,7 +154,7 @@ function splitDataByGarment ()
 			{
 				initCurGarment();
 			}
-			else if ( curCode !== curGarment.code || curAge !== curGarment.age )
+			else if ( curMid + "_" + curStyle !== curGarment.mid + "_" + curGarment.styleNum || curAge !== curGarment.age )
 			{
 				log.l( "curCode or curAge do not match the current garment." );
 				sendCurGarment();
@@ -249,7 +253,16 @@ function splitDataByGarment ()
 		curGarment.roster = {};
 		curGarment.garmentCount = 0;
 		curGarment.designNumber = curDesignNumber;
-		curGarment.garmentsNeededIndex = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + curGarmentIndex );
+
+		//set curGarment.garmentsNeededIndex to the next letter in the alphabet starting with "A"
+		//if garmentsNeededIndex > 0 && garmentsNeededIndex % 26 === 0
+		//prepend a letter to the index
+		// if ( curGarmentIndex > 0 && curGarmentIndex % 26 === 0 )
+		// {
+		// 	firstGarmentAppendage = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + 1 );
+		// }
+		// curGarment.garmentsNeededIndex = firstGarmentAppendage + String.fromCharCode( 65 + ( curGarmentIndex % 26 ) );
+		curGarment.garmentsNeededIndex = ( curGarmentIndex + 1 ).toString();
 		curGarmentIndex++;
 
 	}

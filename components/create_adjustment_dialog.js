@@ -216,6 +216,36 @@ function createAdjustmentDialog ()
 		var msg = "Enter the maximum player name width in inches.";
 		var disp = UI.static( parent, msg );
 		var input = parent.maxWidthInput = UI.edit( parent, "9", 10 );
+		maxPlayerNameWidth = 9 * INCH_TO_POINT_AT_SCALE;
+		adjustNameWidths();
+		// on change, update the global variable
+		input.addEventListener( "change", function () 
+		{
+			maxPlayerNameWidth = Number( input.text ) * INCH_TO_POINT_AT_SCALE || maxPlayerNameWidth;
+			adjustNameWidths();
+			app.redraw();
+		} );
+	}
+
+	function adjustNameWidths ()
+	{
+		log.l( "Adjusting name widths to " + maxPlayerNameWidth + " points." )
+		var artworkLayer = findSpecificLayer( doc.layers, "Artwork" );
+		log.l( "debug: Artwork layer: " + artworkLayer );
+		afc( artworkLayer, "groupItems" ).forEach( function ( gi )
+		{
+			var rosterGroup = findSpecificPageItem( gi, "Roster" );
+			if ( !rosterGroup ) { return; };
+			log.l( "debug: Roster group parent : " + rosterGroup.parent )
+			afc( rosterGroup, "groupItems" ).forEach( function ( rgi )
+			{
+				var playerName = findSpecificPageItem( rgi, "Name", "any" );
+				if ( !playerName ) { return; };
+				log.l( "debug: rosterGroup: " + rosterGroup.name );
+				log.l( "debug: maxPlayerNameWidth: " + maxPlayerNameWidth );
+				resizeLiveText( playerName, maxPlayerNameWidth )
+			} );
+		} );
 	}
 
 	function createTransformControls ( parent )
@@ -370,36 +400,36 @@ function createAdjustmentDialog ()
 		var crn = curRosterGroup.name;
 
 		var nameStr = numStr = gradStr = "";
-		if(crn.match(/\(?no name\)?/i))
+		if ( crn.match( /\(?no name\)?/i ) )
 		{
-			crn = crn.replace(/\(?no name\)?\s*/i,"")
+			crn = crn.replace( /\(?no name\)?\s*/i, "" )
 		}
-		if(crn.match(/\(?no number\)?/i))
+		if ( crn.match( /\(?no number\)?/i ) )
 		{
-			crn = crn.replace(/\(?no number\)?\s*/i,"")
+			crn = crn.replace( /\(?no number\)?\s*/i, "" )
 		}
 
-		var split = crn.split(" ");
+		var split = crn.split( " " );
 
-		split.forEach(function(str)
+		split.forEach( function ( str )
 		{
-			if(str.match(/^[a-z]/i))
+			if ( str.match( /^[a-z]/i ) )
 			{
 				nameStr += str + " ";
 			}
-			if(str.match(/^\d{1,3}$/))
+			if ( str.match( /^\d{1,3}$/ ) )
 			{
 				numStr = str;
 			}
-			if(str.match(/^\d{4}$/))
+			if ( str.match( /^\d{4}$/ ) )
 			{
 				gradStr = str;
 			}
-		});
+		} );
 
-		parent.nameInput.text = trimSpaces(nameStr);
-		parent.numInput.text = trimSpaces(numStr);
-		parent.gradInput.text = trimSpaces(gradStr);
+		parent.nameInput.text = trimSpaces( nameStr );
+		parent.numInput.text = trimSpaces( numStr );
+		parent.gradInput.text = trimSpaces( gradStr );
 	}
 
 	function updateCurRoster ( name, num, grad )

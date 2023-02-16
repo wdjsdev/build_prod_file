@@ -12,24 +12,24 @@
 
 */
 
-function assignGarmentsToLayersDialog(garments)
+function assignGarmentsToLayersDialog ( garments )
 {
 	var rel = [];
 
-	var curGarment,sep;
+	var curGarment, sep;
 
-	var garmentOptions = ["Skip This Garment"];
+	var garmentOptions = [ "Skip This Layer" ];
 	var msg = "";
 	var cg
-	for(var x=0;x<garments.length;x++)
+	for ( var x = 0; x < garments.length; x++ )
 	{
-		cg = garments[x];
+		cg = garments[ x ];
 
 
 		msg = "Garment " + cg.garmentsNeededIndex + ": ";
-		msg += (cg.mid ? cg.mid : cg.name) + "_";
+		msg += ( cg.mid ? cg.mid : cg.name ) + "_";
 		msg += cg.styleNum;
-		msg += (cg.designNumber ? "_" + cg.designNumber : "");
+		msg += ( cg.designNumber ? "_" + cg.designNumber : "" );
 
 		cg.dialogLabel = msg; //so this can be identified in the submit function
 
@@ -38,76 +38,76 @@ function assignGarmentsToLayersDialog(garments)
 		//order is being referenced.
 		//for example the first garment on an order will be "A"
 		//Second garment will be "B", etc.
-		
-		garmentOptions.push(msg);
 
-		
+		garmentOptions.push( msg );
+
+
 	}
 
 
 
-	var w = new Window("dialog","Please select the appropriate layer for each garment on the sales order");
-	var msgGroup = UI.group(w);
-		msgGroup.orientation = "row";
+	var w = new Window( "dialog", "Please select the appropriate layer for each garment on the sales order" );
+	var msgGroup = UI.group( w );
+	msgGroup.orientation = "row";
 
-		var layMsg = UI.static(msgGroup,"Layers",15);
-		var garmentMsg = UI.static(msgGroup,"Garments Ordered");
+	var layMsg = UI.static( msgGroup, "Layers", 15 );
+	var garmentMsg = UI.static( msgGroup, "Garments Ordered" );
 
 
 	var curGarmentLayer;
-	for(var x=0,len = garmentLayers.length;x<len;x++)
+	for ( var x = 0, len = garmentLayers.length; x < len; x++ )
 	{
-		curGarmentLayer = garmentLayers[x];
-		rel[x] = {};
-		rel[x].index = x;
-		rel[x].group = UI.group(w);
-		rel[x].group.orientation = "row";
-		rel[x].msg = UI.static(rel[x].group,curGarmentLayer.name,15);
-		rel[x].dropdown = UI.dropdown(rel[x].group,garmentOptions);
-		rel[x].dropdown.selection = (x+1);
-		sep = UI.hseparator(w,200);
+		curGarmentLayer = garmentLayers[ x ];
+		rel[ x ] = {};
+		rel[ x ].index = x;
+		rel[ x ].group = UI.group( w );
+		rel[ x ].group.orientation = "row";
+		rel[ x ].msg = UI.static( rel[ x ].group, curGarmentLayer.name, 15 );
+		rel[ x ].dropdown = UI.dropdown( rel[ x ].group, garmentOptions );
+		rel[ x ].dropdown.selection = ( x + 1 );
+		sep = UI.hseparator( w, 200 );
 
-		
+
 	}
 
-	var btnGroup = UI.group(w);
-		var submitBtn = UI.button(btnGroup,"Submit",submit)
-		var cancelBtn = UI.button(btnGroup,"Cancel",cancel)
+	var btnGroup = UI.group( w );
+	var submitBtn = UI.button( btnGroup, "Submit", submit )
+	var cancelBtn = UI.button( btnGroup, "Cancel", cancel )
 	w.show();
 
 
 
-	function submit()
+	function submit ()
 	{
-		var garment,layer;
-		for(var x=0,len=rel.length;x<len;x++)
+		var garment, layer;
+		for ( var x = 0, len = rel.length; x < len; x++ )
 		{
-			if(rel[x].dropdown.selection.text.indexOf("Skip")=== -1)
+			if ( rel[ x ].dropdown.selection.text.indexOf( "Skip" ) === -1 )
 			{
-				garment = getGarment(rel[x].dropdown.selection.text);
-				garment.parentLayer = layers[rel[x].msg.text];
-				log.l("Assigned layer: " + garment.parentLayer.name + " to garment: " + garment.dialogLabel);
+				garment = getGarment( rel[ x ].dropdown.selection.text );
+				garment.parentLayer = layers[ rel[ x ].msg.text ];
+				log.l( "Assigned layer: " + garment.parentLayer.name + " to garment: " + garment.dialogLabel );
 			}
 		}
 		w.close();
 	}
 
-	function cancel()
+	function cancel ()
 	{
-		log.l("User cancelled dialog. Exiting script.");
-		errorList.push("Exited the script because the layer prompt dialog was cancelled.");
+		log.l( "User cancelled dialog. Exiting script." );
+		errorList.push( "Exited the script because the layer prompt dialog was cancelled." );
 		valid = false;
 		w.close();
 	}
 
 
-	function getGarment(msg)
+	function getGarment ( msg )
 	{
-		for(var x=0;x<garments.length;x++)
+		for ( var x = 0; x < garments.length; x++ )
 		{
-			if(garments[x].dialogLabel === msg)
+			if ( garments[ x ].dialogLabel === msg )
 			{
-				return garments[x];
+				return garments[ x ];
 			}
 		}
 	}

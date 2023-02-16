@@ -21,12 +21,28 @@ function masterLoop ()
 	scriptTimer.beginTask( "masterLoop" );
 	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
-
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/ig ) || null;
 
 	scriptTimer.beginTask( "getRelevantGarments" );
 	//filter garmentsNeeded to remove any that don't have a parent layer
 	relevantGarments = garmentsNeeded.filter( function ( curGarment )
 	{
+		curGarment.parentLayer = null;
+		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+		var curDesignNumber = curGarment.designNumber || null;
+
+		afc( docRef, "layers" ).forEach( function ( cgl )
+		{
+			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
+			if ( cglName.match( curGarmentCode ) )
+			{
+				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) >= 0 )
+				{
+					curGarment.parentLayer = cgl;
+				}
+			}
+		} );
+
 		return curGarment.parentLayer;
 	} );
 
@@ -34,9 +50,20 @@ function masterLoop ()
 
 	if ( !relevantGarments.length )
 	{
+		assignGarmentsToLayersDialog( garmentsNeeded );
+		relevantGarments = garmentsNeeded.filter( function ( curGarment )
+		{
+			return curGarment.parentLayer;
+		} );
+	}
+
+	if ( !relevantGarments.length )
+	{
 		errorList.push( "This prepress file doesn't match any garments in the order." );
 		result = false;
 	}
+
+
 
 
 

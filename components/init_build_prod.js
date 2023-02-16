@@ -78,13 +78,13 @@ function initBuildProd ()
 		}
 	}
 
-	if ( valid && !noOrderNumber )
-	{
-		scriptTimer.beginTask( "assignGarments" );
-		garmentLayers = findGarmentLayers();
-		assignGarmentsToLayers();
-		scriptTimer.endTask( "assignGarments" );
-	}
+	// if ( valid && !noOrderNumber )
+	// {
+	// 	scriptTimer.beginTask( "assignGarments" );
+	garmentLayers = findGarmentLayers();
+	// 	assignGarmentsToLayers();
+	// 	scriptTimer.endTask( "assignGarments" );
+	// }
 
 	scriptTimer.endTask( "initBuildProd" );
 }

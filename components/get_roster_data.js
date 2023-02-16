@@ -46,14 +46,17 @@ function getRosterData ( roster )
 	for ( var x = 0, len = splitRoster.length; x < len; x++ )
 	{
 		curPlayer = {};
+		log.l( "curEnry = " + splitRoster[ x ] )
 		curEntry = splitRoster[ x ].replace( trimSpacesRegex, "" );
 		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
+		log.l( "after removing spaces, curEntry = " + curEntry );
+
 
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace( /\s*\(.*[^\d][^\)]*\s*\)/ig, "" );
+		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
+		log.l( "after removing instructions, curEntry = " + curEntry );
 
-		log.l( "after removing spaces, curEntry = " + curEntry );
 		if ( curEntry === "" )
 		{
 			log.l( "curEntry was an empty string. continuing loop." );

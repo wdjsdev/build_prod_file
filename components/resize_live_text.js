@@ -2,25 +2,9 @@ function resizeLiveText ( frame, maxWidth )
 {
 	if ( !frame.contents ) { return };
 
-	while ( isOverset( frame ) )
+	while ( isOverset( frame ) || getExpandedDimension( frame ) > maxWidth )
 	{
 		frame.textRange.characterAttributes.horizontalScale -= 2
-	}
-
-
-	if ( getExpandedDimension( frame ) > maxWidth )
-	{
-		while ( getExpandedDimension( frame ) > maxWidth )
-		{
-			frame.textRange.characterAttributes.horizontalScale -= 2;
-		}
-	}
-	else
-	{
-		while ( frame.textRange.characterAttributes.horizontalScale < 100 && getExpandedDimension( frame ) < maxWidth )
-		{
-			frame.textRange.characterAttributes.horizontalScale += 2;
-		}
 	}
 
 

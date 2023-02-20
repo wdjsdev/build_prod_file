@@ -215,9 +215,9 @@ function createAdjustmentDialog ()
 	{
 		var msg = "Enter the maximum player name width in inches.";
 		var disp = UI.static( parent, msg );
-		var input = parent.maxWidthInput = UI.edit( parent, "9", 10 );
+		var input = parent.maxWidthInput = UI.edit( parent, "Max Width", 10 );
 		maxPlayerNameWidth = 9 * INCH_TO_POINT_AT_SCALE;
-		adjustNameWidths();
+		// adjustNameWidths();
 		// on change, update the global variable
 		input.addEventListener( "change", function () 
 		{

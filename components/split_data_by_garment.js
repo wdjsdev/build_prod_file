@@ -115,7 +115,7 @@ function splitDataByGarment ()
 				}
 				else if ( curOpt.name.toLowerCase() === "design" && curOpt.value !== "" )
 				{
-					curDesignNumber = curOpt.value;
+					curDesignNumber = curOpt.value.match( /[0-9a-z]{12}/i ) ? curOpt.value.match( /[0-9a-z]{12}/i )[ 0 ] : "";
 					log.l( "set curDesignNumber = " + curDesignNumber );
 				}
 			}

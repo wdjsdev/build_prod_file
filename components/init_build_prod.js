@@ -41,7 +41,12 @@ function initBuildProd ()
 		scriptTimer.endTask( "getSaveLocation" );
 	}
 
-	if ( valid )
+
+	if ( valid && orderNum === "3880327" )
+	{
+		//don't get the data
+	}
+	else if ( valid )
 	{
 		scriptTimer.beginTask( "curlingOrderData" );
 		curOrderData = curOrderData || curlData( NOD, orderNum )
@@ -54,12 +59,27 @@ function initBuildProd ()
 
 	}
 
-	if ( valid )
+
+	if ( valid && orderNum === "3880327" )
+	{
+		// eval( "#include \"" + dataPath + "tmp_build_prod_data/3880327.js\"" );
+		var tmpDataFile = File( dataPath + "tmp_build_prod_data/3880327.js" );
+		tmpDataFile.open( "r" );
+		garmentsNeeded = JSON.parse( tmpDataFile.read() );
+		tmpDataFile.close();
+	}
+	else if ( valid )
 	{
 		scriptTimer.beginTask( "getOrderData" );
 		valid = splitDataByGarment();
 		scriptTimer.endTask( "getOrderData" );
 	}
+
+	// var outFile = File( desktopPath + "/temp/3880327.js" );
+	// outFile.open( "w" );
+	// outFile.write( "var garmentsNeeded = " + JSON.stringify( garmentsNeeded ) );
+	// outFile.close();
+
 
 	if ( noOrderNumber )
 	{

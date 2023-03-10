@@ -33,7 +33,7 @@ function createAdjustmentDialog ()
 	//group
 	//size selection listbox
 	var g_sizeSelect = createListboxGroup( g_listboxGroup, "(S)ize" );
-	populateListbox( g_sizeSelect.listbox, prodFileSizes );
+	populateListbox( g_sizeSelect.listbox, prodFileSizes.reverse() );
 	g_sizeSelect.listbox.onChange = function ()
 	{
 		if ( !g_sizeSelect.listbox.selection )

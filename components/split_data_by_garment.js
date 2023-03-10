@@ -1,31 +1,8 @@
-/*
-	Component Name: split_data_by_garment
-	Author: William Dowling
-	Creation Date: 27 February, 2018
-	Description: 
-		loop the curOrderData and create a new object
-		for each garment and push the objects
-		to the garmentsNeeded array.
-	Arguments
-		none
-	Return value
-		result
-			success boolean
-
-*/
-
-function splitDataByGarment ()
+function splitDataByGarment ( curOrderData )
 {
-	log.h( "Beginning execution of splitDataByGarment() function" );
-	var result = true;
-	var garPat = /[fpbmc][dsmabf][b]?[-_](.*[\:])?/i;
-
-	var curLine, curItem, curInseam, curWaist, curMid;
-
-	var curGarment;
-
-	var curSize, curAge, curCode, curStyle, curRoster, additionalPlayers, curDesignNumber;
-
+	var resultGarments = [];
+	var curGarment = null;
+	var separator = /fillin|fds|df|minimum|note|rush|fluor|bau/i;
 	var garmentCodeConverter =
 	{
 		"FD-500": "FD-500W",
@@ -37,248 +14,125 @@ function splitDataByGarment ()
 		"PS-2036Y": "PS-2036G",
 	}
 
+	scriptTimer.beginTask( "processData_" + curOrderData.order );
 
-
-	var curGarmentIndex = 0;
-	var firstGarmentAppendage = "A";
-
-	var womensPat = /w$/i;
-	var mensPat = /[^wgy]$/i;
-
-	for ( var x = 0, len = curOrderData.lines.length; x < len; x++ )
+	curOrderData.lines.forEach( function ( curLine, i )
 	{
-		curLine = curOrderData.lines[ x ];
-		curItem = curLine.item;
-
-		log.l( "Processing line " + x + ". curItem = " + curItem )
-		if ( garPat.test( curItem ) && curItem.toLowerCase().indexOf( "sample" ) === -1 && curItem.toLowerCase().indexOf( "fluorescents" ) === -1 )
+		//if this line is a separator, send the current garment to the resultGarments array
+		//and reset the curGarment variable
+		if ( curLine.item.match( separator ) )
 		{
-			log.l( curItem + " is a proper garment line." );
+			curGarment ? resultGarments.push( curGarment ) : null;
+			curGarment = null;
+			return;
+		}
+
+		//if this line is not a garment, skip it
+		if ( !curLine.item.match( /^(fd|ps|bm|mbb|ba)[-_]/i ) )
+		{
+			log.l( "Skipping line " + curLine.item + " because it is not a garment." )
+			return;
+		}
+
+		var curLineData = {};
+
+		var colonPos = curLine.item.indexOf( ":" );
+		curLineData.item = curLine.item.substring( 0, colonPos > -1 ? colonPos : curLine.item.length );
+
+		curLine.options.forEach( function ( curOpt )
+		{
+			curLineData[ curOpt.name.toLowerCase() ] = curOpt.value;
+		} );
 
 
-			// if(curItem.toLowerCase().indexOf("-bag-") === -1)
-			if ( !curItem.match( /bag/i ) )
+		curLineData.mid = curLineData.mid ? ( garmentCodeConverter[ curLineData.mid ] || curLineData.mid ) : "";
+		curLineData.style = curLineData.style ? curLineData.style : "";
+		curLineData.size = curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "";
+		if ( curLineData.item.match( /bag/i ) )
+		{
+			curLineData.size = "ONE PIECE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
+		}
+		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
+		curLineData.roster = curLine.memo.roster || "(blank)";
+		curLineData.designNumber = curLineData.design || "";
+		curLineData.qty = curLine.quantity * 1;
+
+		//take care of any missing data if possible
+		if ( curGarment )
+		{
+			if ( !curLineData.mid && curGarment.mid )
 			{
-				curSize = getSize( curItem );
-				curSize = curSize.replace( /[\"\']/g, "" );
+				curLineData.mid = curGarment.mid;
 			}
-			else
+			else if ( !curGarment.mid && curLineData.mid )
 			{
-				curSize = "ONE PIECE";
-			}
-
-			//replace any "half sizes" that use slashes or hyphens with a ".5"
-			curSize = curSize.replace( /\s?1[\\\-\/]2/, ".5" );
-			curAge = getAge( curSize );
-			curCode = getCode( curItem );
-			if ( !curStyle )
-			{
-				curStyle = getStyleNum( curLine );
-			}
-
-
-			log.l( "checking for mid && design number" );
-			for ( var opt = 0, curOpt; opt < curLine.options.length; opt++ )
-			{
-				curOpt = curLine.options[ opt ];
-				if ( curOpt.name.toLowerCase() === "mid" && curOpt.value !== "" )
-				{
-
-					curMid = curOpt.value;
-
-					//fix broken mid values.
-					//an example is FD-500. This code should be FD-500W,
-					//but the builder exports the wrong code for this garment
-					//so we just have to brute force overwrite the problem
-					//garments here.
-
-					log.h( "attn:" )
-					log.l( "curMid = " + curMid );
-					curMid = garmentCodeConverter[ curMid ] || curMid;
-
-					//handle the case where the sales rep input "WY" in the garment code for some dumb fucking reason
-					//instead of "G". Example: FD-161WY instead of FD-161G
-					curMid = curMid.replace( /wy/i, "G" );
-					log.l( "afterconversion curMid = " + curMid );
-
-
-
-					if ( curAge == "Y" )
-					{
-						curMid = curMid.replace( womensPat, "G" );
-						if ( mensPat.test( curMid ) )
-						{
-							curMid += "Y"
-						}
-					}
-					log.l( "set curMid to " + curMid );
-				}
-				else if ( curOpt.name.toLowerCase() === "design" && curOpt.value !== "" )
-				{
-					curDesignNumber = curOpt.value.match( /[0-9a-z]{12}/i ) ? curOpt.value.match( /[0-9a-z]{12}/i )[ 0 ] : "";
-					log.l( "set curDesignNumber = " + curDesignNumber );
-				}
+				curGarment.mid = curLineData.mid;
 			}
 
-			if ( curMid )
+			if ( !curLineData.style && curGarment.styleNum )
 			{
-				log.l( "Found the mid value. it is: " + curMid );
+				curLineData.style = curGarment.styleNum;
 			}
-			else
+			else if ( !curGarment.styleNum && curLineData.style )
 			{
-				log.e( "No mid value was detected for " + curCode );
-			}
-
-
-
-
-			curRoster = curLine.memo.roster;
-
-			if ( !curRoster )
-			{
-				curRoster = "";
-			}
-			else if ( curRoster.match( /add.*inch/i ) )
-			{
-				messageList.push( "Please don't forget to setup the custom inseam as well." );
-				messageList.push( curMid + "_" + curStyle + " size " + curSize + ( curWaist ? "x" + curWaist : "" ) );
-				messageList.push( "Look for the note on the sales order that says: " + curRoster );
+				curGarment.styleNum = curLineData.style;
 			}
 
-
-
-
-
-
-			if ( !curGarment || !curGarment.garmentCount )
+			if ( !curLineData.designNumber && curGarment.designNumber )
 			{
-				initCurGarment();
+				curLineData.designNumber = curGarment.designNumber;
 			}
-			else if ( curMid + "_" + curStyle !== curGarment.mid + "_" + curGarment.styleNum || curAge !== curGarment.age )
+			else if ( !curGarment.designNumber && curLineData.design )
 			{
-				log.l( "curCode or curAge do not match the current garment." );
-				sendCurGarment();
-				curStyle = getStyleNum( curLine );
-				initCurGarment();
-			}
-
-			if ( curCode === curGarment.code && curAge === curGarment.age )
-			{
-				log.l( "curLine.quantity = " + curLine.quantity );
-				curInseam = getInseam( curLine.options );
-				if ( !curInseam )
-				{
-					curGarment.roster[ curSize ] = {};
-					curGarment.roster[ curSize ].qty = curLine.quantity;
-					curGarment.roster[ curSize ].players = getRosterData( curRoster );
-					log.l( "Added " + curGarment.roster[ curSize ].players.length + " players to the roster for " + curSize + "." );
-				}
-				else
-				{
-					curWaist = curSize;
-					curSize = curInseam;
-					curSize = curSize.replace( /[\"\']/g, "" );
-
-					//if no garment object exists create one
-					if ( curGarment.roster && !curGarment.roster[ curSize ] )
-					{
-						curGarment.roster[ curSize ] = {};
-					}
-
-
-					if ( !curGarment.roster[ curSize ][ curWaist ] )
-					{
-						//no curWaist property for this garment.
-						//This is a standard size garment
-						curGarment.roster[ curSize ][ curWaist ] = {};
-						curGarment.roster[ curSize ][ curWaist ].qty = curLine.quantity;
-						curGarment.roster[ curSize ][ curWaist ].players = getRosterData( curRoster );
-						log.l( "Added " + curGarment.roster[ curSize ][ curWaist ].players.length + " players to the roster for " + curSize + "." );
-					}
-					else
-					{
-						//curWaist property exists for this garment.
-						//This is a variable inseam garment
-						curGarment.roster[ curSize ][ curWaist ].qty = parseInt( curLine.quantity ) + parseInt( curGarment.roster[ curSize ][ curWaist ].qty );
-						additionalPlayers = getRosterData( curRoster );
-						log.l( "Added " + additionalPlayers.length + " new waist sizes to the roster for the inseam " + curSize + "." );
-						log.l( "the following players were added: " + additionalPlayers.join( "\n" ) );
-						curGarment.roster[ curSize ][ curWaist ].players = curGarment.roster[ curSize ][ curWaist ].players.concat( additionalPlayers );
-					}
-
-				}
-				curGarment.garmentCount += parseInt( curLine.quantity );
+				curGarment.designNumber = curLineData.design;
 			}
 
 		}
-		else if ( curItem.toLowerCase().indexOf( "sample" ) > -1 )
+
+		curLineData.code = curLineData.mid + "_" + curLineData.style;
+
+		if ( curGarment && ( curGarment.item !== curLineData.item || curGarment.age !== curLineData.age ) )
 		{
-			errorList.push( "Sorry. Due to the formatting inconsistencies with FD-SAMPLE sales orders, you're on your own for this sample." );
+			curGarment ? resultGarments.push( curGarment ) : null;
+			curGarment = null;
 		}
-		else if ( isSeparator( curItem ) )
+
+		if ( !curGarment )
 		{
-			log.l( curItem + " is a separator." );
-			if ( curGarment && curGarment.code && curGarment.garmentCount )
-			{
-				log.l( "curGarment existed." );
-				sendCurGarment();
-				curStyle = undefined;
-				curGarment.garmentCount = 0;
-			}
-			else
-			{
-				log.l( "Found a separator but curGarment was undefined." );
-			}
+			curGarment = {};
+			curGarment.mid = curLineData.mid;
+			curGarment.styleNum = curLineData.style;
+			curGarment.age = curLineData.age;
+			curGarment.code = curGarment.mid + "_" + curGarment.styleNum;
+			curGarment.designNumber = curLineData.designNumber;
+			curGarment.roster = {};
+			curGarment.totalQty = 0;
+			curGarment.garmentsNeededIndex = resultGarments.length + 1 + "";
+			curGarment.item = curLineData.item;
 		}
-		log.l( "End of loop. curItem : " + curItem + "\n" );
-	}
 
-	for ( var x = 0, len = garmentsNeeded.length; x < len; x++ )
-	{
-
-		log.l( "garmentsNeeded[" + x + "] = ::" + JSON.stringify( garmentsNeeded[ x ] ) );
-		$.sleep( 100 );
-	}
-	return result;
+		curGarment.totalQty += ( curLineData.qty * 1 ) || 0;
 
 
-	function initCurGarment ()
-	{
-		log.l( "Initializing new curGarment object." );
-		curGarment = {};
-		curGarment.code = curCode;
-		curGarment.mid = curMid;
-		curGarment.age = curAge;
-		curGarment.styleNum = curStyle;
-		curGarment.roster = {};
-		curGarment.garmentCount = 0;
-		curGarment.designNumber = curDesignNumber;
+		var inseam = curLineData[ "inseam size" ] || "";
+		var curSize = inseam || curLineData.size;
+		curSize = curSize.replace( /\s*size(:)?\s*/i, "" ).replace( /\//g, "-" );
 
-		//set curGarment.garmentsNeededIndex to the next letter in the alphabet starting with "A"
-		//if garmentsNeededIndex > 0 && garmentsNeededIndex % 26 === 0
-		//prepend a letter to the index
-		// if ( curGarmentIndex > 0 && curGarmentIndex % 26 === 0 )
-		// {
-		// 	firstGarmentAppendage = String.fromCharCode( firstGarmentAppendage.charCodeAt( 0 ) + 1 );
-		// }
-		// curGarment.garmentsNeededIndex = firstGarmentAppendage + String.fromCharCode( 65 + ( curGarmentIndex % 26 ) );
-		curGarment.garmentsNeededIndex = ( curGarmentIndex + 1 ).toString();
-		curGarmentIndex++;
+		var cgr = curGarment.roster[ curSize ] || ( curGarment.roster[ curSize ] = {} ); //current garment roster
+		if ( inseam )
+		{
+			var curWaist = curLineData.size;
+			cgr = cgr[ curWaist ] || ( cgr[ curWaist ] = {} );
+		}
 
-	}
+		var curPlayers = cgr.players || "";
+		cgr.players = curPlayers + ( curLineData.roster ? curLineData.roster : "" ) + "\n";
+		cgr.qty = ( cgr.qty ? cgr.qty : 0 ) + curLineData.qty * 1;
 
-	function sendCurGarment ()
-	{
+	} )
 
-		log.l( "Sending curgGarment to garmentsNeeded array and reinitializing.::curGarment = " + JSON.stringify( curGarment ) + "::::" );
-		garmentsNeeded.push( curGarment );
-	}
+	log.l( "resultGarments = " + JSON.stringify( resultGarments, null, 4 ) );
+	scriptTimer.endTask( "processData_" + curOrderData.order );
 
-	function isSeparator ( str )
-	{
-		str = str.toLowerCase();
-		return str.match( /fillin|sample|df|onfile|custom|provided|minimum/i );
-		// return (str.indexOf("fillin") > -1 || str.indexOf("df") > -1 || str.indexOf("onfile") > -1 || str.indexOf("custom") > -1 || str.indexOf("provided") > -1)
-	}
-
+	return resultGarments;
 }

@@ -51,45 +51,37 @@ function getRosterData ( roster )
 		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
 		log.l( "after removing spaces, curEntry = " + curEntry );
 
-
-		//get rid of any instructions that may have been written by the cs rep
-		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
-		log.l( "after removing instructions, curEntry = " + curEntry );
-
-		if ( curEntry === "" )
+		if ( curEntry === "" || curEntry.match( /^\*.*\*$/ ) )
 		{
-			log.l( "curEntry was an empty string. continuing loop." );
 			continue;
 		}
 
-
-
-		//check for a "*Qty is 8*" or "**Disregard**" line item
-		//don't make a roster entry if the line
-		//matches the above format.
-		if ( curEntry.match( /^\*.*\*$/ ) )
-		{
-			log.l( "curEntry matches the qty indicator or disregard regex. continuing loop." )
-			continue;
-		}
 
 		//check for a "(Blank)" jersey
 		if ( blankJerseyRegex.test( curEntry ) || ( curEntry.match( noNameRegex ) && curEntry.match( noNumberRegex ) ) )
 		{
 			curPlayer.number = "";
 			curPlayer.name = "";
+			curPlayer.label = "no_name_no_number";
 			log.l( "curEntry matches the blank jersey regex." )
 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
 			result.push( curPlayer );
 			continue;
 		}
 
+		//get rid of any instructions that may have been written by the cs rep
+		//anything in parentheses that not a grad year should be removed
+		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
+		log.l( "after removing instructions, curEntry = " + curEntry );
+
+
+
 		//check for a number only format
 		if ( numOnlyRegex.test( curEntry ) )
 		{
 			curPlayer.number = curEntry;
 			curPlayer.name = "";
+
 			log.l( "curEntry matches number only regex." );
 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
 			result.push( curPlayer );
@@ -153,6 +145,11 @@ function getRosterData ( roster )
 		log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
 		result.push( curPlayer );
 	}
+
+	result.forEach( function ( player )
+	{
+		player.label = ( player.name || "(no_name)" ) + " " + ( player.number || "(no_number)" ) + ( player.extraInfo ? " " + player.extraInfo : "" );
+	} )
 
 	return result;
 

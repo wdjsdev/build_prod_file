@@ -2,7 +2,7 @@ function splitDataByGarment ( curOrderData )
 {
 	var resultGarments = [];
 	var curGarment = null;
-	var separator = /fillin|fds|df|minimum|note|rush|fluor|bau/i;
+	var separator = /fillin|fds|df|minimum|note|rush|fluor|bau|sample/i;
 	var garmentCodeConverter =
 	{
 		"FD-500": "FD-500W",
@@ -60,33 +60,16 @@ function splitDataByGarment ( curOrderData )
 		//take care of any missing data if possible
 		if ( curGarment )
 		{
-			if ( !curLineData.mid && curGarment.mid )
-			{
-				curLineData.mid = curGarment.mid;
-			}
-			else if ( !curGarment.mid && curLineData.mid )
-			{
-				curGarment.mid = curLineData.mid;
-			}
+			var cldm = curLineData.mid;
+			var cldst = curLineData.style;
+			var cldd = curLineData.designNumber;
+			var cgm = curGarment.mid;
+			var cgst = curGarment.styleNum;
+			var cgd = curGarment.designNumber;
 
-			if ( !curLineData.style && curGarment.styleNum )
-			{
-				curLineData.style = curGarment.styleNum;
-			}
-			else if ( !curGarment.styleNum && curLineData.style )
-			{
-				curGarment.styleNum = curLineData.style;
-			}
-
-			if ( !curLineData.designNumber && curGarment.designNumber )
-			{
-				curLineData.designNumber = curGarment.designNumber;
-			}
-			else if ( !curGarment.designNumber && curLineData.design )
-			{
-				curGarment.designNumber = curLineData.design;
-			}
-
+			!cldm && cgm ? curLineData.mid = cgm : !cgm && cldm ? curGarment.mid = cldm : null;
+			!cldst && cgst ? curLineData.style = cgst : !cgst && cldst ? curGarment.styleNum = cldst : null;
+			!cldd && cgd ? curLineData.designNumber = cgd : !cgd && cldd ? curGarment.designNumber = cldd : null;
 		}
 
 		curLineData.code = curLineData.mid + "_" + curLineData.style;

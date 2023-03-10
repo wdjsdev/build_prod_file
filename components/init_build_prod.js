@@ -12,78 +12,87 @@
 
 */
 
-function initBuildProd()
+function initBuildProd ()
 {
+	scriptTimer.beginTask( "initBuildProd" );
+
 	//check to make sure the active document is a proper converted template
-	if (valid && !isTemplate(docRef))
+	if ( valid && !isTemplate( docRef ) )
 	{
 		valid = false;
-		errorList.push("Sorry, This script only works on converted template mockup files.");
-		errorList.push("Make sure you have a prepress file open.")
-		log.e("Not a converted template..::Exiting Script.");
+		errorList.push( "Sorry, This script only works on converted template mockup files." );
+		errorList.push( "Make sure you have a prepress file open." )
+		log.e( "Not a converted template..::Exiting Script." );
 	}
 
-	if (valid)
+	if ( valid )
 	{
-		orderNum = getOrderNumber();
-		if (!orderNum || noOrderNumber)
+		orderNum = orderNum || getOrderNumber();
+		if ( !orderNum || noOrderNumber )
 		{
 			valid = false;
 		}
 	}
 
-	if(valid)
+	if ( valid )
 	{
+		scriptTimer.beginTask( "getSaveLocation" );
 		getSaveLocation();
+		scriptTimer.endTask( "getSaveLocation" );
 	}
 
-	if (valid)
-	{
-		curOrderData = curlData(NOD, orderNum)
 
-		if (!curOrderData)
+	if ( valid )
+	{
+		scriptTimer.beginTask( "curlingOrderData" );
+		curOrderData = curOrderData || curlData( NOD, orderNum )
+		scriptTimer.endTask( "curlingOrderData" );
+
+		if ( !curOrderData )
 		{
 			valid = false;
 		}
 
 	}
 
-	if (valid)
+
+	if ( valid )
 	{
-		valid = splitDataByGarment();
+		scriptTimer.beginTask( "getOrderData" );
+		garmentsNeeded = splitDataByGarment( curOrderData );
+		scriptTimer.endTask( "getOrderData" );
 	}
 
-	if (noOrderNumber)
+	// var outFile = File( desktopPath + "/temp/3880327.js" );
+	// outFile.open( "w" );
+	// outFile.write( "var garmentsNeeded = " + JSON.stringify( garmentsNeeded ) );
+	// outFile.close();
+
+
+	if ( noOrderNumber )
 	{
 		valid = true;
-		// curOrderData = manuallyPopulateOrderData();
 		manuallyPopulateOrderData();
 	}
 
-	if (valid)
+	if ( valid )
 	{
-		if (!garmentsNeeded.length)
+		if ( !garmentsNeeded.length )
 		{
-			errorList.push("Failed to find any garments to process.");
-			log.e("Failed to find any garments to process." +
+			errorList.push( "Failed to find any garments to process." );
+			log.e( "Failed to find any garments to process." +
 				"::garmentsNeeded.length = " + garmentsNeeded.length +
-				"::garmentLayers.length = " + garmentLayers.length);
+				"::garmentLayers.length = " + garmentLayers.length );
 		}
 	}
 
-	if (valid && !noOrderNumber)
-	{
+	// if ( valid && !noOrderNumber )
+	// {
+	// 	scriptTimer.beginTask( "assignGarments" );
+	garmentLayers = findGarmentLayers();
+	// 	assignGarmentsToLayers();
+	// 	scriptTimer.endTask( "assignGarments" );
+	// }
 
-		garmentLayers = findGarmentLayers();
-		
-		
-
-		assignGarmentsToLayers();	
-		// assignGarmentsToLayersDialog(garmentsNeeded);
-		
-
-
-
-		
-	}
+	scriptTimer.endTask( "initBuildProd" );
 }

@@ -15,61 +15,35 @@
 
 */
 
-function assignGarmentsToLayers()
+function assignGarmentsToLayers ()
 {
-	var	curGarment,
-		matchedGarments = [],
-		success = false;
 
-	var documentDesignNumber = docRef.name.match(/[a-z0-9]{12}/ig);
-	var fdUnderscorePat = /[fbp][dsm](_)/i;
-	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/i ) || null;
 
+	var assignedGarments = [];
 
-
-	var curGarmentLayer,cglName;
-	for(var g=0;g<garmentLayers.length;g++)
+	garmentsNeeded.forEach( function ( curGarment )
 	{
-		curGarmentLayer = garmentLayers[g];
-		cglName = curGarmentLayer.name;
-		if(fdUnderscorePat.test(cglName))
+		curGarment.parentLayer = null;
+		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+		var curDesignNumber = curGarment.designNumber || null;
+		garmentLayers.forEach( function ( cgl )
 		{
-			cglName = cglName.replace("_","-");
-		}
-		if(threeDigitStyleNumPat.test(cglName))
-		{
-			cglName = cglName.replace("_0","_10");
-			curGarmentLayer.name = cglName;
-		}
-		var searchTerm;
-		for(var x=0;x<garmentsNeeded.length;x++)
-		{
-			curGarment = garmentsNeeded[x];
-			if(cglName.indexOf(curGarment.mid + "_" + curGarment.styleNum)>-1)
+			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
+			if ( cglName.match( curGarmentCode ) )
 			{
-				if(documentDesignNumber && documentDesignNumber.indexOf(curGarment.designNumber)>-1)
+				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) )
 				{
-					curGarment.parentLayer = curGarmentLayer;
-					success = true;					
+					curGarment.parentLayer = cgl;
+					assignedGarments.push( curGarment );
 				}
-				else
-				{
-					matchedGarments.push(garmentsNeeded[x]);
-				}	
 			}
-		}
-		if(matchedGarments.length && matchedGarments.length == 1)
-		{
-			matchedGarments[0].parentLayer = curGarmentLayer;
-			success = true;
-			matchedGarments = [];
-		}
-	}
+		} );
+	} );
 
-
-	if(!success)
+	if ( !assignedGarments.length )
 	{
-		assignGarmentsToLayersDialog(matchedGarments.length ? matchedGarments : garmentsNeeded);
+		assignGarmentsToLayersDialog( garmentsNeeded );
 	}
-		
+
 }

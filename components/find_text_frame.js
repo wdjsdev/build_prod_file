@@ -19,52 +19,68 @@
 
 */
 
-function findTextFrame(item)
+
+function findTextFrames ( pieceGroup )
 {
-	var result;
-	
-	dig(item);
+	var frames = [];
 
-	return result;
+	dig( pieceGroup );
 
+	return frames;
 
-	function dig(item)
+	function dig(group)
 	{
-		if(result)return;
-
-		if(item.typename === "TextFrame" || (item.typename === "GroupItem" && item.clipped && item.textFrames.length))
-		{
-			result = item;
-			return;
-		}
-		else if(item.typename !== "GroupItem")
-		{
-			return;
-		}
-		var len = item.pageItems.length;
-		var curItem;
-		for(var x = 0; x< len;x++)
-		{
-			curItem = item.pageItems[x];
-			if(curItem.typename === "TextFrame")
-			{
-				result = curItem;
-			}
-			else if(curItem.typename === "GroupItem")
-			{
-				if(curItem.clipped && curItem.textFrames.length)
-				{
-					result = curItem;
-				}
-				else
-				{
-					for(var y=0;y<curItem.pageItems.length;y++)
-					{
-						dig(curItem.pageItems[y]);
-					}
-				}
-			}
-		}
+		afc(group,"textFrames").forEach(function(f){frames.push(f)});
+		afc(group,"groupItems").forEach(function(g){dig(g)});
 	}
+
 }
+// function findTextFrame(item)
+// {
+// 	var result;
+	
+// 	dig(item);
+
+// 	return result;
+
+
+// 	function dig(item)
+// 	{
+// 		if(result)return;
+
+// 		if(item.typename === "TextFrame" || (item.typename === "GroupItem" && item.clipped && item.textFrames.length))
+// 		{
+// 			result = item;
+// 			return;
+// 		}
+// 		else if(item.typename !== "GroupItem")
+// 		{
+// 			return;
+// 		}
+// 		var len = item.pageItems.length;
+// 		var curItem;
+// 		for(var x = 0; x< len;x++)
+// 		{
+// 			curItem = item.pageItems[x];
+// 			if(curItem.typename === "TextFrame")
+// 			{
+// 				result = curItem;
+// 			}
+// 			else if(curItem.typename === "GroupItem")
+// 			{
+// 				if(curItem.clipped && curItem.textFrames.length)
+// 				{
+// 					result = curItem;
+// 				}
+// 				else
+// 				{
+// 					for(var y=0;y<curItem.pageItems.length;y++)
+// 					{
+// 						dig(curItem.pageItems[y]);
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 

@@ -27,63 +27,75 @@ Description: create a series of dialog boxes to allow
 	
 	
 */
-#target illustrator
-function container() {
+#target Illustrator
+function container ()
+{
 
 	var valid = true;
 	var scriptName = "adjust_prod_file";
 
 
-	function getUtilities() {
-		var result = [];
-		var utilPath = "/Volumes/Customization/Library/Scripts/Script_Resources/Data/";
-		var ext = ".jsxbin"
+	function getUtilities ()
+	{
+		var utilNames = [ "Utilities_Container" ]; //array of util names
+		var utilFiles = []; //array of util files
+		//check for dev mode
+		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
+		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
+		if ( devUtilitiesPreferenceFile.exists && readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
+		{
+			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
+			var devUtilPath = "~/Desktop/automation/utilities/";
+			utilFiles =[ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			return utilFiles;
+		}
 
-		//check for dev utilities preference file
-		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
-
-		if (devUtilitiesPreferenceFile.exists) {
-			devUtilitiesPreferenceFile.open("r");
-			var prefContents = devUtilitiesPreferenceFile.read();
-			devUtilitiesPreferenceFile.close();
-			if (prefContents === "true") {
-				utilPath = "~/Desktop/automation/utilities/";
-				ext = ".js";
+		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
+		
+		for(var u=0;u<utilNames.length;u++)
+		{
+			var utilFile = new File(dataResourcePath + utilNames[u] + ".jsxbin");
+			if(utilFile.exists)
+			{
+				utilFiles.push(utilFile);	
 			}
+			
 		}
 
-		if ($.os.match("Windows")) {
-			utilPath = utilPath.replace("/Volumes/", "//AD4/");
+		if(!utilFiles.length)
+		{
+			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
+			return [];
 		}
 
-		result.push(utilPath + "Utilities_Container" + ext);
-		result.push(utilPath + "Batch_Framework" + ext);
-
-		if (!result.length) {
-			valid = false;
-			alert("Failed to find the utilities.");
-		}
-		return result;
+		
+		return utilFiles;
 
 	}
-
 	var utilities = getUtilities();
-	for (var u = 0, len = utilities.length; u < len; u++) {
-		eval("#include \"" + utilities[u] + "\"");
+
+	for ( var u = 0, len = utilities.length; u < len && valid; u++ )
+	{
+		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	if (!valid) return;
+	if ( !valid || !utilities.length) return;
 
+	var bpfTimer = new Stopwatch();
+	bpfTimer.logStart();
 
 
 	//verify the existence of a document
-	if (app.documents.length === 0) {
-		errorList.push("You must have a document open.");
-		sendErrors(errorList);
+	if ( app.documents.length === 0 )
+	{
+		errorList.push( "You must have a document open." );
+		sendErrors( errorList );
 		return false;
 	}
 
-	logDest.push(getLogDest());
+	DEV_LOGGING = true;
+
+	logDest.push( getLogDest() );
 
 	/*****************************************************************************/
 	//==============================  Components  ===============================//
@@ -91,18 +103,21 @@ function container() {
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "build_prod_file_beta"
 
-	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev") > -1 ? devComponents : prodComponents);
-	if (compFiles && compFiles.length) {
+	var compFiles = getComponents( $.fileName.toLowerCase().indexOf( "dev" ) > -1 ? devComponents : prodComponents );
+	if ( compFiles && compFiles.length )
+	{
 		var curComponent;
-		for (var cf = 0, len = compFiles.length; cf < len; cf++) {
-			curComponent = compFiles[cf].fullName;
-			eval("#include \"" + curComponent + "\"");
-			log.l("included: " + compFiles[cf].name);
+		for ( var cf = 0, len = compFiles.length; cf < len; cf++ )
+		{
+			curComponent = compFiles[ cf ].fullName;
+			eval( "#include \"" + curComponent + "\"" );
+			log.l( "included: " + compFiles[ cf ].name );
 		}
 	}
-	else {
-		errorList.push("Failed to find the necessary components.");
-		log.e("No components were found.");
+	else
+	{
+		errorList.push( "Failed to find the necessary components." );
+		log.e( "No components were found." );
 		valid = false;
 		return valid;
 	}
@@ -128,11 +143,13 @@ function container() {
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 
-	if (valid) {
+	if ( valid )
+	{
 		valid = initAdjustProdFile();
 	}
 
-	if (valid) {
+	if ( valid )
+	{
 		createAdjustmentDialog();
 	}
 
@@ -140,9 +157,13 @@ function container() {
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if (errorList.length > 0) {
-		sendErrors(errorList);
+	if ( errorList.length > 0 )
+	{
+		sendErrors( errorList );
 	}
+
+	bpfTimer.logEnd();
+	log.l( "Adjust prod file took " + ( bpfTimer.calculate() / 1000 ) + " seconds." );
 
 	printLog();
 

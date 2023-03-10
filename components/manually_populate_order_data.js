@@ -65,6 +65,10 @@ function manuallyPopulateOrderData()
 			var submit = UI.button(btnGroup,"Submit",function()
 			{
 				result.layer = curGarmentLayer;
+				if(!sizeListbox.selection || sizeListbox.selection.length === 0)
+				{
+					return;
+				}
 				for(var a=0,len=sizeListbox.selection.length;a<len;a++)
 				{
 					result.sizes.push(sizeListbox.selection[a].text);

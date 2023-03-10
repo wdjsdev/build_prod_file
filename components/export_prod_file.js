@@ -19,200 +19,186 @@
 
 */
 
-function exportProdFile(pdfFolderName, destFolderPath)
+function exportProdFile ( pdfFolderName, destFolderPath )
 {
-	log.h("exportProdFile(" + pdfFolderName + "," + destFolderPath + ")");
+	scriptTimer.beginTask( "exportProdFile" );
+	log.h( "exportProdFile(" + pdfFolderName + "," + destFolderPath + ")" );
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
-	var tmpNumLay = doc.layers.add();
-	tmpNumLay.name = "tmpnum";
-	var tmpNameLay = doc.layers.add();
-	tmpNameLay.name = "tmpname";
-	var tmpGradLay = doc.layers.add();
-	tmpGradLay.name = "tmpgrad";
-	
 
-	loadExpandAction();
 
-	pdfFolderName = pdfFolderName.replace(".ai","");
-	var pdfFolder = Folder(destFolderPath + "/" + pdfFolderName + "_PDFs");
+	saveFile( doc, docName, Folder( destFolderPath ) );
+	log.l( "Successfully saved " + docName );
 
-	if(result)
+	//expand all textFrames
+	afc( artworkLayer, "groupItems" ).forEach( function ( g )
 	{
-		if(pdfFolder.exists)
+		g.locked = g.hidden = false;
+		//delete any live text group
+		var ltg = findSpecificPageItem( g, "Live Text" );
+		if ( !ltg ) return;
+		ltg.remove();
+		var rg = findSpecificPageItem( g, "Roster" );
+		if ( !rg ) return;
+		afc( rg, "groupItems" ).forEach( function ( rosterGroup )
+		{
+			rosterGroup.locked = rosterGroup.hidden = false;
+			rosterGroup.selected = true;
+		} )
+	} );
+	app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
+	app.executeMenuCommand( "expandStyle" );
+
+	afc( doc, "textFrames" ).forEach( function ( tf )
+	{
+		tf.createOutline();
+	} )
+	app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
+
+
+	// loadExpandAction();
+
+	pdfFolderName = pdfFolderName.replace( ".ai", "" );
+	var pdfFolder = Folder( destFolderPath + "/" + pdfFolderName + "_PDFs" );
+
+	if ( result )
+	{
+		if ( pdfFolder.exists )
 		{
 			var existingPdfFiles = pdfFolder.getFiles();
-			for(var x=existingPdfFiles.length-1;x>=0;x--)
+			for ( var x = existingPdfFiles.length - 1; x >= 0; x-- )
 			{
-				existingPdfFiles[x].remove();
+				existingPdfFiles[ x ].remove();
 			}
 		}
 		else
 		{
 			pdfFolder.create();
-			log.l("Created a new pdf folder.")
+			log.l( "Created a new pdf folder." )
 		}
 	}
 
 
-	if(result)
+	if ( result )
 	{
-		unlockDoc(doc);
+		unlockDoc( doc );
 		sewLinesLayer.visible = false;
 
 		var groups = artworkLayer.groupItems;
-		for(var xg=0,groupsLen=groups.length;xg<groupsLen;xg++)
+		for ( var xg = 0, groupsLen = groups.length; xg < groupsLen; xg++ )
 		{
-			exportPiece(groups[xg]);
+			exportPiece( groups[ xg ] );
 		}
 	}
 
-	tmpNameLay.remove();
-	tmpNumLay.remove();
-	tmpGradLay.remove();
+	// tmpNameLay.remove();
+	// tmpNumLay.remove();
+	// tmpGradLay.remove();
 
-	saveFile(doc,docName,Folder(destFolderPath));
-	log.l("Successfully saved " + docName);
+	// saveFile( doc, docName, Folder( destFolderPath ) );
+	// log.l( "Successfully saved " + docName );
 
-	unloadExpandAction();
-	
+	// unloadExpandAction();
+
+	doc.close( SaveOptions.DONOTSAVECHANGES );
+	app.open( File( destFolderPath + "/" + docName ) );
+
+	scriptTimer.endTask( "exportProdFile" );
 	return result;
 
 
 
-	function exportPiece(piece)
+	function exportPiece ( piece )
 	{
+		scriptTimer.beginTask( "exportPiece_" + piece.name );
 		doc.selection = null;
-		var rosterGroup, liveTextGroup, curRosterChild,pdfFileName;
-		var curNameFrame,curNumFrame,duplicateName,duplicateNumber,duplicateGrad;
+		var rosterGroup, liveTextGroup, curRosterChild, pdfFileName;
+		var curNameFrame, curNumFrame, duplicateName, duplicateNumber, duplicateGrad;
 		var playerNameCenterPoint;
 		try
 		{
-			rosterGroup = piece.groupItems["Roster"];
-			log.l("Successfully set the rosterGroup of piece: " + piece.name);
-			liveTextGroup = piece.groupItems["Live Text"];
-			log.l("Successfully set the liveTextGroup of piece: " + piece.name);
+			rosterGroup = piece.groupItems[ "Roster" ];
+			log.l( "Successfully set the rosterGroup of piece: " + piece.name );
+			liveTextGroup = piece.groupItems[ "Live Text" ];
+			log.l( "Successfully set the liveTextGroup of piece: " + piece.name );
 		}
-		catch(e)
+		catch ( e )
 		{
-			log.l("No roster or live text info here.");
+			log.l( "No roster or live text info here." );
 		}
 
-		piece.selected = true;	
-		
+		piece.selected = true;
+
 		// doc.fitArtboardToSelectedArt(0);
 
-		function makeArtboard(group,rmItems)
+		function makeArtboard ( group, rmItems )
 		{
 			var doc = app.activeDocument
 			var dupGroup = group.duplicate();
-			for(var x = dupGroup.pageItems.length - 1; x>=0; x--)
+			for ( var x = dupGroup.pageItems.length - 1; x >= 0; x-- )
 			{
-				if(rmItems.indexOf(dupGroup.pageItems[x].name)>-1)
+				if ( rmItems.indexOf( dupGroup.pageItems[ x ].name ) > -1 )
 				{
-					dupGroup.pageItems[x].remove();
+					dupGroup.pageItems[ x ].remove();
 				}
 			}
-			
+
 			doc.selection = null;
 			dupGroup.selected = true;
-			doc.fitArtboardToSelectedArt(0);
+			doc.fitArtboardToSelectedArt( 0 );
 			dupGroup.remove();
 		}
-		makeArtboard(piece,["Roster","Live Text"]);
+		makeArtboard( piece, [ "Roster", "Live Text" ] );
 
-		app.executeMenuCommand("fitall");
+		app.executeMenuCommand( "fitall" );
 
 
 		colorBlocks();
 
-		if(!checkThruCut(piece))
+		if ( !checkThruCut( piece ) )
 		{
-			errorList.push(piece.name + " is missing a Thru-cut line.");
+			errorList.push( piece.name + " is missing a Thru-cut line." );
 		}
 
-		if(!rosterGroup)
+		if ( !rosterGroup )
 		{
 			pdfFileName = piece.name + ".pdf";
-			pdfFileName = pdfFileName.replace(/\s/g,"_");
-			saveFile(doc,pdfFileName,pdfFolder)
+			pdfFileName = pdfFileName.replace( /\s/g, "_" );
+			saveFile( doc, pdfFileName, pdfFolder )
 		}
 		else
 		{
-			liveTextGroup.hidden = true;
+			// liveTextGroup.hidden = true;
 
 			//hide all rosterGroup children
-			for(var x=0,len=rosterGroup.groupItems.length;x<len;x++)
-			{ 
-				rosterGroup.groupItems[x].hidden = true;
+			for ( var x = 0, len = rosterGroup.groupItems.length; x < len; x++ )
+			{
+				rosterGroup.groupItems[ x ].hidden = true;
 			}
 
 			//loop rosterGroup children, reveal them one at a time and export the PDF
-			for(var x=rosterGroup.groupItems.length-1;x>=0;x--)
+			for ( var x = rosterGroup.groupItems.length - 1; x >= 0; x-- )
 			{
-				curRosterChild = rosterGroup.groupItems[x];
+				curRosterChild = rosterGroup.groupItems[ x ];
 
-				//loop each textFrame on the curRosterChild group
-				//so they can be expanded separately
-				for(var y=0,yLen = curRosterChild.pageItems.length;y<yLen;y++)
-				{
-					if(curRosterChild.pageItems[y].contents === "")
-					{
-						//empty string. just move on
-						continue;
-					}
-
-
-					if(curRosterChild.pageItems[y].name.indexOf("Name") >-1)
-					{
-						duplicateName = curRosterChild.pageItems[y].duplicate(tmpNameLay);
-						duplicateName.hidden = false;
-						try
-						{
-							var myTextPath = duplicateName.textPath;
-							resizeLiveText(duplicateName);
-							duplicateName = expand(duplicateName);
-						}
-						catch(e)
-						{
-							duplicateName = expand(duplicateName);
-							
-							if(maxPlayerNameWidth && duplicateName.width > maxPlayerNameWidth)
-							{
-								playerNameCenterPoint = duplicateName.left + duplicateName.width/2;
-								duplicateName.width = maxPlayerNameWidth;
-								duplicateName.left = playerNameCenterPoint - duplicateName.width/2;
-							}
-						}
-					}
-					else if(curRosterChild.pageItems[y].name.indexOf("Number") >-1)
-					{
-						
-						duplicateNumber = curRosterChild.pageItems[y].duplicate(tmpNumLay);
-						duplicateNumber = expand(duplicateNumber);
-					}
-					else if(curRosterChild.pageItems[y].name.toLowerCase().indexOf("grad")>-1)
-					{
-						curRosterChild.name = piece.name + "_" + curRosterChild.pageItems[y].contents;
-						duplicateGrad = curRosterChild.pageItems[y].duplicate(tmpGradLay);
-						duplicateGrad = expand(duplicateGrad);
-					}
-				}
+				curRosterChild.hidden = false;
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
-				pdfFileName = pdfFileName.replace(/\s/g,"_");
-				log.l("saving pdf: ::doc = " + doc + "::pdfFileName = " + pdfFileName + "::pdfFolder = " + pdfFolder + "::pdfFolder.exists = " + pdfFolder.exists);
-				saveFile(doc,pdfFileName,pdfFolder);
-				removeExpandedRosterGroup(tmpNameLay);
-				removeExpandedRosterGroup(tmpNumLay);
-				removeExpandedRosterGroup(tmpGradLay);
+
+				// pdfFileName = pdfFileName.replace( /\s/g, "_" );
+				//replace any special characters with underscores
+				pdfFileName = pdfFileName.replace( /\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g, "_" )
+				log.l( "pdfFileName: " + pdfFileName );
+				saveFile( doc, pdfFileName, pdfFolder );
+				curRosterChild.hidden = true;
 			}
 
-			liveTextGroup.hidden = false;
+			// liveTextGroup.hidden = false;
 		}
 
-		log.l("Successfully exported " + pdfFileName)
+		log.l( "Successfully exported " + pdfFileName )
+		scriptTimer.endTask( "exportPiece_" + piece.name );
 
 	}
 }

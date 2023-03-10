@@ -14,15 +14,16 @@
 
 */
 
-function getOverwritePreference(msg)
+function getOverwritePreference ( msg )
 {
+	if ( devMode ) return true;
 	var result;
-	var w = new Window("dialog","Overwrite?");
-		var topTxt = UI.static(w,msg);
-		var topTxt2 = UI.static(w,"Do you want to overwrite it?");
-		var btnGroup = UI.group(w);
-			var cancel = UI.button(btnGroup,"No, Cancel",function(){result = false; w.close()});
-			var overwrite = UI.button(btnGroup, "Yes, Overwrite", function(){result = true; w.close()});
+	var w = new Window( "dialog", "Overwrite?" );
+	var topTxt = UI.static( w, msg );
+	var topTxt2 = UI.static( w, "Do you want to overwrite it?" );
+	var btnGroup = UI.group( w );
+	var cancel = UI.button( btnGroup, "No, Cancel", function () { result = false; w.close() } );
+	var overwrite = UI.button( btnGroup, "Yes, Overwrite", function () { result = true; w.close() } );
 	w.show();
 
 	return result;

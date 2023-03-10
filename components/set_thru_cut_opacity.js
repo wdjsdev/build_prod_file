@@ -13,26 +13,19 @@
 
 function setThruCutOpacity()
 {
-	try
-	{
-		var doc = app.activeDocument;
-		var thruCutSwatch = makeNewSpotColor("Thru-cut", "CMYK", {c:0,m:0,y:0,k:0});
-		doc.selection = null;
-		doc.defaultStrokeColor = thruCutSwatch.color;
-		app.executeMenuCommand("Find Stroke Color menu item");
-		setOpacity(doc.selection,thruCutOpacityPreference);
+	var doc = app.activeDocument;
+	var thruCutSwatch = makeNewSpotColor("Thru-cut", "CMYK", {c:0,m:0,y:0,k:0});
+	doc.selection = null;
+	doc.defaultStrokeColor = thruCutSwatch.color;
+	app.executeMenuCommand("Find Stroke Color menu item");
+	setOpacity(doc.selection,thruCutOpacityPreference);
 
-		function setOpacity(selection,opacity)
-		{
-			for(var x=0,len=selection.length;x<len;x++)
-			{
-				selection[x].opacity = opacity;
-			}
-		}
-		log.l("Successfully set thru-cut lines' opacity to 0.");
-	}
-	catch(e)
+	function setOpacity(selection,opacity)
 	{
-		log.e("Failed to set thru-cut opacities..::e = " + e);
-	};
+		for(var x=0,len=selection.length;x<len;x++)
+		{
+			selection[x].opacity = opacity;
+		}
+	}
+	log.l("Successfully set thru-cut lines' opacity to: " + thruCutOpacityPreference);
 }

@@ -12,31 +12,19 @@
 
 */
 
-function getProdFilePiecesForCurSize(curSize)
+function getProdFilePiecesForCurSize ( curSize )
 {
 	var doc = app.activeDocument;
 	var result = [];
-	var artLay = doc.layers["Artwork"];
+	var artLay = doc.layers[ "Artwork" ];
 	var curItem;
-	for(var x=0,len=artLay.pageItems.length;x<len;x++)
+	for ( var x = 0, len = artLay.pageItems.length; x < len; x++ )
 	{
-		curItem = artLay.pageItems[x];
-		if(curItem.name.indexOf(curSize) === 0 && hasRoster(curItem))
+		curItem = artLay.pageItems[ x ];
+		if ( curItem.name.indexOf( curSize ) === 0 && curItem.note && curItem.note === "hasRoster" )
 		{
-			result.push(curItem.name);
+			result.push( curItem.name );
 		}
 	}
 	return result;
-
-	function hasRoster(item)
-	{
-		for(var hr=0,hrLen=item.pageItems.length;hr<hrLen;hr++)
-		{
-			if(item.pageItems[hr].name === "Roster" && item.pageItems[hr].pageItems.length)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 }

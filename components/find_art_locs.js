@@ -14,43 +14,39 @@
 
 */
 
-function findArtLocs()
+function findArtLocs ()
 {
-	log.h("Beginning execution of findArtLocs() function on the document: " + app.activeDocument.name);
+	scriptTimer.beginTask( "findArtLocs" );
+	log.h( "Beginning execution of findArtLocs() function on the document: " + app.activeDocument.name );
 	var result = true;
 	var curDoc = app.activeDocument;
-	var docItems = curDoc.layers[0].groupItems;
-	var curSize, curItem,curSubItem;
+	var docItems = curDoc.layers[ 0 ].groupItems;
+	var curSize, curItem, curSubItem;
 
 	var frame,
 		curTextFrame,
 		piecesWithRosterGroups = [];
 
-	try
+	scriptTimer.beginTask( "setupRosterGroups" );
+	for ( var x = 0, len = docItems.length; x < len; x++ )
 	{
-		for(var x=0,len=docItems.length;x<len;x++)
-		{
-			curItem = docItems[x];
+		curItem = docItems[ x ];
 
-			if(setupRosterGroup(curItem))
-			{
-				log.l("Successfully setup the rosterGroup for " + curItem.name);
-				piecesWithRosterGroups.push(curItem.name);
-			}
-			else
-			{
-				log.l("no text frames present in " + curItem.name + ". skipping this item.");
-				continue;
-			}
+		if ( setupRosterGroup( curItem ) )
+		{
+			log.l( "Successfully setup the rosterGroup for " + curItem.name );
+			piecesWithRosterGroups.push( curItem.name );
 		}
-		log.l("Successfully set up roster groups on the following pieces: ::\t" + piecesWithRosterGroups.join("\n\t"));
+		else
+		{
+			log.l( "no text frames present in " + curItem.name + ". skipping this item." );
+			continue;
+		}
 	}
-	catch(e)
-	{
-		result = false;
-		log.e("Failed while setting up the art locations::system error message = " + e + ", on line: " + e.line);
-		errorList.push("Failed to identify or setup custom applications for roster input. Sorry. =(");
-	}
+	scriptTimer.endTask( "setupRosterGroups" );
+	log.l( "Successfully set up roster groups on the following pieces: ::\t" + piecesWithRosterGroups.join( "\n\t" ) );
+
+	scriptTimer.endTask( "findArtLocs" );
 
 	return result;
 }

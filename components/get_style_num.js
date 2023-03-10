@@ -34,7 +34,16 @@ function getStyleNum(obj)
 			if (opt[x].name === "Style")
 			{
 				result = opt[x].value;
+
+				//if the style number has no numbers in it
+				//convert it to 1000
 				result = result.replace(/^[a-z]*$/i,"1000");
+
+				//if there's any non numeric characters preceding the style
+				//number, i.e. STL1003, strip out the characters leaving only
+				//the numeric characters
+				result = result.replace(/^[a-z]+/i,"");
+
 				log.l("Found the style number: " + result);
 			}
 		}

@@ -11,86 +11,74 @@ Description: query netsuite for JSON data for a given order number,
 */
 
 #target Illustrator
-function container()
+function container ()
 {
 	var valid = true;
 	var scriptName = "build_prod_file_beta";
 
-	
-	function isDrUser()
+
+	function getUtilities ()
 	{
-		var files = Folder("/Volumes/").getFiles();
-
-		for(var x=0;x<files.length;x++)
+		var utilNames = [ "Utilities_Container" ]; //array of util names
+		var utilFiles = []; //array of util files
+		//check for dev mode
+		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
+		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
+		if ( devUtilitiesPreferenceFile.exists && readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
 		{
-			if(files[x].name.toLowerCase().indexOf("customizationdr")>-1)
+			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
+			var devUtilPath = "~/Desktop/automation/utilities/";
+			utilFiles = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			return utilFiles;
+		}
+
+		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
+
+		for ( var u = 0; u < utilNames.length; u++ )
+		{
+			var utilFile = new File( dataResourcePath + utilNames[ u ] + ".jsxbin" );
+			if ( utilFile.exists )
 			{
-				return true;
+				utilFiles.push( utilFile );
 			}
+
 		}
-		return false;
-	}
 
-	function getUtilities()
-	{
-		var result = [];
-		var utilPath = "/Volumes/" + (isDrUser() ? "CustomizationDR" : "Customization") + "/Library/Scripts/Script_Resources/Data/";
-		var ext = ".jsxbin"
-
-		//check for dev utilities preference file
-		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
-
-		if(devUtilitiesPreferenceFile.exists)
+		if ( !utilFiles.length )
 		{
-			devUtilitiesPreferenceFile.open("r");
-			var prefContents = devUtilitiesPreferenceFile.read();
-			devUtilitiesPreferenceFile.close();
-			if(prefContents === "true")
-			{
-				utilPath = "~/Desktop/automation/utilities/";
-				ext = ".js";
-			}
+			alert( "Could not find utilities. Please ensure you're connected to the appropriate Customization drive." );
+			return [];
 		}
 
-		if($.os.match("Windows"))
-		{
-			utilPath = utilPath.replace("/Volumes/","//AD4/");
-		}
 
-		result.push(utilPath + "Utilities_Container" + ext);
-		// result.push(utilPath + "Batch_Framework" + ext);
-
-		if(!result.length)
-		{
-			valid = false;
-			alert("Failed to find the utilities.");
-		}
-		return result;
+		return utilFiles;
 
 	}
-
 	var utilities = getUtilities();
-	for(var u=0,len=utilities.length;u<len;u++)
+
+	for ( var u = 0, len = utilities.length; u < len && valid; u++ )
 	{
-		eval("#include \"" + utilities[u] + "\"");	
+		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	if(!valid)return;
+	if ( !valid || !utilities.length ) return;
 
-	if(user === "will.dowling")
+	if ( user === "will.dowling" )
 	{
 		DEV_LOGGING = true;
 	}
 
-	logDest.push(getLogDest());
+	logDest.push( getLogDest() );
 
 
+	var scriptTimer = new Stopwatch();
+	scriptTimer.logStart();
 
 
 	/*****************************************************************************/
 	//=================================  Data  =================================//
-	
-	
+
+
 
 
 	//=================================  /Data  =================================//
@@ -101,66 +89,81 @@ function container()
 	/*****************************************************************************/
 	//==============================  Components  ===============================//
 
+
+	scriptTimer.beginTask( "getComponents" );
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
 	var prodComponents = componentsPath + "/build_prod_file_beta";
 
 	// var compFiles = includeComponents(devComponents,prodComponents,false);
-	var compFiles = getComponents($.fileName.toLowerCase().indexOf("dev")>-1 ? devComponents : prodComponents);
-	if(compFiles && compFiles.length)
+	var compFiles = getComponents( $.fileName.match( /dev/i ) ? devComponents : prodComponents );
+	if ( compFiles && compFiles.length )
 	{
 		var curComponent;
-		for(var cf=0,len=compFiles.length;cf<len;cf++)
+		for ( var cf = 0, len = compFiles.length; cf < len; cf++ )
 		{
-			curComponent = compFiles[cf].fullName;
-			eval("#include \"" + curComponent + "\"");
-			log.l("included: " + compFiles[cf].name);
+			curComponent = compFiles[ cf ].fullName;
+			eval( "#include \"" + curComponent + "\"" );
+			log.l( "included: " + compFiles[ cf ].fullName );
 		}
 	}
 	else
 	{
-		errorList.push("Failed to find the necessary components.");
-		log.e("No components were found.");
+		errorList.push( "Failed to find the necessary components." );
+		log.e( "No components were found." );
 		valid = false;
 		return valid;
 	}
 
-	
+	scriptTimer.endTask( "getComponents" );
+
 
 	//=============================  /Components  ===============================//
 	/*****************************************************************************/
 
 
+	//if dev mode, use predefined test data instead of querying netsuite
+	// if ( $.fileName.match( /dev/i ) && confirm( "Use Dev Data?" ) )
+	// {
+	// 	devMode = true;
+	// 	orderNum = "1234567";
+	// 	var devDataFile = File( documentsPath + "script_data/dev_prod_data.json" );
+	// 	devDataFile.open( "r" );
+	// 	curOrderData = JSON.parse( devDataFile.read() );
+	// 	devDataFile.close();
+	// }
+
 
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
-	
-	
 
-	if(valid)
+
+
+	if ( valid )
 	{
 		initBuildProd();
 	}
 
-	if(valid)
+	if ( valid )
 	{
 		valid = masterLoop();
 	}
-	
-	// buildStats.buildScriptExecutionTime = timer.calculate();
 
 
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if(errorList.length)
+	if ( errorList.length )
 	{
-		sendErrors(errorList);
+		sendErrors( errorList );
 	}
 
-	if(messageList.length)
+	if ( messageList.length )
 	{
-		sendScriptMessages(messageList);
+		sendScriptMessages( messageList );
 	}
+
+	scriptTimer.logEnd();
+	log.l( "Buid Prod File Script took: " + scriptTimer.calculate() / 1000 + " seconds." );
 
 	printLog();
 

@@ -56,7 +56,6 @@ function getOrderNumber ()
 	}
 
 
-
 	var w = new Window( "dialog" );
 	var topTxt = UI.static( w, "Please enter the order number: " );
 	var input = UI.edit( w, result, 10 );
@@ -69,6 +68,16 @@ function getOrderNumber ()
 	var submitButton = UI.button( btnGroup, "Submit", submit );
 	var noOrderBtnGroup = UI.group( w );
 	var noOrderNumberButton = UI.button( noOrderBtnGroup, "No Order Number", setNoOrderNumber )
+
+	input.addEventListener( "keydown", function ( e )
+	{
+		if ( e.keyName === "Enter" )
+		{
+			submit();
+		}
+	} );
+
+
 	w.show();
 
 	function submit ()

@@ -41,6 +41,7 @@ function initBuildProd ()
 		scriptTimer.endTask( "getSaveLocation" );
 	}
 
+
 	if ( valid )
 	{
 		scriptTimer.beginTask( "curlingOrderData" );
@@ -54,12 +55,19 @@ function initBuildProd ()
 
 	}
 
+
 	if ( valid )
 	{
 		scriptTimer.beginTask( "getOrderData" );
-		valid = splitDataByGarment();
+		garmentsNeeded = splitDataByGarment( curOrderData );
 		scriptTimer.endTask( "getOrderData" );
 	}
+
+	// var outFile = File( desktopPath + "/temp/3880327.js" );
+	// outFile.open( "w" );
+	// outFile.write( "var garmentsNeeded = " + JSON.stringify( garmentsNeeded ) );
+	// outFile.close();
+
 
 	if ( noOrderNumber )
 	{
@@ -78,13 +86,13 @@ function initBuildProd ()
 		}
 	}
 
-	if ( valid && !noOrderNumber )
-	{
-		scriptTimer.beginTask( "assignGarments" );
-		garmentLayers = findGarmentLayers();
-		assignGarmentsToLayers();
-		scriptTimer.endTask( "assignGarments" );
-	}
+	// if ( valid && !noOrderNumber )
+	// {
+	// 	scriptTimer.beginTask( "assignGarments" );
+	garmentLayers = findGarmentLayers();
+	// 	assignGarmentsToLayers();
+	// 	scriptTimer.endTask( "assignGarments" );
+	// }
 
 	scriptTimer.endTask( "initBuildProd" );
 }

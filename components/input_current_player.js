@@ -31,7 +31,10 @@ function inputCurrentPlayer ( pieces, curPlayer )
 	//for some reason apostrophes are rendered as : ‚Äô
 	//during script execution. replace any instance
 	//of these characters with a correct apostrophe
-	curPlayer.name = curPlayer.name.replace( "‚Äô", "'" );
+	if ( curPlayer.name )
+	{
+		curPlayer.name = curPlayer.name.replace( "‚Äô", "'" );
+	}
 
 	pieces.forEach( function ( curPiece )
 	{
@@ -41,27 +44,6 @@ function inputCurrentPlayer ( pieces, curPlayer )
 		if ( !liveTextGroup || !rosterGroup ) return;
 
 		liveTextGroup.hidden = rosterGroup.hidden = false;
-
-
-		//sometimes the textFrame is buried in a (possibly nested) groupItem
-		//let's go through all the items in liveTextGroup and extract the textFrames
-		//to the top level of liveTextGroup and discard everything else
-		afc( liveTextGroup ).forEach( function ( curItem )
-		{
-			var frame = digForTextFrame( curItem );
-			frame.name = ( frame.contents.match( /\d{4}/ ) ? "Grad" : ( frame.contents.match( /^\d*$/ ) ? "Number" : "Name" ) );
-			frame.moveToEnd( liveTextGroup );
-		} );
-		//now remove all non-textFrames from liveTextGroup
-		afc( liveTextGroup ).forEach( function ( curItem )
-		{
-			if ( curItem.typename !== "TextFrame" )
-			{
-				curItem.remove();
-			}
-		} );
-
-
 
 		if ( afc( curPiece, "textFrames" ).filter( function ( frame ) { return !frame.name } ).length )
 		{
@@ -83,8 +65,10 @@ function inputCurrentPlayer ( pieces, curPlayer )
 
 		var newPlayerGroup = liveTextGroup.duplicate( rosterGroup );
 		newPlayerGroup.name = curPlayer.label;
-		afc( newPlayerGroup, "textFrames" ).forEach( function ( rosterFrame )
+		afc( newPlayerGroup, "pageItems" ).forEach( function ( playerGroupItem )
 		{
+			var rosterFrame;
+			rosterFrame = playerGroupItem.typename === "GroupItem" ? digForTextFrame( playerGroupItem ) : playerGroupItem;
 			//curLabel is the "key" in currentPlayer, whose value is the text to be input
 			//options: "Name", "Number", "extraInfo" (extra info is currently always used for grad year)"
 			var curLabel = rosterFrame.name.match( /grad/i ) ? "extraInfo" : rosterFrame.name.toLowerCase();

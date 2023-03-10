@@ -15,57 +15,35 @@
 
 */
 
-function assignGarmentsToLayers()
+function assignGarmentsToLayers ()
 {
-	var	curGarment,
-		matchedGarments = [],
-		success = false;
 
-	var threeDigitStyleNumPat = /[fpb][dsm]-[a-z0-9]*_0[\d]{2}/i;
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/i ) || null;
 
-	var curGarmentCode;
+	var assignedGarments = [];
 
-
-	var curGarmentLayer,cglName;
-	for(var g=0;g<garmentLayers.length;g++)
+	garmentsNeeded.forEach( function ( curGarment )
 	{
-		curGarmentLayer = garmentLayers[g];
-
-		cglName = curGarmentLayer.name.replace(/-/g, "_").replace("_","-");
-		
-		if(threeDigitStyleNumPat.test(cglName))
+		curGarment.parentLayer = null;
+		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+		var curDesignNumber = curGarment.designNumber || null;
+		garmentLayers.forEach( function ( cgl )
 		{
-			cglName = cglName.replace("_0","_10");
-			curGarmentLayer.name = cglName;
-		}
-
-		for(var x=0;x<garmentsNeeded.length;x++)
-		{
-			curGarment = garmentsNeeded[x];
-			curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
-			if(docRef.name.match(curGarment.designNumber) && cglName.match(curGarmentCode))
+			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
+			if ( cglName.match( curGarmentCode ) )
 			{
-				curGarment.parentLayer = curGarmentLayer;
-				success = true;
+				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) )
+				{
+					curGarment.parentLayer = cgl;
+					assignedGarments.push( curGarment );
+				}
 			}
-			else if(cglName.match(curGarment.mid + "_" + curGarment.styleNum))
-			{
-				matchedGarments.push(curGarment);
-			}
-			
-		}
-		if(!success && matchedGarments.length && matchedGarments.length == 1)
-		{
-			matchedGarments[0].parentLayer = curGarmentLayer;
-			success = true;
-			matchedGarments = [];
-		}
+		} );
+	} );
+
+	if ( !assignedGarments.length )
+	{
+		assignGarmentsToLayersDialog( garmentsNeeded );
 	}
 
-
-	if(!success)
-	{
-		assignGarmentsToLayersDialog(matchedGarments.length ? matchedGarments : garmentsNeeded);
-	}
-		
 }

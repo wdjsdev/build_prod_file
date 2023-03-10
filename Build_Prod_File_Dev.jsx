@@ -92,7 +92,7 @@ function container ()
 
 	scriptTimer.beginTask( "getComponents" );
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = componentsPath + "/build_prod_file_beta";
+	var prodComponents = componentsPath + "/build_prod_file";
 
 	// var compFiles = includeComponents(devComponents,prodComponents,false);
 	var compFiles = getComponents( $.fileName.match( /dev/i ) ? devComponents : prodComponents );

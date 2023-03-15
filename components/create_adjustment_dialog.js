@@ -229,21 +229,17 @@ function createAdjustmentDialog ()
 
 	function adjustNameWidths ()
 	{
-		log.l( "Adjusting name widths to " + maxPlayerNameWidth + " points." )
 		var artworkLayer = findSpecificLayer( doc.layers, "Artwork" );
-		log.l( "debug: Artwork layer: " + artworkLayer );
 		afc( artworkLayer, "groupItems" ).forEach( function ( gi )
 		{
 			var rosterGroup = findSpecificPageItem( gi, "Roster" );
 			if ( !rosterGroup ) { return; };
-			log.l( "debug: Roster group parent : " + rosterGroup.parent )
 			afc( rosterGroup, "groupItems" ).forEach( function ( rgi )
 			{
-				var playerName = findSpecificPageItem( rgi, "Name", "any" );
-				if ( !playerName ) { return; };
-				log.l( "debug: rosterGroup: " + rosterGroup.name );
-				log.l( "debug: maxPlayerNameWidth: " + maxPlayerNameWidth );
-				resizeLiveText( playerName, maxPlayerNameWidth )
+				afc( rgi, "textFrames" ).forEach( function ( tf )
+				{
+					if ( tf.name == "Name" ) resizeLiveText( tf, maxPlayerNameWidth );
+				} )
 			} );
 		} );
 	}

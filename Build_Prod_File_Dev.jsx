@@ -14,7 +14,7 @@ Description: query netsuite for JSON data for a given order number,
 function container ()
 {
 	var valid = true;
-	var scriptName = "build_prod_file_beta";
+	var scriptName = "build_prod_file";
 
 
 	function getUtilities ()

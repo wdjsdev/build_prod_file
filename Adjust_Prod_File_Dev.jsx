@@ -46,29 +46,29 @@ function container ()
 		{
 			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
 			var devUtilPath = "~/Desktop/automation/utilities/";
-			utilFiles =[ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			utilFiles = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
 			return utilFiles;
 		}
 
 		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
-		
-		for(var u=0;u<utilNames.length;u++)
+
+		for ( var u = 0; u < utilNames.length; u++ )
 		{
-			var utilFile = new File(dataResourcePath + utilNames[u] + ".jsxbin");
-			if(utilFile.exists)
+			var utilFile = new File( dataResourcePath + utilNames[ u ] + ".jsxbin" );
+			if ( utilFile.exists )
 			{
-				utilFiles.push(utilFile);	
+				utilFiles.push( utilFile );
 			}
-			
+
 		}
 
-		if(!utilFiles.length)
+		if ( !utilFiles.length )
 		{
-			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
+			alert( "Could not find utilities. Please ensure you're connected to the appropriate Customization drive." );
 			return [];
 		}
 
-		
+
 		return utilFiles;
 
 	}
@@ -79,7 +79,7 @@ function container ()
 		eval( "#include \"" + utilities[ u ] + "\"" );
 	}
 
-	if ( !valid || !utilities.length) return;
+	if ( !valid || !utilities.length ) return;
 
 	var bpfTimer = new Stopwatch();
 	bpfTimer.logStart();
@@ -101,7 +101,7 @@ function container ()
 	//==============================  Components  ===============================//
 
 	var devComponents = desktopPath + "/automation/build_prod_file/components";
-	var prodComponents = componentsPath + "build_prod_file_beta"
+	var prodComponents = componentsPath + "build_prod_file"
 
 	var compFiles = getComponents( $.fileName.toLowerCase().indexOf( "dev" ) > -1 ? devComponents : prodComponents );
 	if ( compFiles && compFiles.length )

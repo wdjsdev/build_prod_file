@@ -42,10 +42,7 @@ function resizeLiveText ( frame, maxWidth )
 		resultHeight = expFrame.height;
 		tmpLay.remove();
 		var result = resultWidth > resultHeight ? resultWidth : resultHeight;
-		log.l( "debug: expanded dimension: " + result );
 		return result;
-
-
 	}
 }
 

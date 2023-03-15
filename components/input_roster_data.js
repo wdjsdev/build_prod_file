@@ -54,9 +54,14 @@ function inputRosterData ( curGarment )
 
 		curSizePieces = pieces.filter( function ( curPiece )
 		{
-			return curPiece.name.match( new RegExp( "^" + curSize + " ", "i" ) )
+			return curPiece.name.match( new RegExp( "^" + curSize, "i" ) )
 		} );
-		csr.players = getRosterData( csr.players )
+
+		if ( !csr.players || typeof csr.players === "string" )
+		{
+			csr.players = getRosterData( csr.players )
+		}
+
 		csr.playerCount = csr.players.length;
 		if ( csr.qty > csr.playerCount )
 		{

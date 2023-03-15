@@ -38,7 +38,7 @@ function inputCurrentPlayer ( pieces, curPlayer )
 
 	pieces.forEach( function ( curPiece )
 	{
-		var newPlayerGroup, curPlayerLabel, existingRosterGroup;
+		var newPlayerGroup, existingRosterGroup;
 		var liveTextGroup = findSpecificPageItem( curPiece, "Live Text" );
 		var rosterGroup = findSpecificPageItem( curPiece, "Roster" );
 		if ( !liveTextGroup || !rosterGroup ) return;

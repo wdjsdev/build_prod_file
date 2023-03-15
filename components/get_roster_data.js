@@ -51,7 +51,7 @@ function getRosterData ( roster )
 		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
 		log.l( "after removing spaces, curEntry = " + curEntry );
 
-		if ( curEntry === "" || curEntry.match( /^\*.*\*$/ ) )
+		if ( curEntry === "" || curEntry.match( /^\s*\*/ ) || curEntry.match( /qty/i ) )
 		{
 			continue;
 		}

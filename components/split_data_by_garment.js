@@ -45,17 +45,22 @@ function splitDataByGarment ( curOrderData )
 		} );
 
 
-		curLineData.mid = curLineData.mid ? ( garmentCodeConverter[ curLineData.mid ] || curLineData.mid ) : "";
-		curLineData.style = curLineData.style ? curLineData.style : "";
+
 		curLineData.size = curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "";
 		if ( curLineData.item.match( /bag/i ) )
 		{
 			curLineData.size = "ONE PIECE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
 		}
-		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
 		curLineData.roster = curLine.memo.roster || "(blank)";
 		curLineData.designNumber = curLineData.design || "";
 		curLineData.qty = curLine.quantity * 1;
+		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
+		garmentCodeConverter[ curLineData.mid ] ? curLineData.mid = garmentCodeConverter[ curLineData.mid ] : null;
+		if ( curLineData.age === "Y" && !curLineData.mid.match( /y$|g$/i ) )
+		{
+			curLineData.mid = curLineData.mid.match( /w$/i ) ? curLineData.mid.replace( /w$/i, "G" ) : curLineData.mid + "Y";
+		}
+		curLineData.style = curLineData.style ? curLineData.style : "";
 
 		//take care of any missing data if possible
 		if ( curGarment )

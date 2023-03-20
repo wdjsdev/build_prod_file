@@ -53,8 +53,8 @@ function colorFixer ()
 					curSwatch.remove();
 				}
 			}
-			catch(e){};
-			
+			catch ( e ) { };
+
 		}
 
 		//remove default swatch foldersw
@@ -69,8 +69,8 @@ function colorFixer ()
 					doc.swatchGroups[ sg ].remove();
 				}
 			}
-			catch(e){};
-			
+			catch ( e ) { };
+
 		}
 		log.l( "Sucessfully eliminated default colors." );
 
@@ -109,20 +109,18 @@ function colorFixer ()
 
 		for ( var fs = 0; fs < swatches.length; fs++ )
 		{
-			var thisSwatch = swatches[ fs ];
-			if ( floLibrary[ thisSwatch.name ] )
+			try
 			{
-				try
-				{
-					thisSwatch.name = floLibrary[ thisSwatch.name ];
-				}
-				catch ( e )
-				{
-					errorList.push( "System: " + e );
-					errorList.push( "Failed while renaming swatch: " + thisSwatch.name +
-						".\nEither there was an MRAP error or there are multiple instances of the same swatch.\
-									\ni.e. CUTLINE and CUT LINE both exist in the swatches panel.");
-				}
+				var thisSwatch = swatches[ fs ];
+				log.l( thisSwatch.name )
+				thisSwatch.name = floLibrary[ thisSwatch.name ] || thisSwatch.name;
+			}
+			catch ( e )
+			{
+				errorList.push( "System: " + e );
+				errorList.push( "Failed while renaming swatch: " + thisSwatch.name +
+					".\nEither there was an MRAP error or there are multiple instances of the same swatch.\
+								\ni.e. CUTLINE and CUT LINE both exist in the swatches panel.");
 			}
 		}
 		log.l( "Successfully fixed flo swatches." );

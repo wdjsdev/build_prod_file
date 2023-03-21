@@ -82,7 +82,7 @@ function getRosterData ( roster )
 		}
 
 		//get the name
-		var name = curEntry.match( /([a-z]+[\d\sa-z])\s?/i );
+		var name = curEntry.match( /\s([a-z]+[\d\sa-z\.]*)\s?/i );
 		if ( name )
 		{
 			curPlayer.name = name[ 1 ].replace( /^\s*|\s*$/ig, "" );

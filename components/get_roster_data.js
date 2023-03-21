@@ -19,138 +19,224 @@
 
 */
 
+
 function getRosterData ( roster )
 {
-	log.h( "Beginning getRosterData(" + roster + ");" );
-	var result = [];
-	var curPlayer, curEntry;
-
-	//regex for testing a number only formatting of roster
-	//for example when the roster does not explicitly
-	//include (No Name)
-	//an example is a string like this:
-	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
-	var numOnlyRegex = /^[\d]*$/;
-	var nameOnlyRegex = /^[a-z]*$/i;
-	var blankJerseyRegex = /\(\s*blank\s*\)/i;
-	// var noNameRegex = /\(?[ ]*no[ ]*name[ ]*\)?/i;
-	// var noNumberRegex = /\(?[ ]*no[ ]*number[ ]*\)?/i
-	var noNameRegex = /no.*name/i;
-	var noNumberRegex = /no.*number/i;
-	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
-	var multipleInsideSpacesRegex = /\s{2,}/g;
-	var qtyIndicatorRegex = /\*\s*qty/i;
-	var gradYearRegex = /\(?[\s]*[\d]{4}[\s]*\)?/;
-
-	var splitRoster = roster.split( "\n" );
-	for ( var x = 0, len = splitRoster.length; x < len; x++ )
+	var resultPlayers = [];
+	var splitRoster = roster.split( "\n" ).filter( function ( line )
 	{
-		curPlayer = {};
-		log.l( "curEnry = " + splitRoster[ x ] )
-		curEntry = splitRoster[ x ].replace( trimSpacesRegex, "" );
-		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
-		log.l( "after removing spaces, curEntry = " + curEntry );
+		return line !== "" && !line.match( /^\s*\*|\(\s*blank\s*\)|qty/i );
+	} );
 
-		if ( curEntry === "" || curEntry.match( /^\s*\*/ ) || curEntry.match( /qty/i ) )
-		{
-			continue;
-		}
+	if ( splitRoster.length === 0 )
+	{
+		resultPlayers.push( { "name": "", "number": "", "label": "(no_name) (no_number)" } );
+		return resultPlayers;
+	}
 
+	splitRoster.forEach( function ( curEntry )
+	{
+		var curPlayer = { "name": "", "number": "", "label": "" };
 
-		//check for a "(Blank)" jersey
-		if ( blankJerseyRegex.test( curEntry ) || ( curEntry.match( noNameRegex ) && curEntry.match( noNumberRegex ) ) )
-		{
-			curPlayer.number = "";
-			curPlayer.name = "";
-			curPlayer.label = "no_name_no_number";
-			log.l( "curEntry matches the blank jersey regex." )
-			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
-			result.push( curPlayer );
-			continue;
-		}
+		//trim spaces
+		curEntry = curEntry.replace( /^\s+|\s+$/g, "" );
+		curEntry = curEntry.replace( /\s{2,}/g, " " );
 
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
 		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
-		log.l( "after removing instructions, curEntry = " + curEntry );
-
 
 
 		//check for a number only format
-		if ( numOnlyRegex.test( curEntry ) )
+		if ( curEntry.match( /^\d+$/ ) )
 		{
 			curPlayer.number = curEntry;
 			curPlayer.name = "";
-
-			log.l( "curEntry matches number only regex." );
-			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
-			result.push( curPlayer );
-			continue;
+			curPlayer.label = "(no_name) " + curEntry;
+			resultPlayers.push( curPlayer );
+			return;
 		}
 
 		//check for a name only format
-		if ( nameOnlyRegex.test( curEntry ) )
+		if ( curEntry.match( /^[a-z]+[\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]a-z]$/i ) )
 		{
-			curPlayer.name = curEntry;
 			curPlayer.number = "";
-			log.l( "curEntry matches name only regex." );
-			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
-			result.push( curPlayer );
-			continue;
+			curPlayer.name = curEntry;
+			curPlayer.label = curEntry + " (no_number)";
+			resultPlayers.push( curPlayer );
+			return;
 		}
 
-		//curEntry is not a name only or number only
-		//so it has both and possibly a grad year
-
-
-
+		//get the grad year
+		var gradYear = curEntry.match( /\(?[\s]*[\d]{4}[\s]*\)?/ );
+		if ( gradYear )
+		{
+			curPlayer.extraInfo = gradYear[ 0 ].replace( /\s|\(|\)/g, "" );
+		}
 
 		//get the number
-		if ( curEntry.toLowerCase().indexOf( "(no number)" ) > -1 )
+		var number = curEntry.match( /^\d+/ );
+		if ( number )
 		{
-			curPlayer.number = "";
-			curEntry = curEntry.replace( /\(no number\)[\s]*/i, "" )
-		}
-		else
-		{
-			curPlayer.number = curEntry.substring( 0, curEntry.indexOf( " " ) );
-			curEntry = curEntry.substring( curEntry.indexOf( " " ) + 1, curEntry.length );
+			curPlayer.number = number[ 0 ];
 		}
 
 		//get the name
-		if ( curEntry.toLowerCase().indexOf( "(no name)" ) > -1 )
+		var name = curEntry.match( /([a-z]+[\d\sa-z])\s?/i );
+		if ( name )
 		{
-			curPlayer.name = "";
-		}
-		else
-		{
-			if ( curEntry.match( gradYearRegex ) )
-			{
-				curPlayer.name = curEntry.substring( 0, curEntry.indexOf( " (" ) ) || "";
-				// curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length).replace(/\(|\)/g,"");
-				curPlayer.extraInfo = curEntry.match( gradYearRegex )[ 0 ].replace( /\(|\)/g, "" );
-			}
-			else
-			{
-				curPlayer.name = curEntry;
-			}
+			curPlayer.name = name[ 1 ].replace( /^\s*|\s*$/ig, "" );
 		}
 
-		// if(curEntry.match(/\([\d]*\)/)
-		// {
-		// 	curPlayer.gradYear = curEntry.replace(/\(|\)/g,"");
-		// }
-		curPlayer.name = curPlayer.name.replace( trimSpacesRegex, "" );
-		curPlayer.number = curPlayer.number.replace( trimSpacesRegex, "" );
-		log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
-		result.push( curPlayer );
-	}
+		//get the label
+		curPlayer.label = curPlayer.name + " " + curPlayer.number;
+		if ( curPlayer.extraInfo )
+		{
+			curPlayer.label += " " + curPlayer.extraInfo;
+		}
 
-	result.forEach( function ( player )
-	{
-		player.label = ( player.name || "(no_name)" ) + " " + ( player.number || "(no_number)" ) + ( player.extraInfo ? " " + player.extraInfo : "" );
+		resultPlayers.push( curPlayer );
 	} )
 
-	return result;
-
+	return resultPlayers;
 }
+
+
+
+
+
+// function getRosterData ( roster )
+// {
+// 	log.h( "Beginning getRosterData(" + roster + ");" );
+// 	var result = [];
+// 	var curPlayer, curEntry;
+
+// 	//regex for testing a number only formatting of roster
+// 	//for example when the roster does not explicitly
+// 	//include (No Name)
+// 	//an example is a string like this:
+// 	//	"\n2\n4\n6\n00\n99\n1\n22\n1\n7\n00\n5\n22\n11"
+// 	var numOnlyRegex = /^[\d]*$/;
+// 	var nameOnlyRegex = /^[a-z]*$/i;
+// 	var blankJerseyRegex = /\(\s*blank\s*\)/i;
+// 	// var noNameRegex = /\(?[ ]*no[ ]*name[ ]*\)?/i;
+// 	// var noNumberRegex = /\(?[ ]*no[ ]*number[ ]*\)?/i
+// 	var noNameRegex = /no.*name/i;
+// 	var noNumberRegex = /no.*number/i;
+// 	var trimSpacesRegex = /^[\s]*|[\s]*$/g;
+// 	var multipleInsideSpacesRegex = /\s{2,}/g;
+// 	var qtyIndicatorRegex = /\*\s*qty/i;
+// 	var gradYearRegex = /\(?[\s]*[\d]{4}[\s]*\)?/;
+
+// 	var splitRoster = roster.split( "\n" );
+// 	for ( var x = 0, len = splitRoster.length; x < len; x++ )
+// 	{
+// 		curPlayer = {};
+// 		log.l( "curEnry = " + splitRoster[ x ] )
+// 		curEntry = splitRoster[ x ].replace( trimSpacesRegex, "" );
+// 		curEntry = curEntry.replace( multipleInsideSpacesRegex, " " );
+// 		log.l( "after removing spaces, curEntry = " + curEntry );
+
+// 		if ( curEntry === "" || curEntry.match( /^\s*\*/ ) || curEntry.match( /qty/i ) )
+// 		{
+// 			continue;
+// 		}
+
+
+// 		//check for a "(Blank)" jersey
+// 		if ( blankJerseyRegex.test( curEntry ) || ( curEntry.match( noNameRegex ) && curEntry.match( noNumberRegex ) ) )
+// 		{
+// 			curPlayer.number = "";
+// 			curPlayer.name = "";
+// 			curPlayer.label = "no_name_no_number";
+// 			log.l( "curEntry matches the blank jersey regex." )
+// 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
+// 			result.push( curPlayer );
+// 			continue;
+// 		}
+
+// 		//get rid of any instructions that may have been written by the cs rep
+// 		//anything in parentheses that not a grad year should be removed
+// 		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
+// 		log.l( "after removing instructions, curEntry = " + curEntry );
+
+
+
+// 		//check for a number only format
+// 		if ( numOnlyRegex.test( curEntry ) )
+// 		{
+// 			curPlayer.number = curEntry;
+// 			curPlayer.name = "";
+
+// 			log.l( "curEntry matches number only regex." );
+// 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
+// 			result.push( curPlayer );
+// 			continue;
+// 		}
+
+// 		//check for a name only format
+// 		if ( nameOnlyRegex.test( curEntry ) )
+// 		{
+// 			curPlayer.name = curEntry;
+// 			curPlayer.number = "";
+// 			log.l( "curEntry matches name only regex." );
+// 			log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
+// 			result.push( curPlayer );
+// 			continue;
+// 		}
+
+// 		//curEntry is not a name only or number only
+// 		//so it has both and possibly a grad year
+
+
+
+
+// 		//get the number
+// 		if ( curEntry.toLowerCase().indexOf( "(no number)" ) > -1 )
+// 		{
+// 			curPlayer.number = "";
+// 			curEntry = curEntry.replace( /\(no number\)[\s]*/i, "" )
+// 		}
+// 		else
+// 		{
+// 			curPlayer.number = curEntry.substring( 0, curEntry.indexOf( " " ) );
+// 			curEntry = curEntry.substring( curEntry.indexOf( " " ) + 1, curEntry.length );
+// 		}
+
+// 		//get the name
+// 		if ( curEntry.toLowerCase().indexOf( "(no name)" ) > -1 )
+// 		{
+// 			curPlayer.name = "";
+// 		}
+// 		else
+// 		{
+// 			if ( curEntry.match( gradYearRegex ) )
+// 			{
+// 				curPlayer.name = curEntry.substring( 0, curEntry.indexOf( " (" ) ) || "";
+// 				// curPlayer.extraInfo = curEntry.substring(curEntry.indexOf(" (")+1,curEntry.length).replace(/\(|\)/g,"");
+// 				curPlayer.extraInfo = curEntry.match( gradYearRegex )[ 0 ].replace( /\(|\)/g, "" );
+// 			}
+// 			else
+// 			{
+// 				curPlayer.name = curEntry;
+// 			}
+// 		}
+
+// 		// if(curEntry.match(/\([\d]*\)/)
+// 		// {
+// 		// 	curPlayer.gradYear = curEntry.replace(/\(|\)/g,"");
+// 		// }
+// 		curPlayer.name = curPlayer.name.replace( trimSpacesRegex, "" );
+// 		curPlayer.number = curPlayer.number.replace( trimSpacesRegex, "" );
+// 		log.l( "pushing the following object to result::" + JSON.stringify( curPlayer ) );
+// 		result.push( curPlayer );
+// 	}
+
+// 	result.forEach( function ( player )
+// 	{
+// 		player.label = ( player.name || "(no_name)" ) + " " + ( player.number || "(no_number)" ) + ( player.extraInfo ? " " + player.extraInfo : "" );
+// 	} )
+
+// 	return result;
+
+// }

@@ -79,6 +79,15 @@ function splitDataByGarment ( curOrderData )
 
 		curLineData.code = curLineData.mid + "_" + curLineData.style;
 
+		//check for any custom inseam garments
+		if ( curLineData.roster.match( /add.*inch|[\+\-]\d|inseam/i ) )
+		{
+			messageList.push( "Please don't forget to setup the custom inseam as well." );
+			messageList.push( curMid + "_" + curStyle + " size " + curSize + ( curWaist ? "x" + curWaist : "" ) );
+			messageList.push( "Look for the note on the sales order that says: " + curRoster );
+		}
+
+
 		if ( curGarment && ( curGarment.item !== curLineData.item || curGarment.age !== curLineData.age ) )
 		{
 			curGarment ? resultGarments.push( curGarment ) : null;

@@ -107,7 +107,7 @@ function colorFixer ()
 			"ZUNDCUT": "Thru-cut"
 		}
 
-		for ( var fs = 0; fs < swatches.length; fs++ )
+		for ( var fs = 2; fs < swatches.length; fs++ )
 		{
 			try
 			{

@@ -23,50 +23,38 @@
 
 */
 
-function revealPieceAndRosterGroup(pieceName,rosterGroupName)
+function revealPieceAndRosterGroup ( pieceName, rosterGroupName )
 {
 	var doc = app.activeDocument;
 	curRosterGroup = curRosterName = curRosterNumber = undefined;
-	var piece = doc.layers["Artwork"].pageItems[pieceName];
-	curRosterGroup = piece.groupItems["Roster"].pageItems[rosterGroupName];
-	getRosterTextFrames(curRosterGroup);
+	var piece = doc.layers[ "Artwork" ].pageItems[ pieceName ];
+	curRosterGroup = piece.groupItems[ "Roster" ].pageItems[ rosterGroupName ];
+	getRosterTextFrames( curRosterGroup );
 
 	//create the artboard
 	doc.selection = null;
-	
 
-	//we need to select some artwork to use for creating the
-	//artboard.. but we can't select the entire piece, because
-	//it has locked/hidden artwork inside. Dig for the first
-	//unlocked piece that is at least 50% as wide as the parent piece
-	var pieceWidth = piece.width;
-	for(var pi = piece.pageItems.length - 1; pi>=0; pi--)
-	{
-		if(piece.pageItems[pi].width > pieceWidth *.5)
-		{
-			piece.pageItems[pi].selected = true;
-			break;
-		}
-	}
-	
+
+	var pieceDimensions = getVisibleBounds( piece );
+	doc.artboards[ 0 ].artboardRect = pieceDimensions;
+	app.executeMenuCommand( "fitall" );
 	// piece.pageItems[piece.pageItems.length-1].selected = true;
-	doc.fitArtboardToSelectedArt(0);
-	app.executeMenuCommand("fitall");
+	// doc.fitArtboardToSelectedArt(0);
 
 	//hide the live text group
-	piece.groupItems["Live Text"].hidden = true;
+	piece.groupItems[ "Live Text" ].hidden = true;
 
 	//hide all roster groups except the desired one
-	for(var x=0,len=piece.groupItems["Roster"].pageItems.length;x<len;x++)
+	for ( var x = 0, len = piece.groupItems[ "Roster" ].pageItems.length; x < len; x++ )
 	{
-		if(piece.groupItems["Roster"].pageItems[x].name === rosterGroupName)
+		if ( piece.groupItems[ "Roster" ].pageItems[ x ].name === rosterGroupName )
 		{
-			piece.groupItems["Roster"].hidden = false;
-			piece.groupItems["Roster"].pageItems[x].hidden = false;
+			piece.groupItems[ "Roster" ].hidden = false;
+			piece.groupItems[ "Roster" ].pageItems[ x ].hidden = false;
 		}
 		else
 		{
-			piece.groupItems["Roster"].pageItems[x].hidden = true;	
+			piece.groupItems[ "Roster" ].pageItems[ x ].hidden = true;
 		}
 	}
 	//reveal the rosterGroup

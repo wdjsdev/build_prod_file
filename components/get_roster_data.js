@@ -38,15 +38,12 @@ function getRosterData ( roster )
 	{
 		var curPlayer = { "name": "", "number": "", "label": "" };
 
-
-
 		//if blank jersey, make a no name no number entry and return
 		if ( curEntry.match( /^\(\s*blank\s*\)\s*$/i ) )
 		{
 			resultPlayers.push( { "name": "", "number": "", "label": "(no_name) (no_number)" } );
 			return;
 		}
-
 
 		//trim spaces
 		curEntry = curEntry.replace( /^\s+|\s+$/g, "" );
@@ -82,44 +79,11 @@ function getRosterData ( roster )
 		}
 
 
-		log.l( "debugging curEntry: " + curEntry );
 		curEntry.split( " " ).forEach( function ( curWord, index )
 		{
-			log.l( "debugging curWord: " + curWord )
 			var key = curWord.match( /\(?\s*\d{4}\s*\)/i ) ? "extraInfo" : ( curWord.match( /^\d+$/ ) ? "number" : "name" );
-			log.l( "debugging key: " + key )
 			curPlayer[ key ] = curPlayer[ key ] ? curPlayer[ key ] + " " + curWord : curWord;
 		} );
-
-		log.l( "debugging curPlayer: " + JSON.stringify( curPlayer ) );
-
-
-		// //get the number
-		// var number = curEntry.match( /(^\d+)\s*/ );
-		// if ( number )
-		// {
-		// 	curPlayer.number = number[ 1 ];
-		// 	curEntry.replace( number[ 0 ], "")
-		// }
-
-		// //get the grad year
-		// var gradYear = curEntry.match( /\(?[\s]*[\d]{4}[\s]*\)?/ );
-		// if ( gradYear )
-		// {
-		// 	curPlayer.extraInfo = gradYear[ 0 ].replace( /\s|\(|\)/g, "" );
-		// 	curEntry.replace( gradYear[ 0 ], "" );
-		// }
-
-		// //get the name
-		// // var name = curEntry.match( /\s([a-z]+[\d\sa-z\.\-]*)\s?/i );
-		// // var name = curEntry.match( /\s*([a-z]+[\s\-\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]a-z]*).*$/i );
-		// // if ( name )
-		// // {
-		// // 	curPlayer.name = name[ 1 ].replace( /^\s*|\s*$/ig, "" );
-		// // }
-
-		// curPlayer.name = curEntry.replace( /^\s*|\s*$/ig, "" );
-
 
 
 		//get the label

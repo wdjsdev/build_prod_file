@@ -119,6 +119,7 @@ function splitDataByGarment ( curOrderData )
 		if ( inseam )
 		{
 			var curWaist = curLineData.size;
+			curGarment.var = true;
 			cgr = cgr[ curWaist ] || ( cgr[ curWaist ] = {} );
 		}
 

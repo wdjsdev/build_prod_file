@@ -33,7 +33,7 @@ function inputRosterData ( curGarment )
 	var sizeArray = [];
 	for ( var curSize in curGarment.roster )
 	{
-		if ( !curGarment.roster[ curSize ].players )
+		if ( curGarment.var )
 		{
 			for ( var curWaist in curGarment.roster[ curSize ] )
 			{

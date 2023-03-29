@@ -87,7 +87,7 @@ function getRosterData ( roster )
 
 
 		//get the label
-		curPlayer.label = curPlayer.name + " " + curPlayer.number;
+		curPlayer.label = ( curPlayer.name || "(no_name)" ) + " " + ( curPlayer.number || "(no_number)" );
 		if ( curPlayer.extraInfo )
 		{
 			curPlayer.extraInfo = curPlayer.extraInfo.replace( /\s|\(|\)/g, "" );

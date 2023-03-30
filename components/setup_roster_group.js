@@ -43,6 +43,6 @@ function setupRosterGroup ( item )
 
 	} );
 
-	return true;
+	return itemFrames.length > 0;
 }
 

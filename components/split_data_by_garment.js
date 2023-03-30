@@ -55,11 +55,6 @@ function splitDataByGarment ( curOrderData )
 		curLineData.designNumber = curLineData.design || "";
 		curLineData.qty = curLine.quantity * 1;
 		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
-		garmentCodeConverter[ curLineData.mid ] ? curLineData.mid = garmentCodeConverter[ curLineData.mid ] : null;
-		if ( curLineData.age === "Y" && !curLineData.mid.match( /y$|g$/i ) )
-		{
-			curLineData.mid = curLineData.mid.match( /w$/i ) ? curLineData.mid.replace( /w$/i, "G" ) : curLineData.mid + "Y";
-		}
 		curLineData.style = curLineData.style ? curLineData.style : "";
 
 		//take care of any missing data if possible
@@ -72,9 +67,16 @@ function splitDataByGarment ( curOrderData )
 			var cgst = curGarment.styleNum;
 			var cgd = curGarment.designNumber;
 
-			!cldm && cgm ? curLineData.mid = cgm : !cgm && cldm ? curGarment.mid = cldm : null;
-			!cldst && cgst ? curLineData.style = cgst : !cgst && cldst ? curGarment.styleNum = cldst : null;
-			!cldd && cgd ? curLineData.designNumber = cgd : !cgd && cldd ? curGarment.designNumber = cldd : null;
+			!cldm && cgm ? ( curLineData.mid = cgm ) : ( !cgm && cldm ? curGarment.mid = cldm : null );
+			!cldst && cgst ? ( curLineData.style = cgst ) : ( !cgst && cldst ? curGarment.styleNum = cldst : null );
+			!cldd && cgd ? ( curLineData.designNumber = cgd ) : ( !cgd && cldd ? curGarment.designNumber = cldd : null );
+		}
+
+		garmentCodeConverter[ curLineData.mid ] ? curLineData.mid = garmentCodeConverter[ curLineData.mid ] : null;
+
+		if ( curLineData.age === "Y" && !curLineData.mid.match( /y$|g$/i ) )
+		{
+			curLineData.mid = curLineData.mid.match( /w$/i ) ? curLineData.mid.replace( /w$/i, "G" ) : curLineData.mid + "Y";
 		}
 
 		curLineData.code = curLineData.mid + "_" + curLineData.style;

@@ -20,7 +20,8 @@
 
 function inputCurrentPlayer ( pieces, curPlayer )
 {
-	log.h( "Beginning execution of inputCurrentPlayer() function.::player name = " + curPlayer.name + "::player number = " + curPlayer.number );
+	log.l( "inputing " + JSON.stringify( curPlayer ) )
+	log.l( "on pieces: " + pieces.join( ", " ) );
 	var result = true;
 	var curFrame;
 	var doc = app.activeDocument;
@@ -61,8 +62,6 @@ function inputCurrentPlayer ( pieces, curPlayer )
 			return;
 		}
 
-		log.l( "Inputting roster info on the " + curPiece.name );
-
 		var newPlayerGroup = liveTextGroup.duplicate( rosterGroup );
 		newPlayerGroup.name = curPlayer.label;
 		afc( newPlayerGroup, "pageItems" ).forEach( function ( playerGroupItem )
@@ -74,8 +73,6 @@ function inputCurrentPlayer ( pieces, curPlayer )
 			var curLabel = rosterFrame.name.match( /grad/i ) ? "extraInfo" : rosterFrame.name.toLowerCase();
 
 			var inputValue = curPlayer[ curLabel ] || "";
-
-
 			//check for (no name) or (no number) formatting
 			inputValue = inputValue.match( /\(.*no (name|number).*\)/i ) ? "" : inputValue;
 

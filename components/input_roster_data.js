@@ -76,7 +76,6 @@ function inputRosterData ( curGarment )
 
 		csr.players.forEach( function ( curPlayer )
 		{
-			log.l( "Inputting player data for " + JSON.stringify( curPlayer ) );
 			inputCurrentPlayer( curSizePieces, curPlayer );
 		} );
 

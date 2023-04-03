@@ -77,10 +77,10 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 			//and select each one.
 			for ( var curWaistSize in curData.roster[ curSize ] )
 			{
+				varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
 				for ( var pp = 0, len = curSizeLayer.groupItems.length; pp < len; pp++ )
 				{
 					curItem = curSizeLayer.pageItems[ pp ];
-					varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
 					if ( curItem.name.toLowerCase().indexOf( varSizeString ) > -1 )
 					{
 						curItem.duplicate( tmpGroup );
@@ -117,6 +117,8 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 		ungroupDoc( curData.doc );
 
 	}
+
+	scriptTimer.endTask( "movePiecesToProdFile" );
 
 	scriptTimer.endTask( "duplicatePiecesToProdFile" );
 	log.l( "End of duplicatePiecesToProdFile function. returning: " + result );

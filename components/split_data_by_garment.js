@@ -109,11 +109,14 @@ function splitDataByGarment ( curOrderData )
 
 		var inseam = curLineData[ "inseam size" ] || "";
 		inseam = inseam.replace( /\s*(inseam)?\s*(size)?\s*:?\s*/ig, "" ).replace( /\//g, "-" );
+
 		var curSize = curLineData.size;
 		curSize = curSize.replace( /\s*size(:)?\s*/i, "" ).replace( /\//g, "-" );
 
-		var cgr = curGarment.roster[ curSize ] || ( curGarment.roster[ curSize ] = {} ); //current garment roster
-		$.writeln( "inseam = " + inseam )
+
+
+		var cgr = curGarment.roster; //current garment roster
+
 		if ( inseam && !inseam.match( /[+\-]0/ ) )
 		{
 			if ( inseam.match( /[+\-]\d|add\s*\d|sub\s*\d/i ) )
@@ -122,10 +125,17 @@ function splitDataByGarment ( curOrderData )
 				return;
 			}
 
-			var curWaist = curSize;
+			var curWaist = curLineData.waist || curLineData[ "waist size" ] || curSize;
+			curWaist = curWaist.replace( /\s*size(:)?\s*/i, "" ).replace( /\//g, "-" );
 			curGarment.var = true;
+			cgr = cgr[ inseam ] || ( cgr[ inseam ] = {} );
 			cgr = cgr[ curWaist ] || ( cgr[ curWaist ] = {} );
 		}
+		else
+		{
+			cgr = cgr[ curSize ] || ( cgr[ curSize ] = {} );
+		}
+
 
 		var curPlayers = cgr.players || "";
 		cgr.players = curPlayers + ( curLineData.roster ? curLineData.roster : "" ) + "\n";

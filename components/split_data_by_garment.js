@@ -41,7 +41,7 @@ function splitDataByGarment ( curOrderData )
 
 		curLine.options.forEach( function ( curOpt )
 		{
-			curLineData[ curOpt.name.toLowerCase() ] = curOpt.value;
+			curLineData[ curOpt.name.toLowerCase() ] = curOpt.value.replace( /^.*:\s*/, "" );
 		} );
 
 

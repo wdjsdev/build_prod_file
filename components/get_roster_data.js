@@ -79,9 +79,10 @@ function getRosterData ( roster )
 		}
 
 
+
 		curEntry.split( " " ).forEach( function ( curWord, index )
 		{
-			var key = curWord.match( /\(?\s*\d{4}\s*\)/i ) ? "extraInfo" : ( curWord.match( /^\d+$/ ) ? "number" : "name" );
+			var key = curWord.match( /\(?\s*\d{4}\s*\)/i ) ? "extraInfo" : ( curWord.match( /^[\'\"\-\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]\?]*$/i ) ? "number" : "name" );
 			curPlayer[ key ] = curPlayer[ key ] ? curPlayer[ key ] + " " + curWord : curWord;
 		} );
 

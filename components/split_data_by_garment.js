@@ -108,7 +108,7 @@ function splitDataByGarment ( curOrderData )
 
 
 		var inseam = curLineData[ "inseam size" ] || "";
-		inseam = inseam.replace( /\s*(inseam)?\s*(size)?\s*:?\s*/ig, "" ).replace( /\//g, "-" );
+		inseam = inseam.replace( /[^\d]/ig, "" );
 
 		var curSize = curLineData.size;
 		curSize = curSize.replace( /\s*size(:)?\s*/i, "" ).replace( /\//g, "-" );
@@ -117,11 +117,11 @@ function splitDataByGarment ( curOrderData )
 
 		var cgr = curGarment.roster; //current garment roster
 
-		if ( inseam && !inseam.match( /[+\-]0/ ) )
+		if ( inseam && !inseam.match( /^[+\-]?0/ ) )
 		{
 			if ( inseam.match( /[+\-]\d|add\s*\d|sub\s*\d/i ) )
 			{
-				messagesList.push( "Extra inseam size: " + inseam + " needed for " + curLineData.code );
+				messageList.push( "Extra inseam size: " + inseam + " needed for " + curLineData.code );
 				return;
 			}
 

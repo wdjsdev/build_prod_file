@@ -35,26 +35,29 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	afc( artworkLayer, "groupItems" ).forEach( function ( g )
 	{
 		g.locked = g.hidden = false;
-		//delete any live text group
 		var ltg = findSpecificPageItem( g, "Live Text" );
-		if ( !ltg ) return;
-		ltg.remove();
-		var rg = findSpecificPageItem( g, "Roster" );
-		if ( !rg ) return;
-		afc( rg, "groupItems" ).forEach( function ( rosterGroup )
-		{
-			rosterGroup.locked = rosterGroup.hidden = false;
-			rosterGroup.selected = true;
-		} )
-	} );
-	app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
-	app.executeMenuCommand( "expandStyle" );
+		if ( ltg ) { ltg.remove(); }
 
-	afc( doc, "textFrames" ).forEach( function ( tf )
-	{
-		tf.createOutline();
-	} )
-	app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
+	} );
+
+	// afc( doc, "textFrames" ).forEach( function ( tf )
+	// {
+	// 	tf.locked = tf.hidden = false;
+	// 	tf.selected = true;
+	// } );
+	// app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
+	// app.executeMenuCommand( "expandStyle" );
+
+	// doc.selection = null;
+	// app.redraw();
+
+	// // afc( doc, "textFrames" ).forEach( function ( tf )
+	// // {
+	// // 	tf.createOutline();
+	// // } )
+
+	// app.redraw();
+	// app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
 
 
 	// loadExpandAction();
@@ -116,44 +119,19 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		var rosterGroup, liveTextGroup, curRosterChild, pdfFileName;
 		var curNameFrame, curNumFrame, duplicateName, duplicateNumber, duplicateGrad;
 		var playerNameCenterPoint;
-		try
-		{
-			rosterGroup = piece.groupItems[ "Roster" ];
-			log.l( "Successfully set the rosterGroup of piece: " + piece.name );
-			liveTextGroup = piece.groupItems[ "Live Text" ];
-			log.l( "Successfully set the liveTextGroup of piece: " + piece.name );
-		}
-		catch ( e )
-		{
-			log.l( "No roster or live text info here." );
-		}
+		// try
+		// {
+		// 	rosterGroup = piece.groupItems[ "Roster" ];
+		// 	log.l( "Successfully set the rosterGroup of piece: " + piece.name );
+		// 	liveTextGroup = piece.groupItems[ "Live Text" ];
+		// 	log.l( "Successfully set the liveTextGroup of piece: " + piece.name );
+		// }
+		// catch ( e )
+		// {
+		// 	log.l( "No roster or live text info here." );
+		// }
 
-		piece.selected = true;
-
-		// doc.fitArtboardToSelectedArt(0);
-
-		function makeArtboard ( group, rmItems )
-		{
-			var doc = app.activeDocument
-			var dupGroup = group.duplicate();
-			for ( var x = dupGroup.pageItems.length - 1; x >= 0; x-- )
-			{
-				if ( rmItems.indexOf( dupGroup.pageItems[ x ].name ) > -1 )
-				{
-					dupGroup.pageItems[ x ].remove();
-				}
-			}
-
-			doc.selection = null;
-			dupGroup.selected = true;
-			doc.fitArtboardToSelectedArt( 0 );
-			dupGroup.remove();
-		}
-		makeArtboard( piece, [ "Roster", "Live Text" ] );
-
-		app.executeMenuCommand( "fitall" );
-
-
+		doc.artboards[ 0 ].artboardRect = getVisibleBounds( piece );
 		colorBlocks();
 
 		if ( !checkThruCut( piece ) )
@@ -161,16 +139,39 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 			errorList.push( piece.name + " is missing a Thru-cut line." );
 		}
 
-		if ( !rosterGroup )
-		{
-			pdfFileName = piece.name + ".pdf";
-			pdfFileName = pdfFileName.replace( /\s/g, "_" );
-			saveFile( doc, pdfFileName, pdfFolder )
-		}
-		else
-		{
-			// liveTextGroup.hidden = true;
 
+		// piece.selected = true;
+
+		// doc.fitArtboardToSelectedArt(0);
+
+		// function makeArtboard ( group, rmItems )
+		// {
+		// 	var doc = app.activeDocument
+		// 	var dupGroup = group.duplicate();
+		// 	for ( var x = dupGroup.pageItems.length - 1; x >= 0; x-- )
+		// 	{
+		// 		if ( rmItems.indexOf( dupGroup.pageItems[ x ].name ) > -1 )
+		// 		{
+		// 			dupGroup.pageItems[ x ].remove();
+		// 		}
+		// 	}
+
+		// 	doc.selection = null;
+		// 	dupGroup.selected = true;
+		// 	doc.fitArtboardToSelectedArt( 0 );
+		// 	dupGroup.remove();
+		// }
+		// makeArtboard( piece, [ "Roster", "Live Text" ] );
+
+
+
+		app.executeMenuCommand( "fitall" );
+
+
+		var rosterGroup = findSpecificPageItem( piece, "roster", "any" );
+
+		if ( rosterGroup )
+		{
 			//hide all rosterGroup children
 			for ( var x = 0, len = rosterGroup.groupItems.length; x < len; x++ )
 			{
@@ -186,15 +187,18 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 
 				pdfFileName = piece.name + "_" + curRosterChild.name + ".pdf";
 
-				// pdfFileName = pdfFileName.replace( /\s/g, "_" );
 				//replace any special characters with underscores
 				pdfFileName = pdfFileName.replace( /\s|[!-\-]|[\/]|[\[-\`]|[:-@]|[\{-\~]/g, "_" )
 				log.l( "pdfFileName: " + pdfFileName );
 				saveFile( doc, pdfFileName, pdfFolder );
 				curRosterChild.hidden = true;
 			}
-
-			// liveTextGroup.hidden = false;
+		}
+		else
+		{
+			pdfFileName = piece.name + ".pdf";
+			pdfFileName = pdfFileName.replace( /\s/g, "_" );
+			saveFile( doc, pdfFileName, pdfFolder )
 		}
 
 		log.l( "Successfully exported " + pdfFileName )

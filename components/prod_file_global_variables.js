@@ -92,7 +92,7 @@ prodFileRoster =
 //PDF save settings
 var flatOpts = new PrintFlattenerOptions();
 flatOpts.overprint = PDFOverprint.DISCARDPDFOVERPRINT;
-// flatOpts.convertTextToOutlines = true;
+flatOpts.convertTextToOutlines = true;
 //attn:
 //look into using flattener options to negate the need for text expansion.
 //attn;

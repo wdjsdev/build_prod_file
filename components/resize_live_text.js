@@ -2,7 +2,7 @@ function resizeLiveText ( frame, maxWidth )
 {
 	if ( !frame.contents ) { return };
 
-	while ( isOverset( frame ) || getExpandedDimension( frame ) > maxWidth )
+	while ( ( !frame.kind.toString().match( /point/i ) && isOverset( frame ) ) || getExpandedDimension( frame ) > maxWidth )
 	{
 		frame.textRange.characterAttributes.horizontalScale -= 2
 	}

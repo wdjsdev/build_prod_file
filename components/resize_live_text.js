@@ -2,13 +2,24 @@ function resizeLiveText ( frame, maxWidth )
 {
 	if ( !frame.contents ) { return };
 
-	while ( ( !frame.kind.toString().match( /point/i ) && isOverset( frame ) ) || getExpandedDimension( frame ) > maxWidth )
+	var frameKind = frame.kind.toString();
+
+	app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
+
+	if ( !frameKind.match( /point/i ) )
 	{
-		frame.textRange.characterAttributes.horizontalScale -= 2
+		while ( isOverset( frame ) && frame.textRange.characterAttributes.horizontalScale > 2 )
+		{
+			frame.textRange.characterAttributes.horizontalScale -= 2;
+		}
 	}
-
-
-
+	else
+	{
+		while ( getExpandedDimension( frame ) > maxWidth )
+		{
+			frame.textRange.characterAttributes.horizontalScale -= 2;
+		}
+	}
 
 	function isOverset ( frame )
 	{

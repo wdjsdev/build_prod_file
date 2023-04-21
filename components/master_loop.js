@@ -96,7 +96,7 @@ function masterLoop ()
 
 			if ( !createProdFile( curGarment ) )
 			{
-				result = false;
+				return;
 			}
 		}
 

@@ -78,7 +78,7 @@ function inputCurrentPlayer ( pieces, curPlayer )
 
 			//input the roster info into the textFrame contents
 			rosterFrame.contents = inputValue;
-			resizeLiveText( rosterFrame, Infinity )
+			curLabel.match( /name/ ) ? resizeLiveText( rosterFrame, Infinity ) : null;
 		} );
 
 		//hide the live text and roster groups to prepare to process next customized garment piece

@@ -49,10 +49,11 @@ function getRosterData ( roster )
 		curEntry = curEntry.replace( /^\s+|\s+$/g, "" );
 		curEntry = curEntry.replace( /\s{2,}/g, " " );
 
-
+		var gradYear = curEntry.match( /\(\d{4}\)/ ) ? " " + curEntry.match( /\(\d{4}\)/ )[ 0 ] : "";
+		gradYear = gradYear ? gradYear[ 0 ] : "";
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace( /\s*\([^\d][^\)]*\s*\)?/ig, "" );
+		curEntry = curEntry.replace( /\s?\([^\)]*\s*\)?/ig, gradYear );
 
 		//get rid of any no name no number callouts
 		curEntry = curEntry.replace( /\s*\(?\s*no\s*(name|number)\s*\)?\s*/ig, "" );
@@ -82,7 +83,11 @@ function getRosterData ( roster )
 
 		curEntry.split( " " ).forEach( function ( curWord, index )
 		{
-			var key = curWord.match( /\(?\s*\d{4}\s*\)/i ) ? "extraInfo" : ( curWord.match( /^[\'\"\-\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]\?]*$/i ) ? "number" : "name" );
+			if ( !curWord )
+			{
+				return;
+			}
+			var key = curWord.match( /\(?\s*\d{4}\s*\)/i ) ? "extraInfo" : ( !curPlayer.number && curWord.match( /^[\<\>\'\"\-\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]\?]*$/i ) ? "number" : "name" );
 			curPlayer[ key ] = curPlayer[ key ] ? curPlayer[ key ] + " " + curWord : curWord;
 		} );
 

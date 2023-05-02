@@ -92,11 +92,18 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 		else
 		{
 			curSizeLayer = getSizeLayer( curSize );
-			for ( var x = curSizeLayer.pageItems.length - 1; x >= 0; x-- )
+			if ( curSizeLayer )
 			{
-				curItem = curSizeLayer.pageItems[ x ];
-				if ( curItem.typename === "GroupItem" )
-					curItem.duplicate( tmpGroup );
+				for ( var x = curSizeLayer.pageItems.length - 1; x >= 0; x-- )
+				{
+					curItem = curSizeLayer.pageItems[ x ];
+					if ( curItem.typename === "GroupItem" )
+						curItem.duplicate( tmpGroup );
+				}
+			}
+			else
+			{
+				errorList.push( "Could not find prepress layer for size: " + curSize + " in " + srcLayer.name )
 			}
 		}
 
@@ -128,31 +135,44 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 
 	function getSizeLayer ( curSize )
 	{
-		var len = ppLay.layers.length;;
-		var curLay;
-		for ( var x = 0; x < len; x++ )
+		var resultLayer;
+		var regex = new RegExp( "^" + curSize, "i" );
+		afc( ppLay, "layers" ).forEach( function ( sizeLay )
 		{
-			curLay = ppLay.layers[ x ];
-			if ( sizeType === "std" && curLay.name === curSize )
+			if ( resultLayer ) { return }
+			if ( sizeLay.name.match( regex ) )
 			{
-				log.l( "curSize layer = " + curLay );
-				return curLay;
+				resultLayer = sizeLay;
 			}
-			// else if(sizeType === "var" && curLay.name === curSize + "I")
-			else if ( sizeType === "var" && curLay.name === curSize )
-			{
-				log.l( "curSize layer = " + curLay );
-				return curLay;
-			}
-			else if ( sizeType === "wxh" && curLay.name.indexOf( curSize ) === 0 )
-			{
-				log.l( "curSize layer = " + curLay );
-				return curLay;
-			}
-		}
-		log.e( "Failed to find a prepress size layer for " + curSize );
-		errorList.push( "Failed to find a prepress size layer for " + curSize );
-		return undefined;
+		} );
+		return resultLayer;
+
+
+		// var len = ppLay.layers.length;;
+		// var curLay;
+		// for ( var x = 0; x < len; x++ )
+		// {
+		// 	curLay = ppLay.layers[ x ];
+		// 	if ( sizeType === "std" && curLay.name === curSize )
+		// 	{
+		// 		log.l( "curSize layer = " + curLay );
+		// 		return curLay;
+		// 	}
+		// 	// else if(sizeType === "var" && curLay.name === curSize + "I")
+		// 	else if ( sizeType === "var" && curLay.name === curSize )
+		// 	{
+		// 		log.l( "curSize layer = " + curLay );
+		// 		return curLay;
+		// 	}
+		// 	else if ( sizeType === "wxh" && curLay.name.indexOf( curSize ) === 0 )
+		// 	{
+		// 		log.l( "curSize layer = " + curLay );
+		// 		return curLay;
+		// 	}
+		// }
+		// log.e( "Failed to find a prepress size layer for " + curSize );
+		// errorList.push( "Failed to find a prepress size layer for " + curSize );
+		// return undefined;
 	}
 
 	function selectArtworkFromSizeLayer ( layer )

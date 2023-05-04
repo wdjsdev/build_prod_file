@@ -36,6 +36,7 @@ function getRosterData ( roster )
 
 	splitRoster.forEach( function ( curEntry )
 	{
+		log.l( "curEntry = " + curEntry );
 		var curPlayer = { "name": "", "number": "", "label": "" };
 
 		//if blank jersey, make a no name no number entry and return
@@ -49,15 +50,17 @@ function getRosterData ( roster )
 		curEntry = curEntry.replace( /^\s+|\s+$/g, "" );
 		curEntry = curEntry.replace( /\s{2,}/g, " " );
 
-		var gradYear = curEntry.match( /\(\d{4}\)/ ) ? " " + curEntry.match( /\(\d{4}\)/ )[ 0 ] : "";
-		gradYear = gradYear ? gradYear[ 0 ] : "";
+		var gradYear = curEntry.match( /\(\d{4}\)/ ) ? curEntry.match( /\(\d{4}\)/ )[ 0 ] : "";
+
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed
-		curEntry = curEntry.replace( /\s?\([^\)]*\s*\)?/ig, gradYear );
+		// curEntry = curEntry.replace( /\s?\([^\)]*\s*\)?/ig, " " + gradYear );
+		curEntry = curEntry.replace( /\(.*\)/g, gradYear );
 
 		//get rid of any no name no number callouts
 		curEntry = curEntry.replace( /\s*\(?\s*no\s*(name|number)\s*\)?\s*/ig, "" );
 
+		log.l( "sanitized curEntry = " + curEntry );
 
 		//check for a number only format
 		if ( curEntry.match( /^\d+$/ ) )
@@ -99,7 +102,6 @@ function getRosterData ( roster )
 			curPlayer.extraInfo = curPlayer.extraInfo.replace( /\s|\(|\)/g, "" );
 			curPlayer.label += " " + curPlayer.extraInfo;
 		}
-
 		resultPlayers.push( curPlayer );
 	} )
 

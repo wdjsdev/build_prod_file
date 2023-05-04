@@ -54,7 +54,7 @@ function inputRosterData ( curGarment )
 
 		curSizePieces = pieces.filter( function ( curPiece )
 		{
-			return curPiece.name.match( new RegExp( "^" + curSize, "i" ) )
+			return curPiece.note === "hasRoster" && curPiece.name.match( new RegExp( "^" + curSize, "i" ) )
 		} );
 
 		if ( !csr.players || typeof csr.players === "string" )

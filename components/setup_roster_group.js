@@ -27,6 +27,8 @@ function setupRosterGroup ( item )
 	itemFrames.forEach( function ( frame )
 	{
 		var frameType = frame.contents.match( /\d{4}/ ) ? "grad" : ( frame.contents.match( /^\d*$/i ) ? "number" : "name" );
+		if ( !frameType.match( /grad|number|name/i ) ) { return };
+
 		frame.name = frameType.toTitleCase();
 		item.note = "hasRoster";
 		rosterGroup = rosterGroup || item.groupItems.add();

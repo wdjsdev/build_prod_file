@@ -12,29 +12,29 @@
 
 */
 
-function findGarmentLayers()
+function findGarmentLayers ()
 {
-	log.h("Beginning execution of findGarmentLayers() function.");
+	log.h( "Beginning execution of findGarmentLayers() function." );
 	var result = [];
 
 	var curLay;
-	for(var x=0,len=layers.length;x<len;x++)
+	for ( var x = 0, len = layers.length; x < len; x++ )
 	{
-		curLay = layers[x];
-		if(isTemplate(curLay))
+		curLay = layers[ x ];
+		if ( isTemplate( curLay ) )
 		{
-			log.l("pushing " + curLay + " to result array.");
-			result.push(curLay);
+			log.l( "pushing " + curLay + " to result array." );
+			result.push( curLay );
 		}
 	}
 
-	if(!result.length)
+	if ( !result.length )
 	{
-		errorList.push("There were no converted templates found in this master file. Cannot proceed.");
-		log.e("No Converted templates found. Exiting script.");
+		errorList.push( "There were no converted templates found in this master file. Cannot proceed." );
+		log.e( "No Converted templates found. Exiting script." );
 		valid = false;
 	}
 
-	log.l("end of findGarmentLayers() function. returning::" + result);
+	log.l( "end of findGarmentLayers() function. returning::" + result );
 	return result;
 }

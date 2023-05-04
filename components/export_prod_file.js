@@ -31,7 +31,7 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	saveFile( doc, docName, Folder( destFolderPath ) );
 	log.l( "Successfully saved " + docName );
 
-	//expand all textFrames
+	//remove all "Live Text" textFrames
 	afc( artworkLayer, "groupItems" ).forEach( function ( g )
 	{
 		g.locked = g.hidden = false;
@@ -40,27 +40,6 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 
 	} );
 
-	// afc( doc, "textFrames" ).forEach( function ( tf )
-	// {
-	// 	tf.locked = tf.hidden = false;
-	// 	tf.selected = true;
-	// } );
-	// app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS;
-	// app.executeMenuCommand( "expandStyle" );
-
-	// doc.selection = null;
-	// app.redraw();
-
-	// // afc( doc, "textFrames" ).forEach( function ( tf )
-	// // {
-	// // 	tf.createOutline();
-	// // } )
-
-	// app.redraw();
-	// app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
-
-
-	// loadExpandAction();
 
 	pdfFolderName = pdfFolderName.replace( ".ai", "" );
 	var pdfFolder = Folder( destFolderPath + "/" + pdfFolderName + "_PDFs" );
@@ -95,15 +74,6 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		}
 	}
 
-	// tmpNameLay.remove();
-	// tmpNumLay.remove();
-	// tmpGradLay.remove();
-
-	// saveFile( doc, docName, Folder( destFolderPath ) );
-	// log.l( "Successfully saved " + docName );
-
-	// unloadExpandAction();
-
 	doc.close( SaveOptions.DONOTSAVECHANGES );
 	app.open( File( destFolderPath + "/" + docName ) );
 
@@ -116,20 +86,8 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	{
 		scriptTimer.beginTask( "exportPiece_" + piece.name );
 		doc.selection = null;
-		var rosterGroup, liveTextGroup, curRosterChild, pdfFileName;
-		var curNameFrame, curNumFrame, duplicateName, duplicateNumber, duplicateGrad;
-		var playerNameCenterPoint;
-		// try
-		// {
-		// 	rosterGroup = piece.groupItems[ "Roster" ];
-		// 	log.l( "Successfully set the rosterGroup of piece: " + piece.name );
-		// 	liveTextGroup = piece.groupItems[ "Live Text" ];
-		// 	log.l( "Successfully set the liveTextGroup of piece: " + piece.name );
-		// }
-		// catch ( e )
-		// {
-		// 	log.l( "No roster or live text info here." );
-		// }
+		var rosterGroup, curRosterChild, pdfFileName;
+
 
 		doc.artboards[ 0 ].artboardRect = getVisibleBounds( piece );
 		colorBlocks();
@@ -138,31 +96,6 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		{
 			errorList.push( piece.name + " is missing a Thru-cut line." );
 		}
-
-
-		// piece.selected = true;
-
-		// doc.fitArtboardToSelectedArt(0);
-
-		// function makeArtboard ( group, rmItems )
-		// {
-		// 	var doc = app.activeDocument
-		// 	var dupGroup = group.duplicate();
-		// 	for ( var x = dupGroup.pageItems.length - 1; x >= 0; x-- )
-		// 	{
-		// 		if ( rmItems.indexOf( dupGroup.pageItems[ x ].name ) > -1 )
-		// 		{
-		// 			dupGroup.pageItems[ x ].remove();
-		// 		}
-		// 	}
-
-		// 	doc.selection = null;
-		// 	dupGroup.selected = true;
-		// 	doc.fitArtboardToSelectedArt( 0 );
-		// 	dupGroup.remove();
-		// }
-		// makeArtboard( piece, [ "Roster", "Live Text" ] );
-
 
 
 		app.executeMenuCommand( "fitall" );
@@ -201,7 +134,6 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 			saveFile( doc, pdfFileName, pdfFolder )
 		}
 
-		log.l( "Successfully exported " + pdfFileName )
 		scriptTimer.endTask( "exportPiece_" + piece.name );
 
 	}

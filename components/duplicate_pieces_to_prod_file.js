@@ -67,44 +67,48 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 	app.selection = null;
 
 	scriptTimer.beginTask( "makePieceGroup" );
+	var curSizePieces = [];
 	for ( var curSize in curData.roster )
 	{
 		if ( sizeType === "var" )
 		{
 			curSizeLayer = getSizeLayer( curSize + "I" );
+			curSizePieces = afc( curSizeLayer, "groupItems" ).filter( function ( curPiece )
+			{
+				return curPiece.pageItems.length && curPiece.name.match( curSize + "I" );
+			} );
+
 			//loop each item in the curSizeLayer and find pieces
 			//which match the waist and inseam of the current garment
 			//and select each one.
 			for ( var curWaistSize in curData.roster[ curSize ] )
 			{
+
 				varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
-				for ( var pp = 0, len = curSizeLayer.groupItems.length; pp < len; pp++ )
+				curSizePieces.forEach( function ( curPiece )
 				{
-					curItem = curSizeLayer.pageItems[ pp ];
-					if ( curItem.name.toLowerCase().indexOf( varSizeString ) > -1 )
+					if ( curPiece.name.toLowerCase().indexOf( varSizeString ) > -1 )
 					{
-						curItem.duplicate( tmpGroup );
+						curItem.duplicate( tmpGroup )
 					}
-				}
+				} )
 
 			}
 		}
 		else
 		{
 			curSizeLayer = getSizeLayer( curSize );
-			if ( curSizeLayer )
+			if ( !curSizeLayer )
 			{
-				for ( var x = curSizeLayer.pageItems.length - 1; x >= 0; x-- )
-				{
-					curItem = curSizeLayer.pageItems[ x ];
-					if ( curItem.typename === "GroupItem" )
-						curItem.duplicate( tmpGroup );
-				}
+				log.e( "Failed to find a prepress layer for size: " + curSize );
+				errorList.push( "Failed to find a prepress layer for size: " + curSize );
+				continue;
 			}
-			else
+			curSizePieces = afc( curSizeLayer, "groupItems" ).filter( function ( curPiece ) { return curPiece.pageItems.length } );
+			curSizePieces.forEach( function ( curPiece )
 			{
-				errorList.push( "Could not find prepress layer for size: " + curSize + " in " + srcLayer.name )
-			}
+				curPiece.duplicate( tmpGroup );
+			} )
 		}
 
 

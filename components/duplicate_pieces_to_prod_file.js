@@ -89,7 +89,7 @@ function duplicatePiecesToProdFile ( curData, srcLayer )
 				{
 					if ( curPiece.name.toLowerCase().indexOf( varSizeString ) > -1 )
 					{
-						curItem.duplicate( tmpGroup )
+						curPiece.duplicate( tmpGroup )
 					}
 				} )
 

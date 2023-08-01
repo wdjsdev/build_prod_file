@@ -22,38 +22,66 @@ function masterLoop ()
 	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
 	var docDesignNumber = docRef.name.match( /[\da-z]{12}/ig ) || null;
+	var manuallyAssignGarments = false;
 
 	scriptTimer.beginTask( "getRelevantGarments" );
-	//filter garmentsNeeded to remove any that don't have a parent layer
-	relevantGarments = garmentsNeeded.filter( function ( curGarment )
+
+	//build the relevantGarments array
+	//relevantGarments is an array of garment objects
+	//if the garment.designNumber matches the docDesignNumber
+	//and the garment.mid matches the parent layer name
+	//then push the garment to the relevantGarments array
+	garmentsNeeded.forEach( function ( curGarment )
 	{
 		curGarment.parentLayer = null;
-		var curGarmentCode = curGarment.mid + "_" + curGarment.styleNum;
+		var styleNum = curGarment.styleNum;
+		styleNum.match( /\d{3,}[a-z]?/i ) ? styleNum = styleNum.replace( /[a-z]$/i, "" ) : null;
+		var curGarmentCode = curGarment.mid + "_" + styleNum;
 		var curDesignNumber = curGarment.designNumber || null;
 
-		afc( docRef, "layers" ).forEach( function ( cgl )
+		var docLayers = afc( docRef, "layers" );
+
+		if ( !curDesignNumber || !docDesignNumber )
 		{
-			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
-			if ( cglName.match( curGarmentCode ) )
+			manuallyAssignGarments = true;
+			return;
+		}
+
+
+		if ( docDesignNumber.indexOf( curDesignNumber ) < 0 )
+		{
+			log.l( "skipping garment: " + curGarmentCode + " because the design number " + curDesignNumber + " don't match docDesignNumber " + docDesignNumber )
+			return;
+		}
+
+		docLayers.forEach( function ( cgl )
+		{
+			if ( !curGarment.parentLayer && cgl.name.match( new RegExp( curGarment.mid + "[-_]", "i" ) ) )
 			{
-				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) >= 0 )
+				curGarment.parentLayer = cgl;
+				curGarment.prepressDoc = docRef;
+				relevantGarments.push( curGarment );
+				if ( curGarment.extraSizesRoster )
 				{
-					curGarment.parentLayer = cgl;
+					locateExtraSizesPrepressFile( curGarment )
 				}
 			}
 		} );
 
-		return curGarment.parentLayer;
 	} );
 
 	scriptTimer.endTask( "getRelevantGarments" );
 
-	if ( !relevantGarments.length )
+	if ( !relevantGarments.length || manuallyAssignGarments )
 	{
 		assignGarmentsToLayersDialog( garmentsNeeded );
-		relevantGarments = garmentsNeeded.filter( function ( curGarment )
+		relevantGarments = []
+		garmentsNeeded.forEach( function ( curGarment )
 		{
-			return curGarment.parentLayer;
+			if ( curGarment.parentLayer )
+			{
+				relevantGarments.push( curGarment );
+			}
 		} );
 	}
 
@@ -74,7 +102,6 @@ function masterLoop ()
 		var curGarmentLayer = curGarment.parentLayer;
 		//check mid value against list of garments that should get a 50% thrucut opacity
 		thruCutOpacityPreference = TCT.indexOf( curGarment.mid ) > -1 ? 50 : 0;
-
 
 		//check mid value against list of reversible football garments
 		//if it's a match, locate the "front" piece, locate the C1 block,
@@ -103,10 +130,24 @@ function masterLoop ()
 		//copy each piece of the necessary sizes to the new production file
 		if ( result )
 		{
-			result = duplicatePiecesToProdFile( curGarment, curGarmentLayer );
+			result = duplicatePiecesToProdFile( curGarment );
+			if ( curGarment.extraSizesRoster )
+			{
+				if ( curGarment.extraSizesPrepressDoc && curGarment.extraSizesParentLayer )
+				{
+					duplicatePiecesToProdFile( curGarment, curGarment.extraSizes );
+				}
+				else 
+				{
+					errorList.push( "Couldn't locate extra sizes prepress file for " + curGarment.code + "_" + curGarment.styleNum + ". Please locate it manually." )
+				}
+			}
+
+			curGarment.prodFile.activate();
+
 
 			scriptTimer.beginTask( "saveProdFileWithArt" );
-			saveFile( curGarment.doc, saveFileName, saveFolder );
+			saveFile( curGarment.prodFile, saveFileName, saveFolder );
 			scriptTimer.endTask( "saveProdFileWithArt" );
 		}
 

@@ -18,43 +18,22 @@ function inputRosterData ( curGarment )
 	scriptTimer.beginTask( "inputRosterData" );
 	log.h( "Beginning execution of inputRosterData() function." );
 	var result = true;
-	var doc = app.activeDocument;
-	var pieces = afc( doc.layers[ 0 ], "groupItems" );
-	var len, curPlayer, curPlayerIndex;
+	var pieces = afc( curGarment.prodFile.layers[ 0 ], "groupItems" );
 	var rosterInconsistencies = [];
 	var curSizePieces = [];
-	var curQty, playerLen;
-
-	var roster = curGarment.roster;
-
-	var csr;
-	var csr;
 	var rosterArray = [];
+	var sizeRegexArray = [];
 	var sizeArray = [];
-	for ( var curSize in curGarment.roster )
-	{
-		if ( curGarment.var )
-		{
-			for ( var curWaist in curGarment.roster[ curSize ] )
-			{
-				rosterArray.push( curGarment.roster[ curSize ][ curWaist ] );
-				sizeArray.push( curWaist + "wx" + curSize + "I" );
-			}
-		}
-		else
-		{
-			rosterArray.push( curGarment.roster[ curSize ] );
-			sizeArray.push( curSize );
-		}
-	}
+
+	populateRosterArray( curGarment.roster );
+	populateRosterArray( curGarment.extraSizesRoster );
+
 
 	rosterArray.forEach( function ( csr, i )
 	{
-		var curSize = sizeArray[ i ];
-
 		curSizePieces = pieces.filter( function ( curPiece )
 		{
-			return curPiece.note === "hasRoster" && curPiece.name.match( new RegExp( "^" + curSize, "i" ) )
+			return curPiece.note === "hasRoster" && curPiece.name.match( sizeRegexArray[ i ] )
 		} );
 
 		if ( !csr.players || typeof csr.players === "string" )
@@ -65,13 +44,13 @@ function inputRosterData ( curGarment )
 		csr.playerCount = csr.players.length;
 		if ( csr.qty > csr.playerCount )
 		{
-			rosterInconsistencies.push( "Roster inconsistency found for size " + curSize + ". Expected " + csr.qty + " players but found " + csr.playerCount + " players." );
+			rosterInconsistencies.push( "Roster inconsistency found for size " + sizeArray[ i ] + ". Expected " + csr.qty + " players but found " + csr.playerCount + " players." );
 			csr.players.push( { name: "", number: "" } );
 		}
 		else if ( csr.qty < csr.playerCount )
 		{
-			rosterInconsistencies.push( "Roster inconsistency found for size " + curSize + ". Expected " + csr.qty + " players but found " + csr.playerCount + " players." );
-			errorList.push( curSize + " has more roster entries than garments sold!" );
+			rosterInconsistencies.push( "Roster inconsistency found for size " + sizeArray[ i ] + ". Expected " + csr.qty + " players but found " + csr.playerCount + " players." );
+			errorList.push( sizeArray[ i ] + " has more roster entries than garments sold!" );
 		}
 
 		csr.players.forEach( function ( curPlayer )
@@ -97,4 +76,28 @@ function inputRosterData ( curGarment )
 	scriptTimer.endTask( "inputRosterData" );
 
 	return result;
+
+
+	function populateRosterArray ( roster )
+	{
+		if ( !roster ) { return };
+		for ( var curSize in roster )
+		{
+			if ( !roster[ curSize ].players )
+			{
+				for ( var curWaist in roster[ curSize ] )
+				{
+					rosterArray.push( roster[ curSize ][ curWaist ] );
+					sizeRegexArray.push( new RegExp( "^" + curWaist + ".*" + curSize, "i" ) );
+					sizeArray.push( curWaist + "x" + curSize );
+				}
+			}
+			else
+			{
+				rosterArray.push( roster[ curSize ] );
+				sizeRegexArray.push( new RegExp( "^" + curSize ) );
+				sizeArray.push( curSize );
+			}
+		}
+	}
 }

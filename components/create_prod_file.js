@@ -50,7 +50,7 @@ function createProdFile ( curGarment )
 	else
 	{
 		log.l( "creating a new production file called " + orderNum + appendage )
-		curGarment.doc = app.documents.add();
+		curGarment.prodFile = app.documents.add();
 		createAction( "cleanup_swatches", CLEANUP_SWATCHES_ACTION_STRING );
 		app.doScript( "cleanup_swatches", "cleanup_swatches" );
 		removeAction( "cleanup_swatches" );
@@ -58,7 +58,7 @@ function createProdFile ( curGarment )
 		artworkLayer = app.activeDocument.layers[ 0 ];
 		artworkLayer.name = "Artwork";
 		scriptTimer.beginTask( "initialSaveProdFile" );
-		saveFile( curGarment.doc, saveFileName, saveFolder );
+		saveFile( curGarment.prodFile, saveFileName, saveFolder );
 		scriptTimer.endTask( "initialSaveProdFile" );
 	}
 

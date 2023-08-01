@@ -63,10 +63,12 @@ function initBuildProd ()
 		scriptTimer.endTask( "getOrderData" );
 	}
 
-	// var outFile = File( desktopPath + "/temp/3880327.js" );
-	// outFile.open( "w" );
-	// outFile.write( "var garmentsNeeded = " + JSON.stringify( garmentsNeeded ) );
-	// outFile.close();
+
+	//extract any extra inseam sizes to a separate roster object in the garment object
+	if ( valid )
+	{
+		separateExtraSizes();
+	}
 
 
 	if ( noOrderNumber )
@@ -86,13 +88,7 @@ function initBuildProd ()
 		}
 	}
 
-	// if ( valid && !noOrderNumber )
-	// {
-	// 	scriptTimer.beginTask( "assignGarments" );
 	garmentLayers = findGarmentLayers();
-	// 	assignGarmentsToLayers();
-	// 	scriptTimer.endTask( "assignGarments" );
-	// }
 
 	scriptTimer.endTask( "initBuildProd" );
 }

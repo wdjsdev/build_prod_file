@@ -86,6 +86,7 @@ function assignGarmentsToLayersDialog ( garments )
 			{
 				garment = getGarment( rel[ x ].dropdown.selection.text );
 				garment.parentLayer = layers[ rel[ x ].msg.text ];
+				garment.prepressDoc = docRef;
 				log.l( "Assigned layer: " + garment.parentLayer.name + " to garment: " + garment.dialogLabel );
 			}
 		}

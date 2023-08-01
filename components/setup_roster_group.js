@@ -26,7 +26,7 @@ function setupRosterGroup ( item )
 
 	itemFrames.forEach( function ( frame )
 	{
-		var frameType = frame.contents.match( /\d{4}/ ) ? "grad" : ( frame.contents.match( /^\d*$/i ) ? "number" : "name" );
+		var frameType = frame.contents.match( /\d{4}/ ) ? "grad" : ( frame.contents.match( /^[\<\>\'\"\-\d\!\@\#\$\%\^\&\*\(\)\{\}\[\]\?]*$/i ) ? "number" : "name" );
 		if ( !frameType.match( /grad|number|name/i ) ) { return };
 
 		frame.name = frameType.toTitleCase();
@@ -35,7 +35,7 @@ function setupRosterGroup ( item )
 		rosterGroup.name = "Roster";
 		liveTextGroup = liveTextGroup || item.groupItems.add();
 		liveTextGroup.name = "Live Text";
-		if ( frame.parent.clipped )
+		if ( frame.parent !== item && frame.parent.clipped )
 		{
 			frame.parent.name = frameType.toTitleCase();
 			frame.parent.moveToEnd( liveTextGroup );

@@ -121,7 +121,7 @@ function container ()
 	/*****************************************************************************/
 
 
-	//if dev mode, use predefined test data instead of querying netsuite
+	// if dev mode, use predefined test data instead of querying netsuite
 	// if ( $.fileName.match( /dev/i ) && confirm( "Use Dev Data?" ) )
 	// {
 	// 	devMode = true;
@@ -142,6 +142,7 @@ function container ()
 	{
 		initBuildProd();
 	}
+
 
 	if ( valid )
 	{

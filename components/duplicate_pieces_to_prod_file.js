@@ -8,185 +8,97 @@
 	Arguments
 		curData
 			object containing the roster info for the current garment
-		srcLayer
-			garment layer object
 	Return value
 		success boolean
 
 */
 
-function duplicatePiecesToProdFile ( curData, srcLayer )
+function duplicatePiecesToProdFile ( curGarment, extraSizes ) 
 {
-	scriptTimer.beginTask( "duplicatePiecesToProdFile" );
-	log.h( "Beginning execution of duplicatePiecesToProdFile() function." );
-	var result = true;
-	var sizeType = "";
-	var curSizeLayer, curItem;
-	var wxhPat = /[\d]{2}[iw]?x[\d]{2}[iw]?/i;
-	var variableInseamPat = /[\d]{2}i/i;
-	var firstPrepressLayer;
-	var varSizeString;
-	docRef.activate();
-	docRef.selection = null;
-
-	//create a temp group to hold all the selected pieces.
-	var tmpLay = layers.add();
-	var tmpGroup = tmpLay.groupItems.add();
-	var curItem;
-
-	//Determine how to handle the sizing format
-	//var = variable inseam, for example 30Ix32W or 36Ix34W
-	//wxh = fixed inseam/waist relationship. sizing is measured in inseam/waist but relationships are not variable
-	//std = standard sizing structure. S M L XL etc
-	var ppLay = getPPLay( srcLayer );
-	firstPrepressLayer = ppLay.layers[ 0 ];
-	if ( variableInseamPat.test( firstPrepressLayer ) )
+	log.h( "executing duplicatePiecesToProdFile()" )
+	var prepressDoc = extraSizes ? curGarment.extraSizesPrepressDoc : curGarment.prepressDoc;
+	if ( !prepressDoc )
 	{
-		log.l( "firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = variable inseam." );
-		sizeType = "var"
+		errorList.push( "No prepress document found for " + curGarment.mid + ( extraSizes ? "X" : "" ) + "." )
+		log.e( "No prepress document found for " + curGarment.mid + ( extraSizes ? "X" : "" ) + "." )
+		return;
 	}
-	else if ( wxhPat.test( firstPrepressLayer ) )
+	var parentLayer = extraSizes ? curGarment.extraSizesParentLayer : curGarment.parentLayer;
+	if ( !parentLayer )
 	{
-		log.l( ppLay.name + ".layers[0].name = " + firstPrepressLayer.name + "::sizeType = width x height." );
-		sizeType = "wxh"
+		errorList.push( "No parent layer found for " + curGarment.mid + ( extraSizes ? "X" : "" ) + "." );
+		log.e( "No parent layer found for " + curGarment.mid + ( extraSizes ? "X" : "" ) + "." );
+		return;
 	}
-	else
-	{
-		log.l( "firstPrepressLayer.name = " + firstPrepressLayer.name + "::sizeType = standard sizing." );
-		sizeType = "std";
-	}
-	ppLay.visible = true;
-	log.l( "set ppLay to " + ppLay );
+	var roster = curGarment[ extraSizes ? "extraSizesRoster" : "roster" ];
+	var prodFile = curGarment.prodFile;
+	var ppLay = parentLayer.layers[ "Prepress" ];
 
 
-	//if this garment is built with "women's sizing"
-	//for example, "WM", "WL", "WXL"
-	//then strip out the W
+	log.l( "prepressDoc: " + prepressDoc.name );
+	log.l( "parentLayer: " + parentLayer.name );
+	log.l( "extraSizes: " + extraSizes );
+	log.l( "roster: " + JSON.stringify( roster, null, 2 ) );
+
+	prepressDoc.activate();
+
+
 	fixImproperWomensSizing( ppLay );
 
-	app.selection = null;
-
-	scriptTimer.beginTask( "makePieceGroup" );
-	var curSizePieces = [];
-	for ( var curSize in curData.roster )
+	var tmpLay = prepressDoc.layers.add();
+	var tmpGroup = tmpLay.groupItems.add();
+	var curSizeLayer, curSizeItems, curWaistSizeItems = [];
+	for ( var curSize in roster )
 	{
-		if ( sizeType === "var" )
+		curSizeLayer = findSpecificLayer( ppLay, new RegExp( "^" + curSize ) );
+		if ( !curSizeLayer )
 		{
-			curSizeLayer = getSizeLayer( curSize + "I" );
-			curSizePieces = afc( curSizeLayer, "groupItems" ).filter( function ( curPiece )
+			errorList.push( "Couldn't find prepress size layer " + curSize + " in " + parentLayer.name + " prepress file." );
+			log.e( "Couldn't find prepress size layer " + curSize + " in " + parentLayer.name + " prepress file." )
+			return;
+		}
+		curSizeItems = afc( curSizeLayer, "pageItems" );
+		if ( !roster[ curSize ].players )
+		{
+			//this roster is "variable inseam".
+			//filter out any items that don't match the necessary waist sizes
+			for ( var curWaist in roster[ curSize ] )
 			{
-				return curPiece.pageItems.length && curPiece.name.match( curSize + "I" );
-			} );
-
-			//loop each item in the curSizeLayer and find pieces
-			//which match the waist and inseam of the current garment
-			//and select each one.
-			for ( var curWaistSize in curData.roster[ curSize ] )
-			{
-
-				varSizeString = curWaistSize + "wx" + curSize.toLowerCase() + "i";
-				curSizePieces.forEach( function ( curPiece )
+				curSizeItems.forEach( function ( curItem ) 
 				{
-					if ( curPiece.name.toLowerCase().indexOf( varSizeString ) > -1 )
+					if ( curItem.name.match( new RegExp( "^" + curWaist, "i" ) ) )
 					{
-						curPiece.duplicate( tmpGroup )
+						curWaistSizeItems.push( curItem );
 					}
-				} )
-
+				} );
 			}
-		}
-		else
-		{
-			curSizeLayer = getSizeLayer( curSize );
-			if ( !curSizeLayer )
-			{
-				log.e( "Failed to find a prepress layer for size: " + curSize );
-				errorList.push( "Failed to find a prepress layer for size: " + curSize );
-				continue;
-			}
-			curSizePieces = afc( curSizeLayer, "groupItems" ).filter( function ( curPiece ) { return curPiece.pageItems.length } );
-			curSizePieces.forEach( function ( curPiece )
-			{
-				curPiece.duplicate( tmpGroup );
-			} )
+			curSizeItems = curWaistSizeItems;
+			curWaistSizeItems = [];
 		}
 
+		log.l( "duplicating the following items to the prod file: " );
+		log.l( curSizeItems.map( function ( a ) { return a.name; } ) );
 
-	}
-	scriptTimer.endTask( "makePieceGroup" );
-
-	scriptTimer.beginTask( "movePiecesToProdFile" );
-	if ( result )
-	{
-		//duplicate the temp group to the production file
-		var tmpGroupCopy = tmpGroup.duplicate( curData.doc );
-		tmpLay.remove();
-
-		curData.doc.activate();
-
-		curData.doc.fitArtboardToSelectedArt( 0 );
-		ungroupDoc( curData.doc );
-
-	}
-
-	scriptTimer.endTask( "movePiecesToProdFile" );
-
-	scriptTimer.endTask( "duplicatePiecesToProdFile" );
-	log.l( "End of duplicatePiecesToProdFile function. returning: " + result );
-
-	return result;
-
-
-	function getSizeLayer ( curSize )
-	{
-		var resultLayer;
-		var regex = new RegExp( "^" + curSize, "i" );
-		afc( ppLay, "layers" ).forEach( function ( sizeLay )
+		//duplicate the items into the tmpGroup
+		curSizeItems.forEach( function ( curItem )
 		{
-			if ( resultLayer ) { return }
-			if ( sizeLay.name.match( regex ) )
-			{
-				resultLayer = sizeLay;
-			}
+			curItem.duplicate( tmpGroup );
 		} );
-		return resultLayer;
-
-
-		// var len = ppLay.layers.length;;
-		// var curLay;
-		// for ( var x = 0; x < len; x++ )
-		// {
-		// 	curLay = ppLay.layers[ x ];
-		// 	if ( sizeType === "std" && curLay.name === curSize )
-		// 	{
-		// 		log.l( "curSize layer = " + curLay );
-		// 		return curLay;
-		// 	}
-		// 	// else if(sizeType === "var" && curLay.name === curSize + "I")
-		// 	else if ( sizeType === "var" && curLay.name === curSize )
-		// 	{
-		// 		log.l( "curSize layer = " + curLay );
-		// 		return curLay;
-		// 	}
-		// 	else if ( sizeType === "wxh" && curLay.name.indexOf( curSize ) === 0 )
-		// 	{
-		// 		log.l( "curSize layer = " + curLay );
-		// 		return curLay;
-		// 	}
-		// }
-		// log.e( "Failed to find a prepress size layer for " + curSize );
-		// errorList.push( "Failed to find a prepress size layer for " + curSize );
-		// return undefined;
+		curSizeItems = [];
 	}
 
-	function selectArtworkFromSizeLayer ( layer )
+	if ( !tmpGroup.pageItems.length )
 	{
-		layer.locked = false;
-		layer.visible = true;
-		// layer.hasSelectedArtwork = true;
-		for ( var x = 0, len = layer.groupItems.length; x < len; x++ )
-		{
-			layer.groupItems[ x ].selected = true;
-		}
+		tmpLay.remove();
+		errorList.push( "Failed to find any prepress artwork in " + prepressDoc.name );
+		return;
 	}
+
+	//move the tmpGroup into the prod file and ungroup it
+	//remove the tmpLay
+	var dupTmpGroup = tmpGroup.duplicate( prodFile );
+	tmpLay.remove();
+	ungroup( dupTmpGroup, prodFile, 1 );
+	return true;
 }
+

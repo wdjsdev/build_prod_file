@@ -86,7 +86,7 @@ function splitDataByGarment ( curOrderData )
 
 		if ( curGarment && ( curGarment.code !== curLineData.code || curGarment.age !== curLineData.age ) )
 		{
-			curGarment ? resultGarments.push( curGarment ) : null;
+			resultGarments.push( curGarment );
 			curGarment = null;
 		}
 
@@ -117,17 +117,12 @@ function splitDataByGarment ( curOrderData )
 
 		var cgr = curGarment.roster; //current garment roster
 
-		if ( inseam && !inseam.match( /^[+\-]?0/ ) )
+		if ( inseam && !inseam.replace( /\s/g, "" ).match( /^0$/ ) )
 		{
-			if ( inseam.match( /[+\-]\d|add\s*\d|sub\s*\d/i ) )
-			{
-				messageList.push( "Extra inseam size: " + inseam + " needed for " + curLineData.code );
-				return;
-			}
-			inseam = inseam.replace( /[^\d]/ig, "" );
+			inseam = inseam.match( /add|sub/i ) ? inseam.replace( /\s/g, "" ).toUpperCase() : inseam.replace( /[^\d]/ig, "" );
 			var curWaist = curLineData.waist || curLineData[ "waist size" ] || curSize;
 			curWaist = curWaist.replace( /\s*size(:)?\s*/i, "" ).replace( /\//g, "-" );
-			curGarment.var = true;
+			curGarment.varInseam = true;
 			cgr = cgr[ inseam ] || ( cgr[ inseam ] = {} );
 			cgr = cgr[ curWaist ] || ( cgr[ curWaist ] = {} );
 		}

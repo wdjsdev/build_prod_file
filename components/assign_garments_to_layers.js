@@ -30,11 +30,12 @@ function assignGarmentsToLayers ()
 		garmentLayers.forEach( function ( cgl )
 		{
 			var cglName = cgl.name.replace( /-/g, "_" ).replace( "_", "-" ).replace( /_0/, "_10" ).replace( /(_[a-z]{1}$)/i, "" );
-			if ( cglName.match( curGarmentCode ) )
+			if ( cglName.match( new RegExp( curGarmentCode + "[-_]", "i" ) ) )
 			{
 				if ( curDesignNumber && docDesignNumber && docDesignNumber.indexOf( curDesignNumber ) )
 				{
 					curGarment.parentLayer = cgl;
+					curGarment.prepressDoc = docRef;
 					assignedGarments.push( curGarment );
 				}
 			}

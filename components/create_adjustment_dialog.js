@@ -135,8 +135,8 @@ function createAdjustmentDialog ()
 
 	//group
 	//this group holds the text expansion preferences
-	var g_textExpansionGroup = UI.group( w );
-	getExpansionPreferences( g_textExpansionGroup );
+	// var g_textExpansionGroup = UI.group( w );
+	// getExpansionPreferences( g_textExpansionGroup );
 
 	//group
 	//this is the group of buttons for the bottom of the
@@ -460,45 +460,45 @@ function createAdjustmentDialog ()
 		var submit = UI.button( parent, "Submit", function ()
 		{
 
-			for ( var x = 0; x < 3; x++ )
-			{
-				if ( g_textExpansionGroup.cboxes[ x ].value )
-				{
-					textExpandSteps.push( g_textExpansionGroup.cboxes[ x ].text )
-				}
-			}
+			// for ( var x = 0; x < 3; x++ )
+			// {
+			// 	if ( g_textExpansionGroup.cboxes[ x ].value )
+			// 	{
+			// 		textExpandSteps.push( g_textExpansionGroup.cboxes[ x ].text )
+			// 	}
+			// }
 
-			if ( !textExpandSteps.length )
-			{
-				var msg = "You did not select any text expansion options. Are you sure you want to proceed?";
-				var confirmContinue = new Window( "dialog" );
-				var msg = UI.static( confirmContinue, msg );
-				var ccBtnGroup = UI.group( confirmContinue );
-				var noBtn = UI.button( ccBtnGroup, "No", function ()
-				{
-					continuePreference = false;
-					confirmContinue.close();
-				} )
-				var yesBtn = UI.button( ccBtnGroup, "Yes", function ()
-				{
-					continuePreference = true;
-					log.l( "ATTN: User chose to export the artwork without expanding the text." );
-					confirmContinue.close();
-				} )
-				confirmContinue.show();
-			}
-			else
-			{
-				continuePreference = true;
-			}
-			if ( !continuePreference )
-			{
-				return;
-			}
+			// if ( !textExpandSteps.length )
+			// {
+			// 	var msg = "You did not select any text expansion options. Are you sure you want to proceed?";
+			// 	var confirmContinue = new Window( "dialog" );
+			// 	var msg = UI.static( confirmContinue, msg );
+			// 	var ccBtnGroup = UI.group( confirmContinue );
+			// 	var noBtn = UI.button( ccBtnGroup, "No", function ()
+			// 	{
+			// 		continuePreference = false;
+			// 		confirmContinue.close();
+			// 	} )
+			// 	var yesBtn = UI.button( ccBtnGroup, "Yes", function ()
+			// 	{
+			// 		continuePreference = true;
+			// 		log.l( "ATTN: User chose to export the artwork without expanding the text." );
+			// 		confirmContinue.close();
+			// 	} )
+			// 	confirmContinue.show();
+			// }
+			// else
+			// {
+			// 	continuePreference = true;
+			// }
+			// if ( !continuePreference )
+			// {
+			// 	return;
+			// }
 
 			scriptTimer.endTask( "adjustmentDialogUserInteraction" );
 			log.l( "Adjustment Dialog Submitted." );
-			log.l( "User selected the following text expansion steps: ::" + textExpandSteps.join( ", " ) );
+			// log.l( "User selected the following text expansion steps: ::" + textExpandSteps.join( ", " ) );
 
 			maxPlayerNameWidth = Number( g_getMaxNameWidthSettingsGroup.maxWidthInput.text ) * INCH_TO_POINT_AT_SCALE;
 			log.l( "Maximum player name width: " + maxPlayerNameWidth );

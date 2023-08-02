@@ -88,8 +88,9 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		doc.selection = null;
 		var rosterGroup, curRosterChild, pdfFileName;
 
-		var bgPath = findBackgroundPath( piece );
-		doc.artboards[ 0 ].artboardRect = getVisibleBounds( bgPath );
+		// var bgPath = findBackgroundPath( piece );
+		// doc.artboards[ 0 ].artboardRect = getVisibleBounds( bgPath );
+		doc.artboards[ 0 ].artboardRect = getVisibleBounds( piece );
 		colorBlocks();
 
 		if ( !checkThruCut( piece ) )

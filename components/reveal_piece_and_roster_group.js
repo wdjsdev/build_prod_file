@@ -34,8 +34,9 @@ function revealPieceAndRosterGroup ( pieceName, rosterGroupName )
 	//create the artboard
 	doc.selection = null;
 
-	var bgPath = findBackgroundPath( piece );
-	var pieceDimensions = getVisibleBounds( bgPath );
+	// var bgPath = findBackgroundPath( piece );
+	// var pieceDimensions = getVisibleBounds( bgPath );
+	var pieceDimensions = getVisibleBounds( piece );
 	doc.artboards[ 0 ].artboardRect = pieceDimensions;
 	app.executeMenuCommand( "fitall" );
 	// piece.pageItems[piece.pageItems.length-1].selected = true;

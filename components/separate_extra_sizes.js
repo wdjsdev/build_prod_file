@@ -5,8 +5,10 @@
 
 function separateExtraSizes ()
 {
+    scriptTimer.beginTask( "separateExtraSizes" );
     garmentsNeeded.forEach( function ( curGarment )
     {
+        scriptTimer.beginTask( "separateExtraSizes: " + curGarment.mid + "_" + curGarment.styleNum );
         for ( var curSize in curGarment.roster )
         {
             if ( curSize.match( /add|sub/i ) )
@@ -21,5 +23,7 @@ function separateExtraSizes ()
                 delete curGarment.roster[ curSize ];
             }
         }
+        scriptTimer.endTask( "separateExtraSizes: " + curGarment.mid + "_" + curGarment.styleNum );
     } );
+    scriptTimer.endTask( "separateExtraSizes" );
 }

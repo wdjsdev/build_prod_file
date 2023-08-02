@@ -1,5 +1,6 @@
 function splitDataByGarment ( curOrderData )
 {
+	scriptTimer.beginTask( "splitDataByGarment_" + curOrderData.order );
 	var resultGarments = [];
 	var curGarment = null;
 	var separator = /fillin|fds|df|minimum|note|rush|fluor|bau|sample/i;
@@ -14,7 +15,7 @@ function splitDataByGarment ( curOrderData )
 		"PS-2036Y": "PS-2036G",
 	}
 
-	scriptTimer.beginTask( "processData_" + curOrderData.order );
+
 
 	curOrderData.lines.forEach( function ( curLine, i )
 	{
@@ -139,7 +140,7 @@ function splitDataByGarment ( curOrderData )
 	} )
 
 	log.l( "resultGarments = " + JSON.stringify( resultGarments, null, 4 ) );
-	scriptTimer.endTask( "processData_" + curOrderData.order );
+	scriptTimer.endTask( "splitDataByGarment_" + curOrderData.order );
 
 	return resultGarments;
 }

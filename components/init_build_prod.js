@@ -58,9 +58,7 @@ function initBuildProd ()
 
 	if ( valid )
 	{
-		scriptTimer.beginTask( "getOrderData" );
 		garmentsNeeded = splitDataByGarment( curOrderData );
-		scriptTimer.endTask( "getOrderData" );
 	}
 
 

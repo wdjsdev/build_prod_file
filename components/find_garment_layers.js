@@ -14,6 +14,7 @@
 
 function findGarmentLayers ()
 {
+	scriptTimer.beginTask( "findGarmentLayers" );
 	log.h( "Beginning execution of findGarmentLayers() function." );
 	var result = [];
 
@@ -36,5 +37,6 @@ function findGarmentLayers ()
 	}
 
 	log.l( "end of findGarmentLayers() function. returning::" + result );
+	scriptTimer.endTask( "findGarmentLayers" );
 	return result;
 }

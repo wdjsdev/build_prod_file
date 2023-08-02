@@ -159,12 +159,13 @@ function createAdjustmentDialog ()
 	g_sizeSelect.listbox.selection = 0;
 	g_sizeSelect.listbox.active = true;
 
+	scriptTimer.endTask( "createAdjustmentDialog" );
 
+	scriptTimer.beginTask( "adjustmentDialogUserInteraction" );
 	w.show();
 
 
 	log.l( "End of adjustment dialog. Returning: " + result );
-	scriptTimer.endTask( "createAdjustmentDialog" );
 	return result;
 
 
@@ -494,6 +495,8 @@ function createAdjustmentDialog ()
 			{
 				return;
 			}
+
+			scriptTimer.endTask( "adjustmentDialogUserInteraction" );
 			log.l( "Adjustment Dialog Submitted." );
 			log.l( "User selected the following text expansion steps: ::" + textExpandSteps.join( ", " ) );
 

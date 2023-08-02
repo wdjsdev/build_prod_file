@@ -18,6 +18,7 @@ function createAdjustmentDialog ()
 	log.h( "Beginning execution of createAdjustmentDialog();" );
 	var result = true;
 	var doc = app.activeDocument;
+	var docName = doc.name.replace( ".ai", "" );
 	var nameInputSelection = [];
 
 	var w = new Window( "dialog" );
@@ -163,6 +164,11 @@ function createAdjustmentDialog ()
 
 	scriptTimer.beginTask( "adjustmentDialogUserInteraction" );
 	w.show();
+
+	if ( result )
+	{
+		exportProdFile( docName, prodFileSaveLocation );
+	}
 
 
 	log.l( "End of adjustment dialog. Returning: " + result );
@@ -508,11 +514,10 @@ function createAdjustmentDialog ()
 			log.l( "Thru-cut Opacity preference: " + thruCutOpacityPreference );
 
 			setThruCutOpacity();
-			var docName = doc.name.replace( ".ai", "" );
-			var docPath = decodeURI( doc.path ).replace( "/Users/", "/Volumes/Macintosh HD/Users/" );
+			// var docName = doc.name.replace( ".ai", "" );
 
 			w.close();
-			exportProdFile( docName, prodFileSaveLocation );
+			// exportProdFile( docName, prodFileSaveLocation );
 		} );
 	}
 

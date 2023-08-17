@@ -117,15 +117,15 @@ function masterLoop ()
 		}
 
 
-		//create a new production file for the current garment
-		if ( result )
-		{
+		// //create a new production file for the current garment
+		// if ( result )
+		// {
 
-			if ( !createProdFile( curGarment ) )
-			{
-				return;
-			}
-		}
+		// 	if ( !createProdFile( curGarment ) )
+		// 	{
+		// 		return;
+		// 	}
+		// }
 
 		//copy each piece of the necessary sizes to the new production file
 		if ( result )

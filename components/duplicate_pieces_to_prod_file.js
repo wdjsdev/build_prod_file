@@ -31,7 +31,6 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 		return;
 	}
 	var roster = curGarment[ extraSizes ? "extraSizesRoster" : "roster" ];
-	var prodFile = curGarment.prodFile;
 	var ppLay = parentLayer.layers[ "Prepress" ];
 
 
@@ -40,7 +39,7 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 	log.l( "extraSizes: " + extraSizes );
 	log.l( "roster: " + JSON.stringify( roster, null, 2 ) );
 
-	prepressDoc.activate();
+	// prepressDoc.activate();
 
 
 	fixImproperWomensSizing( ppLay );
@@ -94,10 +93,15 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 		return;
 	}
 
+	//create a new production file for the current garment
+	createProdFile( curGarment )
+	var prodFile = curGarment.prodFile;
+
 	//move the tmpGroup into the prod file and ungroup it
 	//remove the tmpLay
 	var dupTmpGroup = tmpGroup.duplicate( prodFile );
 	tmpLay.remove();
+	// prodFile.activate();
 	ungroup( dupTmpGroup, prodFile, 1 );
 	return true;
 }

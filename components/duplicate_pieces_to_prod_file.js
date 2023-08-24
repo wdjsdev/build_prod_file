@@ -54,7 +54,7 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 		{
 			errorList.push( "Couldn't find prepress size layer " + curSize + " in " + parentLayer.name + " prepress file." );
 			log.e( "Couldn't find prepress size layer " + curSize + " in " + parentLayer.name + " prepress file." )
-			return;
+			continue;
 		}
 		curSizeItems = afc( curSizeLayer, "pageItems" );
 		if ( !roster[ curSize ].players )
@@ -90,12 +90,12 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 	{
 		tmpLay.remove();
 		errorList.push( "Failed to find any prepress artwork in " + prepressDoc.name );
-		return;
+		return false;
 	}
 
 	//create a new production file for the current garment
 	createProdFile( curGarment )
-	var prodFile = curGarment.prodFile;
+	var prodFile = curGarment.prodFile = app.activeDocument;
 
 	//move the tmpGroup into the prod file and ungroup it
 	//remove the tmpLay

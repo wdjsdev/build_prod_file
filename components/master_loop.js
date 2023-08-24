@@ -142,7 +142,9 @@ function masterLoop ()
 					errorList.push( "Couldn't locate extra sizes prepress file for " + curGarment.code + "_" + curGarment.styleNum + ". Please locate it manually." )
 				}
 			}
-
+		}
+		if ( result )
+		{
 			curGarment.prodFile.activate();
 
 

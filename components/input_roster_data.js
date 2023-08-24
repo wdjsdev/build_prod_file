@@ -18,7 +18,7 @@ function inputRosterData ( curGarment )
 	scriptTimer.beginTask( "inputRosterData" );
 	log.h( "Beginning execution of inputRosterData() function." );
 	var result = true;
-	var pieces = afc( curGarment.prodFile.layers[ 0 ], "groupItems" );
+	var pieces = afc( app.activeDocument.layers[ 0 ], "groupItems" );
 	var rosterInconsistencies = [];
 	var curSizePieces = [];
 	var rosterArray = [];

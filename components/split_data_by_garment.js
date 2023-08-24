@@ -50,7 +50,7 @@ function splitDataByGarment ( curOrderData )
 		curLineData.size = curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "";
 		if ( curLineData.item.match( /bag/i ) )
 		{
-			curLineData.size = "ONE PIECE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
+			curLineData.size = "ONE SIZE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
 		}
 		curLineData.roster = curLine.memo.roster || "(blank)";
 		curLineData.designNumber = curLineData.design || "";

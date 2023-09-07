@@ -35,6 +35,13 @@ function splitDataByGarment ( curOrderData )
 			return;
 		}
 
+		//if this line says "disregard" in the memo, skip it
+		if ( curLine.memo && curLine.memo.roster && curLine.memo.roster.match( /disregard/i ) )
+		{
+			log.l( "Skipping line " + curLine.item + " because it says \"disregard\" in the memo." )
+			return;
+		}
+
 		var curLineData = {};
 
 		var colonPos = curLine.item.indexOf( ":" );
@@ -56,7 +63,7 @@ function splitDataByGarment ( curOrderData )
 		curLineData.designNumber = curLineData.design || "";
 		curLineData.qty = curLine.quantity * 1;
 		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
-		curLineData.style = curLineData.style ? curLineData.style : "";
+		curLineData.style = curLineData.style ? curLineData.style.toLowerCase() : "";
 
 		//take care of any missing data if possible
 		if ( curGarment )

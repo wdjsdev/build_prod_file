@@ -15,6 +15,13 @@ function splitDataByGarment ( curOrderData )
 		"PS-2036Y": "PS-2036G",
 	}
 
+	var sockSizeConverter =
+	{
+		"A": "ADULT",
+		"I": "INTERMEDIATE",
+		"Y": "YOUTH"
+	}
+
 
 
 	curOrderData.lines.forEach( function ( curLine, i )
@@ -53,8 +60,19 @@ function splitDataByGarment ( curOrderData )
 		} );
 
 
-
 		curLineData.size = curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "";
+		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
+
+		//check whether this garment is a FD sock
+		//if so, sizing is handled slightly differently
+		//youth sizes are in the adult CT...
+		if ( curLineData.mid.match( /fd-11004/i ) )
+		{
+			curLineData.size = sockSizeConverter[ curLineData.size ] || curLineData.size;
+			curLineData.age = "A";
+		}
+
+
 		if ( curLineData.item.match( /bag/i ) )
 		{
 			curLineData.size = "ONE SIZE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
@@ -62,7 +80,6 @@ function splitDataByGarment ( curOrderData )
 		curLineData.roster = curLine.memo.roster || "(blank)";
 		curLineData.designNumber = curLineData.design || "";
 		curLineData.qty = curLine.quantity * 1;
-		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
 		curLineData.style = curLineData.style ? curLineData.style.toLowerCase() : "";
 
 		//take care of any missing data if possible

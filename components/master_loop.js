@@ -146,6 +146,7 @@ function masterLoop ()
 		if ( result )
 		{
 			curGarment.prodFile.activate();
+			curGarment.prodFile.note = curGarment.mid
 
 
 			scriptTimer.beginTask( "saveProdFileWithArt" );

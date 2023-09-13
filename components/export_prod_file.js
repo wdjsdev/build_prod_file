@@ -26,6 +26,17 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	var result = true;
 	var doc = app.activeDocument;
 	var docName = doc.name;
+	var userTintValue = 70;
+
+	if ( doc.note && doc.note.match( /11004/ ) )
+	{
+		var w = new Window( "dialog", "Enter Tint Value" );
+		var topTxt = UI.static( w, "Enter tint value for spot colors:" );
+		var btnGroup = UI.group( w );
+		var btn70 = UI.button( btnGroup, "70%", function () { userTintValue = 70; w.close(); } );
+		var btn85 = UI.button( btnGroup, "85%", function () { userTintValue = 85; w.close(); } );
+		w.show();
+	}
 
 
 	saveFile( doc, docName, Folder( destFolderPath ) );
@@ -37,6 +48,52 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		g.locked = g.hidden = false;
 		var ltg = findSpecificPageItem( g, "Live Text" );
 		if ( ltg ) { ltg.remove(); }
+
+		if ( doc.note.match( /11004/ ) )
+		{
+
+			doc.selection = null;
+			var artGroup = findSpecificPageItem( g, "Art Group" );
+			if ( !artGroup ) { return; };
+			afc( artGroup ).forEach( function ( agi )
+			{
+				agi.selected = true;
+			} );
+			app.executeMenuCommand( "expandStyle" );
+			doc.selection = null;
+			ungroup( artGroup, artGroup, 0, function ( item )
+			{
+				if ( item.typename === "CompoundPathItem" )
+				{
+					if ( !item.pathItems.length )
+					{
+						item = cleanupCompoundPath( item );
+					}
+					if ( !item.pathItems.length )
+					{
+						item.remove();
+						return;
+					}
+					item = item.pathItems[ 0 ]
+				}
+
+				if ( item.typename === "PathItem" )
+				{
+					if ( item.fillColor.typename === "SpotColor" )
+					{
+						item.filled ? item.fillColor.tint = userTintValue : null;
+						item.stroked ? item.fillColor.tint = userTintValue : null;
+					}
+					else if ( item.fillColor.typename === "GradientColor" )
+					{
+						afc( item.fillColor.gradient, "gradientStops" ).forEach( function ( stop )
+						{
+							stop.color.typename === "SpotColor" ? stop.color.tint = userTintValue : null;
+						} );
+					}
+				}
+			} )
+		}
 
 	} );
 

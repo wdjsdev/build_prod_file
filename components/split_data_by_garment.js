@@ -36,7 +36,7 @@ function splitDataByGarment ( curOrderData )
 		}
 
 		//if this line is not a garment, skip it
-		if ( !curLine.item.match( /^(fd|ps|bm|mbb|ba)[-_]/i ) )
+		if ( !curLine.item.match( /^(fd|ps|bm|mbb|ba|cf)[-_]/i ) )
 		{
 			log.l( "Skipping line " + curLine.item + " because it is not a garment." )
 			return;

@@ -21,61 +21,81 @@ function masterLoop ()
 	scriptTimer.beginTask( "masterLoop" );
 	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
-	var docDesignNumber = docRef.name.match( /[\da-z]{12}/ig ) || null;
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/gi ) || null;
 	var manuallyAssignGarments = false;
 
 	scriptTimer.beginTask( "getRelevantGarments" );
 
-	//build the relevantGarments array
-	//relevantGarments is an array of garment objects
-	//if the garment.designNumber matches the docDesignNumber
-	//and the garment.mid matches the parent layer name
-	//then push the garment to the relevantGarments array
-	garmentsNeeded.forEach( function ( curGarment )
+	if ( noOrderNumber )
 	{
-		curGarment.parentLayer = null;
-		var styleNum = curGarment.styleNum;
-		styleNum.match( /\d{3,}[a-z]?/i ) ? styleNum = styleNum.replace( /[a-z]$/i, "" ) : null;
-		var curGarmentCode = curGarment.mid + "_" + styleNum;
-		var curDesignNumber = curGarment.designNumber || null;
-
-		var docLayers = afc( docRef, "layers" );
-
-		if ( !curDesignNumber || !docDesignNumber )
+		relevantGarments.push( garmentsNeeded[ 0 ] );
+	}
+	else 
+	{
+		//build the relevantGarments array
+		//relevantGarments is an array of garment objects
+		//if the garment.designNumber matches the docDesignNumber
+		//and the garment.mid matches the parent layer name
+		//then push the garment to the relevantGarments array
+		garmentsNeeded.forEach( function ( curGarment )
 		{
-			manuallyAssignGarments = true;
-			return;
-		}
+			curGarment.parentLayer = null;
+			var styleNum = curGarment.styleNum;
+			styleNum.match( /\d{3,}[a-z]?/i )
+				? ( styleNum = styleNum.replace( /[a-z]$/i, "" ) )
+				: null;
+			var curGarmentCode = curGarment.mid + "_" + styleNum;
+			var curDesignNumber = curGarment.designNumber || null;
 
+			var docLayers = afc( docRef, "layers" );
 
-		if ( docDesignNumber.indexOf( curDesignNumber ) < 0 )
-		{
-			log.l( "skipping garment: " + curGarmentCode + " because the design number " + curDesignNumber + " don't match docDesignNumber " + docDesignNumber )
-			return;
-		}
-
-		docLayers.forEach( function ( cgl )
-		{
-			if ( !curGarment.parentLayer && cgl.name.match( new RegExp( curGarment.mid + "[-_]", "i" ) ) )
+			if ( !curDesignNumber || !docDesignNumber )
 			{
-				curGarment.parentLayer = cgl;
-				curGarment.prepressDoc = docRef;
-				relevantGarments.push( curGarment );
-				if ( curGarment.extraSizesRoster )
-				{
-					locateExtraSizesPrepressFile( curGarment )
-				}
+				manuallyAssignGarments = true;
+				return;
 			}
+
+			if ( docDesignNumber.indexOf( curDesignNumber ) < 0 )
+			{
+				log.l(
+					"skipping garment: " +
+					curGarmentCode +
+					" because the design number " +
+					curDesignNumber +
+					" don't match docDesignNumber " +
+					docDesignNumber
+				);
+				return;
+			}
+
+			docLayers.forEach( function ( cgl )
+			{
+				if (
+					!curGarment.parentLayer &&
+					cgl.name.match( new RegExp( curGarment.mid + "[-_]", "i" ) )
+				)
+				{
+					curGarment.parentLayer = cgl;
+					curGarment.prepressDoc = docRef;
+					relevantGarments.push( curGarment );
+					if ( curGarment.extraSizesRoster )
+					{
+						locateExtraSizesPrepressFile( curGarment );
+					}
+				}
+			} );
 		} );
 
-	} );
+	}
 
 	scriptTimer.endTask( "getRelevantGarments" );
+
+
 
 	if ( !relevantGarments.length || manuallyAssignGarments )
 	{
 		assignGarmentsToLayersDialog( garmentsNeeded );
-		relevantGarments = []
+		relevantGarments = [];
 		garmentsNeeded.forEach( function ( curGarment )
 		{
 			if ( curGarment.parentLayer )
@@ -87,18 +107,18 @@ function masterLoop ()
 
 	if ( !relevantGarments.length )
 	{
-		errorList.push( "This prepress file doesn't match any garments in the order." );
+		errorList.push(
+			"This prepress file doesn't match any garments in the order."
+		);
 		result = false;
 	}
-
-
-
-
 
 	relevantGarments.forEach( function ( curGarment )
 	{
 		scriptTimer.beginTask( curGarment.code + "_" + curGarment.styleNum );
-		log.l( "Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum );
+		log.l(
+			"Processing Garment Code: " + curGarment.code + "_" + curGarment.styleNum
+		);
 		var curGarmentLayer = curGarment.parentLayer;
 		//check mid value against list of garments that should get a 50% thrucut opacity
 		thruCutOpacityPreference = TCT.indexOf( curGarment.mid ) > -1 ? 50 : 0;
@@ -108,14 +128,12 @@ function masterLoop ()
 		//then check its fill color. if it's white, set the thrucut opacity to 50%
 		if ( REV_FOOTBALL_GARMENTS.indexOf( curGarment.mid ) > -1 )
 		{
-
-			var baseColor = getBaseColor( curGarmentLayer )
+			var baseColor = getBaseColor( curGarmentLayer );
 			if ( !baseColor || baseColor === "White B" )
 			{
 				thruCutOpacityPreference = 50;
 			}
 		}
-
 
 		// //create a new production file for the current garment
 		// if ( result )
@@ -133,27 +151,33 @@ function masterLoop ()
 			result = duplicatePiecesToProdFile( curGarment );
 			if ( curGarment.extraSizesRoster )
 			{
-				if ( curGarment.extraSizesPrepressDoc && curGarment.extraSizesParentLayer )
+				if (
+					curGarment.extraSizesPrepressDoc &&
+					curGarment.extraSizesParentLayer
+				)
 				{
 					duplicatePiecesToProdFile( curGarment, curGarment.extraSizes );
-				}
-				else 
+				} else
 				{
-					errorList.push( "Couldn't locate extra sizes prepress file for " + curGarment.code + "_" + curGarment.styleNum + ". Please locate it manually." )
+					errorList.push(
+						"Couldn't locate extra sizes prepress file for " +
+						curGarment.code +
+						"_" +
+						curGarment.styleNum +
+						". Please locate it manually."
+					);
 				}
 			}
 		}
 		if ( result )
 		{
 			curGarment.prodFile.activate();
-			curGarment.prodFile.note = curGarment.mid
-
+			curGarment.prodFile.note = curGarment.mid;
 
 			scriptTimer.beginTask( "saveProdFileWithArt" );
 			saveFile( curGarment.prodFile, saveFileName, saveFolder );
 			scriptTimer.endTask( "saveProdFileWithArt" );
 		}
-
 
 		//search for text frames that could hold names/numbers.
 		//setup roster grouping structure in each necessary piece.

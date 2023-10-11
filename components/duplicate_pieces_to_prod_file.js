@@ -49,7 +49,7 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 	var curSizeLayer, curSizeItems, curWaistSizeItems = [];
 	for ( var curSize in roster )
 	{
-		curSizeLayer = findSpecificLayer( ppLay, new RegExp( "^" + curSize ) );
+		curSizeLayer = findSpecificLayer( ppLay, new RegExp( "^" + curSize.replace( /\s*1-2\s*/, ".5" ) ) );
 		if ( !curSizeLayer )
 		{
 			errorList.push( "Couldn't find prepress size layer " + curSize + " in " + parentLayer.name + " prepress file." );

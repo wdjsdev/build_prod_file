@@ -83,20 +83,21 @@ function inputRosterData ( curGarment )
 		if ( !roster ) { return };
 		for ( var curSize in roster )
 		{
+			// curSize = curSize.replace( /\s*1-2\s*/i, ".5" );
 			if ( !roster[ curSize ].players )
 			{
 				for ( var curWaist in roster[ curSize ] )
 				{
 					rosterArray.push( roster[ curSize ][ curWaist ] );
-					sizeRegexArray.push( new RegExp( "^" + curWaist + ".*" + curSize, "i" ) );
-					sizeArray.push( curWaist + "x" + curSize );
+					sizeRegexArray.push( new RegExp( "^" + curWaist + ".*" + curSize.replace( /\s*1-2\s*/i, ".5" ), "i" ) );
+					sizeArray.push( curWaist + "x" + curSize.replace( /\s*1-2\s*/i, ".5" ) );
 				}
 			}
 			else
 			{
 				rosterArray.push( roster[ curSize ] );
-				sizeRegexArray.push( new RegExp( "^" + curSize ) );
-				sizeArray.push( curSize );
+				sizeRegexArray.push( new RegExp( "^" + curSize.replace( /\s*1-2\s*/i, ".5" ) ) );
+				sizeArray.push( curSize.replace( /\s*1-2\s*/i, ".5" ) );
 			}
 		}
 	}

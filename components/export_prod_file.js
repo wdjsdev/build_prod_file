@@ -49,7 +49,7 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 		var ltg = findSpecificPageItem( g, "Live Text" );
 		if ( ltg ) { ltg.remove(); }
 
-		if ( doc.note.match( /11004/ ) )
+		if ( doc.note && doc.note.match( /11004/ ) )
 		{
 
 			doc.selection = null;

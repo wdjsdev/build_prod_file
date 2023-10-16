@@ -159,6 +159,7 @@ function splitDataByGarment ( curOrderData )
 
 		var curPlayers = cgr.players || "";
 		cgr.players = curPlayers + ( curLineData.roster ? curLineData.roster : "" ) + "\n";
+		cgr.players = cgr.players.replace( /\s*\n\s*|\n{2,}/g, "\n" );
 		cgr.qty = ( cgr.qty ? cgr.qty : 0 ) + curLineData.qty * 1;
 
 	} )

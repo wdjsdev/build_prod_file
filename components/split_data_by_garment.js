@@ -60,7 +60,7 @@ function splitDataByGarment ( curOrderData )
 		} );
 
 
-		curLineData.size = curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "";
+		curLineData.size = curLine.item.match( /bag/i ) ? "" : ( curLine.item.match( /.*-(.*)/ ) ? curLine.item.match( /.*-(.*)/ )[ 1 ] : "" );
 		curLineData.age = curLineData.size.match( /y/i ) ? "Y" : "A";
 
 		//check whether this garment is a FD sock
@@ -127,6 +127,7 @@ function splitDataByGarment ( curOrderData )
 			curGarment.totalQty = 0;
 			curGarment.garmentsNeededIndex = resultGarments.length + 1 + "";
 			curGarment.item = curLineData.item;
+			curGarment.isBag = curLineData.item.match( /bag/i ) ? true : false;
 		}
 
 		curGarment.totalQty += ( curLineData.qty * 1 ) || 0;

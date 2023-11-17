@@ -44,6 +44,34 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 
 	fixImproperWomensSizing( ppLay );
 
+	//check whether this garment is a bag, and if there is no size layer or are no "size labels" on the piece names
+	//for example, the size layer is called "ONE SIZE", so each piece name needs to include that as well. eg: "ONE SIZE FRONT"
+	//this is an issue for fillins that used cads that werent fully converted for script use
+	//if this is the case, we need to add the size label to the piece names
+	if ( curGarment.isBag )
+	{
+		var sizeLayer;
+		if ( !ppLay.layers.length )
+		{
+			sizeLayer = ppLay.layers.add();
+			afc( ppLay, "pageItems" ).forEach( function ( p )
+			{
+				p.moveToEnd( sizeLayer );
+			} )
+		}
+		else 
+		{
+			sizeLayer = ppLay.layers[ 0 ];
+		}
+		sizeLayer.name = "ONE SIZE";
+		afc( sizeLayer, "pageItems" ).forEach( function ( p )
+		{
+			p.name = p.name.replace( /^one (size|piece)\s*/i, "" );
+			p.name = "ONE SIZE " + p.name;
+		} );
+
+	}
+
 	var tmpLay = prepressDoc.layers.add();
 	var tmpGroup = tmpLay.groupItems.add();
 	var curSizeLayer, curSizeItems, curWaistSizeItems = [];
@@ -74,6 +102,8 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 			curSizeItems = curWaistSizeItems;
 			curWaistSizeItems = [];
 		}
+
+
 
 		log.l( "duplicating the following items to the prod file: " );
 		log.l( curSizeItems.map( function ( a ) { return a.name; } ) );

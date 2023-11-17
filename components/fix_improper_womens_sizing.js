@@ -1,10 +1,11 @@
 function fixImproperWomensSizing ( ppLay )
 {
-	var pat = /^w/i;
+	var pat = /^w[xsml2345]/i;
 
 	function renameTheThing ( thing )
 	{
-		thing.name = thing.name.replace( pat, "" );
+		if ( !thing.name.match( pat ) ) { return; }
+		thing.name = thing.name.replace( /^w/i, "" );
 	}
 
 	var curLay, curPiece;

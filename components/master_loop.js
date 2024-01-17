@@ -148,7 +148,7 @@ function masterLoop ()
 		//copy each piece of the necessary sizes to the new production file
 		if ( result )
 		{
-			result = duplicatePiecesToProdFile( curGarment );
+			duplicatePiecesToProdFile( curGarment );
 			if ( curGarment.extraSizesRoster )
 			{
 				if (

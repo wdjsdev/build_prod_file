@@ -7,7 +7,7 @@ function locateExtraSizesPrepressFile ( curGarment )
 
     //first, get the extra inseams prepress file
     //loop the open documents and find a file whose name matches the current design number and the text "extra_sizes"
-    var exSearchPat = new RegExp( curGarment.designNumber + "_extra_sizes", "i" );
+    var exSearchPat = new RegExp( curGarment.designNumber + ".*_extra_sizes", "i" );
     afc( app, "documents" ).forEach( function ( doc )
     {
         if ( doc.name.match( /prepress/i ) && doc.name.match( exSearchPat ) )

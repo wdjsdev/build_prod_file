@@ -28,15 +28,15 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 	var docName = doc.name;
 	var userTintValue = 70;
 
-	if ( doc.note && doc.note.match( /11004/ ) )
-	{
-		var w = new Window( "dialog", "Enter Tint Value" );
-		var topTxt = UI.static( w, "Enter tint value for spot colors:" );
-		var btnGroup = UI.group( w );
-		var btn70 = UI.button( btnGroup, "70%", function () { userTintValue = 70; w.close(); } );
-		var btn85 = UI.button( btnGroup, "85%", function () { userTintValue = 85; w.close(); } );
-		w.show();
-	}
+	// if ( doc.note && doc.note.match( /11004/ ) )
+	// {
+	// 	var w = new Window( "dialog", "Enter Tint Value" );
+	// 	var topTxt = UI.static( w, "Enter tint value for spot colors:" );
+	// 	var btnGroup = UI.group( w );
+	// 	var btn70 = UI.button( btnGroup, "70%", function () { userTintValue = 70; w.close(); } );
+	// 	var btn85 = UI.button( btnGroup, "85%", function () { userTintValue = 85; w.close(); } );
+	// 	w.show();
+	// }
 
 
 	saveFile( doc, docName, Folder( destFolderPath ) );

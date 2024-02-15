@@ -21,8 +21,9 @@ function masterLoop ()
 	scriptTimer.beginTask( "masterLoop" );
 	log.h( "Beginning execution of masterLoop() function" );
 	var result = true;
-	var docDesignNumber = docRef.name.match( /[\da-z]{12}/gi ) || null;
+	var docDesignNumber = docRef.name.match( /[\da-z]{12}/gi ) || docRef.name.match( /([\da-z]{3}-){3}[\da-z]{3}/gi ) || null;
 	var manuallyAssignGarments = false;
+	var prepressLayers = afc( docRef, "layers" );
 
 	scriptTimer.beginTask( "getRelevantGarments" );
 
@@ -47,7 +48,6 @@ function masterLoop ()
 			var curGarmentCode = curGarment.mid + "_" + styleNum;
 			var curDesignNumber = curGarment.designNumber || null;
 
-			var docLayers = afc( docRef, "layers" );
 
 			if ( !curDesignNumber || !docDesignNumber )
 			{
@@ -68,7 +68,7 @@ function masterLoop ()
 				return;
 			}
 
-			docLayers.forEach( function ( cgl )
+			prepressLayers.forEach( function ( cgl )
 			{
 				if (
 					!curGarment.parentLayer &&

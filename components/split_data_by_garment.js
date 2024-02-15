@@ -78,7 +78,7 @@ function splitDataByGarment ( curOrderData )
 			curLineData.size = "ONE SIZE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
 		}
 		curLineData.roster = curLine.memo.roster || "(blank)";
-		curLineData.designNumber = curLineData.design || "";
+		curLineData.designNumber = curLineData.design || curLineData[ "program id" ] || "";
 		curLineData.qty = curLine.quantity * 1;
 		curLineData.style = curLineData.style ? curLineData.style.toLowerCase() : "";
 
@@ -119,7 +119,7 @@ function splitDataByGarment ( curOrderData )
 		{
 			curGarment = {};
 			curGarment.mid = curLineData.mid;
-			curGarment.styleNum = curLineData.style;
+			curGarment.styleNum = curLineData.style.match( /\d*[a-z]*$/i )[ 0 ];
 			curGarment.age = curLineData.age;
 			curGarment.code = curGarment.mid + "_" + curGarment.styleNum;
 			curGarment.designNumber = curLineData.designNumber;
@@ -164,6 +164,8 @@ function splitDataByGarment ( curOrderData )
 		cgr.qty = ( cgr.qty ? cgr.qty : 0 ) + curLineData.qty * 1;
 
 	} )
+
+	resultGarments.push( curGarment );
 
 	log.l( "resultGarments = " + JSON.stringify( resultGarments, null, 4 ) );
 	scriptTimer.endTask( "splitDataByGarment_" + curOrderData.order );

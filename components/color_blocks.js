@@ -103,7 +103,7 @@ function colorBlocks ()
 				{
 					result.approved.push( ink.name );
 				}
-				else
+				else if ( !ink.name.match( /process/i ) )
 				{
 					result.undesirable.push( ink.name );
 					hasWrongColors = true;
@@ -192,7 +192,7 @@ function colorBlocks ()
 
 	var library = {
 		approvedColors: BOOMBAH_APPROVED_COLORS,
-		productionColors: [ 'Thru-cut', 'CUT LINE', 'cut line', 'Info B', 'cutline', 'CUTLINE', 'SEW LINE', 'SEW LINES', 'SEWLINE' ],
+		productionColors: [ 'Thru-cut', 'CUT LINE', 'cut line', 'Info B', 'cutline', 'CUTLINE', 'SEW LINE', 'SEW LINES', 'SEWLINE', 'CALLOUT' ],
 
 	}
 

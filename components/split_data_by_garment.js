@@ -165,7 +165,10 @@ function splitDataByGarment ( curOrderData )
 
 	} )
 
-	resultGarments.push( curGarment );
+	if ( curGarment && curGarment.code )
+	{
+		resultGarments.push( curGarment );
+	}
 
 	log.l( "resultGarments = " + JSON.stringify( resultGarments, null, 4 ) );
 	scriptTimer.endTask( "splitDataByGarment_" + curOrderData.order );

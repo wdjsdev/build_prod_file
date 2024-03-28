@@ -134,6 +134,12 @@ function createAdjustmentDialog ()
 	//horizontal separator
 	UI.hseparator( w, 400 );
 
+	//expand all live text button
+	var expandAllText = UI.button( w, "Expand All Live Text", function ()
+	{
+		expandAllLiveText();
+	} );
+
 	//group
 	//this group holds the text expansion preferences
 	// var g_textExpansionGroup = UI.group( w );

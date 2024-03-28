@@ -20,7 +20,7 @@ function createAdjustmentDialog ()
 	var doc = app.activeDocument;
 	var docName = doc.name.replace( ".ai", "" );
 	var nameInputSelection = [];
-
+	var forceExpandText = false;
 	var w = new Window( "dialog" );
 	w.alignChildren[ "fill", "fill" ];
 
@@ -135,10 +135,11 @@ function createAdjustmentDialog ()
 	UI.hseparator( w, 400 );
 
 	//expand all live text button
-	var expandAllText = UI.button( w, "Expand All Live Text", function ()
+	var expandAllText = UI.checkbox( w, "Expand All Live Text" );
+	expandAllText.onClick = function ()
 	{
-		expandAllLiveText();
-	} );
+		forceExpandText = expandAllText.value;
+	}
 
 	//group
 	//this group holds the text expansion preferences
@@ -173,7 +174,7 @@ function createAdjustmentDialog ()
 
 	if ( result )
 	{
-		exportProdFile( docName, prodFileSaveLocation );
+		exportProdFile( docName, prodFileSaveLocation, forceExpandText );
 	}
 
 

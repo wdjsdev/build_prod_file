@@ -14,12 +14,14 @@
 		destFolderPath
 			folder object where the production file was saved
 			the PDFs folder should be saved in the same location
+		forceExpandText
+			boolean to determine whether or not to expand text objects
 	Return value
 		success boolean
 
 */
 
-function exportProdFile ( pdfFolderName, destFolderPath )
+function exportProdFile ( pdfFolderName, destFolderPath, forceExpandText )
 {
 	scriptTimer.beginTask( "exportProdFile" );
 	log.h( "exportProdFile(" + pdfFolderName + "," + destFolderPath + ")" );
@@ -41,6 +43,11 @@ function exportProdFile ( pdfFolderName, destFolderPath )
 
 	saveFile( doc, docName, Folder( destFolderPath ) );
 	log.l( "Successfully saved " + docName );
+
+	if ( forceExpandText )
+	{
+		expandAllLiveText();
+	}
 
 	//remove all "Live Text" textFrames
 	afc( artworkLayer, "groupItems" ).forEach( function ( g )

@@ -66,7 +66,7 @@ function splitDataByGarment ( curOrderData )
 		//check whether this garment is a FD sock
 		//if so, sizing is handled slightly differently
 		//youth sizes are in the adult CT...
-		if ( curLineData.mid.match( /fd-11004/i ) )
+		if ( curLineData.mid.match( /fd-1100\d/i ) )
 		{
 			curLineData.size = sockSizeConverter[ curLineData.size ] || curLineData.size;
 			curLineData.age = "A";

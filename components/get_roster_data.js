@@ -37,6 +37,11 @@ function getRosterData ( roster )
 	splitRoster.forEach( function ( curEntry )
 	{
 		log.l( "curEntry = " + curEntry );
+		//if internal mockup, skip
+		if ( curEntry.match( /internal mockup/i ) )
+		{
+			return;
+		}
 		var curPlayer = { "name": "", "number": "", "label": "" };
 
 		//if blank jersey, make a no name no number entry and return
@@ -51,6 +56,9 @@ function getRosterData ( roster )
 		curEntry = curEntry.replace( /\s{2,}/g, " " );
 
 		var gradYear = curEntry.match( /\(\d{4}\)/ ) ? curEntry.match( /\(\d{4}\)/ )[ 0 ] : "";
+
+
+
 
 		//get rid of any instructions that may have been written by the cs rep
 		//anything in parentheses that not a grad year should be removed

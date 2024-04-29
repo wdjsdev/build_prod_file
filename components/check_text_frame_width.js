@@ -17,7 +17,7 @@
 
 */
 
-function checkTextFrameWidth(frame)
+function checkTextFrameWidth ( frame )
 {
 	var doc = app.activeDocument;
 	var result = false;
@@ -26,22 +26,22 @@ function checkTextFrameWidth(frame)
 	var centerPoint = frame.left + frame.width / 2;
 
 	//check whether the textFrame is already less than the maximum width
-	if(frame.width <= maxPlayerNameWidth)
+	if ( frame.width <= maxPlayerNameWidth )
 	{
 		result = true;
 	}
 	else
 	{
-		log.l("Current frame width = " + frame.width);
+		log.l( "Current frame width = " + frame.width );
 		frame.width = maxPlayerNameWidth;
-		var tempFrame = frame.duplicate(tempLay);
+		var tempFrame = frame.duplicate( tempLay );
 		tempFrame.selected = true;
 		expand();
 		doc.selection = null;
 		tempLay.hasSelectedArtwork = true;
-		tempFrame = doc.selection[0];
+		tempFrame = doc.selection[ 0 ];
 
-		if (tempFrame.width <= maxPlayerNameWidth + BUFFER)
+		if ( tempFrame.width <= maxPlayerNameWidth + BUFFER )
 		{
 			frame = tempFrame;
 			result = true;
@@ -49,7 +49,7 @@ function checkTextFrameWidth(frame)
 		// tempFrame.remove();
 	}
 
-	if(result)
+	if ( result )
 	{
 		frame.left = centerPoint - frame.width / 2;
 		doc.selection = null;
@@ -59,6 +59,6 @@ function checkTextFrameWidth(frame)
 
 	tempFrame.remove();
 
-	log.l("End of checkTextFrameWidth() function. returning " + result);
+	log.l( "End of checkTextFrameWidth() function. returning " + result );
 	return result;
 }

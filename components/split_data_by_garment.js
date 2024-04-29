@@ -75,7 +75,7 @@ function splitDataByGarment ( curOrderData )
 
 		if ( curLineData.item.match( /bag/i ) )
 		{
-			curLineData.size = "ONE SIZE"; //..... who knows? someone used "ONE PIECE" as the size for a bag.
+			curLineData.size = "ONE SIZE";
 		}
 		curLineData.roster = curLine.memo.roster || "(blank)";
 		curLineData.designNumber = curLineData.design || curLineData[ "program id" ] || "";

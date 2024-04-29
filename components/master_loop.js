@@ -174,6 +174,8 @@ function masterLoop ()
 			curGarment.prodFile.activate();
 			curGarment.prodFile.note = curGarment.mid;
 
+			preventArtworkOverlap( curGarment.prodFile );
+
 			scriptTimer.beginTask( "saveProdFileWithArt" );
 			saveFile( curGarment.prodFile, saveFileName, saveFolder );
 			scriptTimer.endTask( "saveProdFileWithArt" );

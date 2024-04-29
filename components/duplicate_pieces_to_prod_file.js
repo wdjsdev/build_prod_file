@@ -124,8 +124,12 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 	}
 
 	//create a new production file for the current garment
-	createProdFile( curGarment )
-	var prodFile = curGarment.prodFile = app.activeDocument;
+	var prodFile = curGarment.prodFile;
+	if ( !prodFile )
+	{
+		createProdFile( curGarment );
+		prodFile = curGarment.prodFile = app.activeDocument;
+	}
 
 	//move the tmpGroup into the prod file and ungroup it
 	//remove the tmpLay

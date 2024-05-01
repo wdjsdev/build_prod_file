@@ -131,11 +131,11 @@ function exportProdFile ( pdfFolderName, destFolderPath, forceExpandText )
 		unlockDoc( doc );
 		sewLinesLayer.visible = false;
 
-		var groups = artworkLayer.groupItems;
-		for ( var xg = 0, groupsLen = groups.length; xg < groupsLen; xg++ )
+		afc( artworkLayer, "groupItems" ).forEach( function ( item )
 		{
-			exportPiece( groups[ xg ] );
-		}
+			if ( !item.name ) { return; }
+			exportPiece( item );
+		} );
 	}
 
 	doc.close( SaveOptions.DONOTSAVECHANGES );

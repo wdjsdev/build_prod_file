@@ -42,12 +42,12 @@ function getRosterData ( roster )
 		{
 			return;
 		}
-		var curPlayer = { "name": "", "number": "", "label": "" };
+		var curPlayer = { "name": "", "number": "", "label": "(no_name) (no_number)" };
 
 		//if blank jersey, make a no name no number entry and return
 		if ( curEntry.match( /^\(\s*blank\s*\)\s*$/i ) )
 		{
-			resultPlayers.push( { "name": "", "number": "", "label": "(no_name) (no_number)" } );
+			resultPlayers.push( curPlayer );
 			return;
 		}
 
@@ -113,7 +113,8 @@ function getRosterData ( roster )
 		resultPlayers.push( curPlayer );
 	} )
 
-	return resultPlayers;
+	log.l( "resultPlayers = " + JSON.stringify( resultPlayers, null, 4 ) );
+	return resultPlayers.length ? resultPlayers : null;
 }
 
 

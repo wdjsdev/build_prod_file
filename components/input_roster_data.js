@@ -41,6 +41,9 @@ function inputRosterData ( curGarment )
 			csr.players = getRosterData( csr.players )
 		}
 
+		log.l( "csr.players = " + JSON.stringify( csr.players ) );
+		if ( !csr.players ) { return; }
+
 		csr.playerCount = csr.players.length;
 		if ( csr.qty > csr.playerCount )
 		{

@@ -26,13 +26,15 @@ function inputRosterData ( curGarment )
 	var sizeArray = [];
 
 	populateRosterArray( curGarment.roster );
-	populateRosterArray( curGarment.extraSizesRoster );
+	populateRosterArray( curGarment.extraSizesRoster, true );
 
 
 	rosterArray.forEach( function ( csr, i )
 	{
 		curSizePieces = pieces.filter( function ( curPiece )
 		{
+			if ( !curPiece.note || curPiece.note !== "hasRoster" ) { return; }
+
 			return curPiece.note === "hasRoster" && curPiece.name.match( sizeRegexArray[ i ] )
 		} );
 
@@ -81,26 +83,26 @@ function inputRosterData ( curGarment )
 	return result;
 
 
-	function populateRosterArray ( roster )
+	function populateRosterArray ( roster, extraSizes )
 	{
 		if ( !roster ) { return };
 		for ( var curSize in roster )
 		{
-			// curSize = curSize.replace( /\s*1-2\s*/i, ".5" );
+			curSize = curSize.replace( /\s*1-2\s*/i, "\\.5" );
 			if ( !roster[ curSize ].players )
 			{
 				for ( var curWaist in roster[ curSize ] )
 				{
 					rosterArray.push( roster[ curSize ][ curWaist ] );
-					sizeRegexArray.push( new RegExp( "^" + curWaist + ".*" + curSize.replace( /\s*1-2\s*/i, ".5" ), "i" ) );
-					sizeArray.push( curWaist + "x" + curSize.replace( /\s*1-2\s*/i, ".5" ) );
+					sizeRegexArray.push( new RegExp( "^" + curWaist + "x" + curSize, "i" ) );
+					sizeArray.push( curWaist + "x" + curSize );
 				}
 			}
 			else
 			{
 				rosterArray.push( roster[ curSize ] );
-				sizeRegexArray.push( new RegExp( "^" + curSize.replace( /\s*1-2\s*/i, ".5" ) ) );
-				sizeArray.push( curSize.replace( /\s*1-2\s*/i, ".5" ) );
+				sizeRegexArray.push( new RegExp( "^" + curSize + "x[\\d]+", "i" ) );
+				sizeArray.push( curSize );
 			}
 		}
 	}

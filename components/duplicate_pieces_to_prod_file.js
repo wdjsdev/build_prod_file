@@ -15,7 +15,7 @@
 
 function duplicatePiecesToProdFile ( curGarment, extraSizes ) 
 {
-	log.h( "executing duplicatePiecesToProdFile()" )
+	log.h( "executing duplicatePiecesToProdFile(extraSizes = " + extraSizes + ")" );
 	var prepressDoc = extraSizes ? curGarment.extraSizesPrepressDoc : curGarment.prepressDoc;
 	if ( !prepressDoc )
 	{

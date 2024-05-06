@@ -42,16 +42,14 @@ function masterLoop ()
 		{
 			curGarment.parentLayer = null;
 			var styleNum = curGarment.styleNum;
-			styleNum.match( /\d{3,}[a-z]?/i )
-				? ( styleNum = styleNum.replace( /[a-z]$/i, "" ) )
-				: null;
+			styleNum.match( /\d{3,}[a-z]?/i ) ? ( styleNum = styleNum.replace( /[a-z]$/i, "" ) ) : null;
 			var curGarmentCode = curGarment.mid + "_" + styleNum;
 			var curDesignNumber = curGarment.designNumber || null;
 
 
 			if ( !curDesignNumber || !docDesignNumber )
 			{
-				manuallyAssignGarments = true;
+				// manuallyAssignGarments = true;
 				return;
 			}
 
@@ -70,9 +68,8 @@ function masterLoop ()
 
 			prepressLayers.forEach( function ( cgl )
 			{
-				if (
-					!curGarment.parentLayer &&
-					cgl.name.match( new RegExp( curGarment.mid + "[-_]", "i" ) )
+				log.l( cgl.name );
+				if ( !curGarment.parentLayer && cgl.name.match( new RegExp( curGarment.mid + "x?[-_]", "i" ) )
 				)
 				{
 					curGarment.parentLayer = cgl;

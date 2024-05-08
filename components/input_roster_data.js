@@ -38,6 +38,13 @@ function inputRosterData ( curGarment )
 			return curPiece.note === "hasRoster" && curPiece.name.match( sizeRegexArray[ i ] )
 		} );
 
+		if ( !curSizePieces.length )
+		{
+			errorList.push( "No pieces found for size " + sizeArray[ i ] + ".." );
+			log.e( "No pieces found for size " + sizeArray[ i ] + ".." );
+			return;
+		}
+
 		if ( !csr.players || typeof csr.players === "string" )
 		{
 			csr.players = getRosterData( csr.players )
@@ -101,7 +108,7 @@ function inputRosterData ( curGarment )
 			else
 			{
 				rosterArray.push( roster[ curSize ] );
-				sizeRegexArray.push( new RegExp( "^" + curSize + "x[\\d]+", "i" ) );
+				sizeRegexArray.push( new RegExp( "^" + curSize + "[\\sx]", "i" ) );
 				sizeArray.push( curSize );
 			}
 		}

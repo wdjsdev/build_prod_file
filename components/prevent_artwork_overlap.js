@@ -1,3 +1,7 @@
+//spread out the prod file artwork so that no pieces overlap
+
+
+
 function preventArtworkOverlap ( doc )
 {
     //get a list of unique piece names

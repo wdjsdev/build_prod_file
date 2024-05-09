@@ -118,7 +118,7 @@ function manuallyPopulateOrderData ()
 		var pat = /(.*)[-_]([a-z\d]{3,}([-_][a-z])?)/i;
 		newGarment.styleNum = curGarmentLayer.name.match( pat )[ 2 ];
 
-		newGarment.age = getAge( newGarment.code );
+		newGarment.age = newGarment.code.match( /[yg]/i ) ? "Y" : "A";
 		newGarment.parentLayer = findSpecificLayer( layers, curGarmentLayer.name );
 
 		newGarment.roster = {};

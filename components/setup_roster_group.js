@@ -22,7 +22,7 @@
 function setupRosterGroup ( item )
 {
 	var liveTextGroup, rosterGroup;
-	var itemFrames = findTextFrames( item );
+	var itemFrames = recursiveDig( item, function ( i ) { return i.typename.match( /text/i ) } );
 
 	itemFrames.forEach( function ( frame )
 	{

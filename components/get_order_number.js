@@ -36,23 +36,18 @@ function getOrderNumber ()
 		//failed to get a proper order number from the file name
 
 		//get the contents of the order number text frame instead
-		for ( var x = 0, len = layers.length; x < len && !result; x++ )
+		afc( doc, "layers" ).forEach( function ( l )
 		{
-			log.l( "Checking layer: " + layers[ x ].name + " for order number text frame." );
-			try
+			var infoLay = findSpecificLayer( l, "Information" );
+			if ( result || !infoLay ) return;
+			afc( infoLay, "textFrames" ).forEach( function ( f )
 			{
-				infoLay = layers[ x ].layers[ "Information" ];
-				result = infoLay.textFrames[ "Order Number" ].contents;
-				result = result.substring( 0, result.indexOf( " " ) );
-				result = result.replace( "#", "" );
-				log.l( "Found the order number text frame. Set result to " + result );
-			}
-			catch ( e )
-			{
-				log.l( "Layer: " + layers[ x ].name + " does not have an information layer or order number text frame" );
-				//just continue looking for information layer
-			}
-		}
+				if ( f.name.match( /order number/i ) )
+				{
+					result = f.contents.match( /(\d{7})/ )[ 0 ];
+				}
+			} );
+		} );
 	}
 
 

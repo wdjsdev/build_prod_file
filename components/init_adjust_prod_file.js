@@ -119,7 +119,7 @@ function initAdjustProdFile ()
 
 	function parseSize ( name )
 	{
-		return name.substring( 0, name.indexOf( " " ) );
+		return name.match( /^one/i ) ? "ONE SIZE" : name.substring( 0, name.indexOf( " " ) );
 	}
 
 

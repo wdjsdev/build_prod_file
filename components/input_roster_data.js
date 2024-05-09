@@ -90,12 +90,11 @@ function inputRosterData ( curGarment )
 	return result;
 
 
-	function populateRosterArray ( roster, extraSizes )
+	function populateRosterArray ( roster )
 	{
 		if ( !roster ) { return };
 		for ( var curSize in roster )
 		{
-			curSize = curSize.replace( /\s*1-2\s*/i, "\\.5" );
 			if ( !roster[ curSize ].players )
 			{
 				for ( var curWaist in roster[ curSize ] )
@@ -108,7 +107,8 @@ function inputRosterData ( curGarment )
 			else
 			{
 				rosterArray.push( roster[ curSize ] );
-				sizeRegexArray.push( new RegExp( "^" + curSize + "[\\sx]", "i" ) );
+				curSize = curSize.replace( /\s*1-2\s*/i, ".5" );
+				sizeRegexArray.push( new RegExp( "^" + curSize.replace( /\./g, "\\." ) + "[\\sx]", "i" ) );
 				sizeArray.push( curSize );
 			}
 		}

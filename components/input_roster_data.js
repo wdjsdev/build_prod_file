@@ -40,7 +40,6 @@ function inputRosterData ( curGarment )
 
 		if ( !curSizePieces.length )
 		{
-			errorList.push( "No pieces found for size " + sizeArray[ i ] + ".." );
 			log.e( "No pieces found for size " + sizeArray[ i ] + ".." );
 			return;
 		}

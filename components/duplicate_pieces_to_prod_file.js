@@ -42,7 +42,7 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 	// prepressDoc.activate();
 
 
-	fixImproperWomensSizing( ppLay );
+	fixPrepressSizing( ppLay );
 
 	//check whether this garment is a bag, and if there is no size layer or are no "size labels" on the piece names
 	//for example, the size layer is called "ONE SIZE", so each piece name needs to include that as well. eg: "ONE SIZE FRONT"

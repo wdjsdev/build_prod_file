@@ -56,51 +56,53 @@ function exportProdFile ( pdfFolderName, destFolderPath, forceExpandText )
 		var ltg = findSpecificPageItem( g, "Live Text" );
 		if ( ltg ) { ltg.remove(); }
 
-		if ( doc.note && doc.note.match( /11004/ ) )
-		{
 
-			doc.selection = null;
-			var artGroup = findSpecificPageItem( g, "Art Group" );
-			if ( !artGroup ) { return; };
-			afc( artGroup ).forEach( function ( agi )
-			{
-				agi.selected = true;
-			} );
-			app.executeMenuCommand( "expandStyle" );
-			doc.selection = null;
-			ungroup( artGroup, artGroup, 0, function ( item )
-			{
-				if ( item.typename === "CompoundPathItem" )
-				{
-					if ( !item.pathItems.length )
-					{
-						item = cleanupCompoundPath( item );
-					}
-					if ( !item.pathItems.length )
-					{
-						item.remove();
-						return;
-					}
-					item = item.pathItems[ 0 ]
-				}
+		//disabling sock tint logic for now
+		// if ( doc.note && doc.note.match( /11004/ ) )
+		// {
 
-				if ( item.typename === "PathItem" )
-				{
-					if ( item.fillColor.typename === "SpotColor" )
-					{
-						item.filled ? item.fillColor.tint = userTintValue : null;
-						item.stroked ? item.fillColor.tint = userTintValue : null;
-					}
-					else if ( item.fillColor.typename === "GradientColor" )
-					{
-						afc( item.fillColor.gradient, "gradientStops" ).forEach( function ( stop )
-						{
-							stop.color.typename === "SpotColor" ? stop.color.tint = userTintValue : null;
-						} );
-					}
-				}
-			} )
-		}
+		// 	doc.selection = null;
+		// 	var artGroup = findSpecificPageItem( g, "Art Group" );
+		// 	if ( !artGroup ) { return; };
+		// 	afc( artGroup ).forEach( function ( agi )
+		// 	{
+		// 		agi.selected = true;
+		// 	} );
+		// 	app.executeMenuCommand( "expandStyle" );
+		// 	doc.selection = null;
+		// 	ungroup( artGroup, artGroup, 0, function ( item )
+		// 	{
+		// 		if ( item.typename === "CompoundPathItem" )
+		// 		{
+		// 			if ( !item.pathItems.length )
+		// 			{
+		// 				item = cleanupCompoundPath( item );
+		// 			}
+		// 			if ( !item.pathItems.length )
+		// 			{
+		// 				item.remove();
+		// 				return;
+		// 			}
+		// 			item = item.pathItems[ 0 ]
+		// 		}
+
+		// 		if ( item.typename === "PathItem" )
+		// 		{
+		// 			if ( item.fillColor.typename === "SpotColor" )
+		// 			{
+		// 				item.filled ? item.fillColor.tint = userTintValue : null;
+		// 				item.stroked ? item.fillColor.tint = userTintValue : null;
+		// 			}
+		// 			else if ( item.fillColor.typename === "GradientColor" )
+		// 			{
+		// 				afc( item.fillColor.gradient, "gradientStops" ).forEach( function ( stop )
+		// 				{
+		// 					stop.color.typename === "SpotColor" ? stop.color.tint = userTintValue : null;
+		// 				} );
+		// 			}
+		// 		}
+		// 	} )
+		// }
 
 	} );
 

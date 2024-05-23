@@ -34,7 +34,7 @@ function inputRosterData ( curGarment )
 		curSizePieces = [];
 		pieces.forEach( function ( curPiece )
 		{
-			if ( !curPiece.note || curPiece.note !== "hasRoster" ) { return; }
+			if ( !curPiece.note || curPiece.note !== "hasRoster" || !curPiece.name.match( sizeRegexArray[ i ] ) ) { return; }
 
 			curSizePieces.push( curPiece );
 		} );

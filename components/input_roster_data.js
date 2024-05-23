@@ -31,11 +31,12 @@ function inputRosterData ( curGarment )
 
 	rosterArray.forEach( function ( csr, i )
 	{
-		curSizePieces = pieces.filter( function ( curPiece )
+		curSizePieces = [];
+		pieces.forEach( function ( curPiece )
 		{
 			if ( !curPiece.note || curPiece.note !== "hasRoster" ) { return; }
 
-			return curPiece.note === "hasRoster" && curPiece.name.match( sizeRegexArray[ i ] )
+			curSizePieces.push( curPiece );
 		} );
 
 		if ( !curSizePieces.length )

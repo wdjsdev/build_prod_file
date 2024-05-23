@@ -17,14 +17,21 @@ function getProdFilePiecesForCurSize ( curSize )
 	var doc = app.activeDocument;
 	var result = [];
 	var artLay = doc.layers[ "Artwork" ];
-	var curItem;
-	for ( var x = 0, len = artLay.pageItems.length; x < len; x++ )
+	afc( artLay ).forEach( function ( item )
 	{
-		curItem = artLay.pageItems[ x ];
-		if ( curItem.name.indexOf( curSize ) === 0 && curItem.note && curItem.note === "hasRoster" )
+		if ( item.name.match( new RegExp( "^" + curSize, "i" ) ) && item.note && item.note === "hasRoster" )
 		{
-			result.push( curItem.name );
+			result.push( item.name );
 		}
-	}
+	} );
+	var curItem;
+	// for ( var x = 0, len = artLay.pageItems.length; x < len; x++ )
+	// {
+	// 	curItem = artLay.pageItems[ x ];
+	// 	if ( curItem.name.indexOf( curSize ) === 0 && curItem.note && curItem.note === "hasRoster" )
+	// 	{
+	// 		result.push( curItem.name );
+	// 	}
+	// }
 	return result;
 }

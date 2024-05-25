@@ -3,7 +3,7 @@ function splitDataByGarment ( curOrderData )
 	scriptTimer.beginTask( "splitDataByGarment_" + curOrderData.order );
 	var resultGarments = [];
 	var curGarment = null;
-	var separator = /fillin|fds|df|minimum|note|rush|fluor|bau|sample/i;
+	var separator = /fillin|fds|df|minimum|note|rush|fluor|sample/i;
 	var garmentCodeConverter =
 	{
 		"FD-500": "FD-500W",
@@ -52,11 +52,12 @@ function splitDataByGarment ( curOrderData )
 		var curLineData = {};
 
 		var colonPos = curLine.item.indexOf( ":" );
-		curLineData.item = curLine.item.substring( 0, colonPos > -1 ? colonPos : curLine.item.length );
+		// curLineData.item = curLine.item.substring( 0, colonPos > -1 ? colonPos : curLine.item.length );
+		curLineData.item = curLine.item.replace( /\s*:.*$/, "" );
 
 		curLine.options.forEach( function ( curOpt )
 		{
-			curLineData[ curOpt.name.toLowerCase() ] = curOpt.value.replace( /^.*:\s*/, "" );
+			curLineData[ curOpt.name.toLowerCase() ] = curOpt.value.replace( /^.*:\s*|[\(\)]/g, "" );
 		} );
 
 
@@ -80,7 +81,8 @@ function splitDataByGarment ( curOrderData )
 		curLineData.roster = curLine.memo.roster || "(blank)";
 		curLineData.designNumber = curLineData.design || curLineData[ "program id" ] || "";
 		curLineData.qty = curLine.quantity * 1;
-		curLineData.style = curLineData.style ? curLineData.style.toLowerCase() : "";
+		curLineData.style = curLineData.style || "";
+		curLineData.style = curLineData.style.replace( /^bm.*/i, "1000" );
 
 		//take care of any missing data if possible
 		if ( curGarment )
@@ -96,8 +98,6 @@ function splitDataByGarment ( curOrderData )
 			!cldst && cgst ? ( curLineData.style = cgst ) : ( !cgst && cldst ? curGarment.styleNum = cldst : null );
 			!cldd && cgd ? ( curLineData.designNumber = cgd ) : ( !cgd && cldd ? curGarment.designNumber = cldd : null );
 		}
-
-		curLineData.code = curLineData.mid + "_" + curLineData.style;
 
 		garmentCodeConverter[ curLineData.mid ] ? curLineData.mid = garmentCodeConverter[ curLineData.mid ] : null;
 
@@ -121,7 +121,7 @@ function splitDataByGarment ( curOrderData )
 			curGarment.mid = curLineData.mid;
 			curGarment.styleNum = curLineData.style.match( /\d*[a-z]*$/i )[ 0 ];
 			curGarment.age = curLineData.age;
-			curGarment.code = curGarment.mid + "_" + curGarment.styleNum;
+			curGarment.code = curLineData.code;
 			curGarment.designNumber = curLineData.designNumber;
 			curGarment.roster = {};
 			curGarment.totalQty = 0;

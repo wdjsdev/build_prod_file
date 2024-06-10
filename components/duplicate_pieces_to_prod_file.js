@@ -31,6 +31,9 @@ function duplicatePiecesToProdFile ( curGarment, extraSizes )
 		return;
 	}
 	var roster = curGarment[ extraSizes ? "extraSizesRoster" : "roster" ];
+	if ( !roster ) { return; }
+
+
 	var ppLay = parentLayer.layers[ "Prepress" ];
 
 

@@ -165,6 +165,7 @@ function masterLoop ()
 					);
 				}
 			}
+			if ( !curGarment.prodFile ) { return; }
 		}
 		if ( result )
 		{

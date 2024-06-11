@@ -174,6 +174,8 @@ function masterLoop ()
 
 			preventArtworkOverlap( curGarment.prodFile );
 
+			addOrderNumberToCallouts( curGarment.prodFile, orderNum );
+
 			scriptTimer.beginTask( "saveProdFileWithArt" );
 			saveFile( curGarment.prodFile, saveFileName, saveFolder );
 			scriptTimer.endTask( "saveProdFileWithArt" );

@@ -12,10 +12,10 @@ function preventArtworkOverlap ( doc )
     } );
     pieceNames = getUnique( pieceNames );
 
-    var spacing = 30;
+    var spacing = 65;
 
-    var curY = 1000;
-    var curX = -1000;
+    var curY = 7000;
+    var curX = -2000;
 
     var maxHeight = 0;
     pieceNames.forEach( function ( pn, index )

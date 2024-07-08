@@ -12,7 +12,7 @@ function preventArtworkOverlap ( doc )
     } );
     pieceNames = getUnique( pieceNames );
 
-    var spacing = 65;
+    var spacing = 100;
 
     var curY = 7000;
     var curX = -2000;
@@ -38,7 +38,7 @@ function preventArtworkOverlap ( doc )
             curX += getBoundsData( cp ).width + spacing;
         } );
         curY -= maxHeight + spacing;
-        curX = -1000;
+        curX = -2000;
         maxHeight = 0;
     } );
 }

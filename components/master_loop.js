@@ -125,11 +125,12 @@ function masterLoop ()
 		//then check its fill color. if it's white, set the thrucut opacity to 50%
 		if ( REV_FOOTBALL_GARMENTS.indexOf( curGarment.mid ) > -1 )
 		{
-			var baseColor = getBaseColor( curGarmentLayer );
-			if ( !baseColor || baseColor === "White B" )
-			{
-				thruCutOpacityPreference = 50;
-			}
+			thruCutOpacityPreference = 50;
+			// var baseColor = getBaseColor( curGarmentLayer );
+			// if ( !baseColor || baseColor === "White B" )
+			// {
+			// 	thruCutOpacityPreference = 50;
+			// }
 		}
 
 		// //create a new production file for the current garment
